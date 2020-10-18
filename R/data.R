@@ -48,3 +48,19 @@
 #' }
 #' @source \url{https://www.insee.fr/fr/statistiques/2496716?sommaire=2496793}
 "FRInseePopulationForecast2016"
+
+#' A dataset with disability prevalences in France (2014)
+#'
+#' Prevalences are estimated through the 2014 'Vie quotidienne et santé' (VQS) survey.
+#' They are estimated by age brackets (eg. '[60;65)' stands for ages 60 to 64)
+#'
+#' @format A data frame with 176 observations and 5 variables:
+#' \describe{
+#'   \item{limitationtype}{type of limitation (eg. GALI, physical limitation, etc.)}
+#'   \item{prevalence}{prevalence of limitation in the given age bracket (number between 0 and 1)}
+#'   \item{sex}{sex ('female' or 'male')}
+#'   \item{age}{minimal age within the age bracket}
+#'   \item{agebracket}{age bracket (eg '[60;65)' = between 60 and 64 years old)}
+#' }
+#' @source \url{https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/les-dossiers-de-la-drees/article/incapacites-et-perte-d-autonomie-des-personnes-agees-en-france-une-evolution}
+"FRDreesVQSsurvey2014"

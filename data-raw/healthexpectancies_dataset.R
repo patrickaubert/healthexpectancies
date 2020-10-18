@@ -6,6 +6,7 @@ library(tidyverse)
 
 # ===================================================================================
 # Examples from the sullivan manual (2007 version)
+# ===================================================================================
 
 # raw data are downloaded from: https://reves.site.ined.fr/en/resources/computation_online/sullivan/
 
@@ -39,7 +40,7 @@ description_sullivan <- data.frame(
 
 # ===================================================================================
 # Forecasted mortality rates for men and women, from Insee's 2016 population forecast
-
+# ===================================================================================
 
 # raw data are downloaded from: https://www.insee.fr/fr/statistiques/2496793
 
@@ -80,7 +81,7 @@ FRInseeMortalityForecast2016 <- rbind(
 
 # ===================================================================================
 # Forecasted populations, from Insee's 2016 population forecast
-
+# ===================================================================================
 
 # raw data are downloaded from: https://www.insee.fr/fr/statistiques/2496793
 
@@ -104,11 +105,39 @@ FRInseePopulationForecast2016 <- rbind(
   popMale %>% mutate(sex = "male")
 )
 
+# ===================================================================================
+# Disability prevalences after age 60, from DREES' 2014 VQS survey
+# ===================================================================================
 
+# data from "graphique 2" can be downloaded on the DREES website: https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/les-dossiers-de-la-drees/article/incapacites-et-perte-d-autonomie-des-personnes-agees-en-france-une-evolution
+
+prevMale <- read_excel("data-raw/dd_vqs_tableau_etude_20180228.xlsx",
+                      sheet = "Graphique 2",
+                      range = "A4:I15")
+names(prevMale)[1] <- "limitationtype"
+prevMale <- prevMale %>%
+  pivot_longer(-c("limitationtype"), names_to = "tempage", values_to = "prevalence") %>%
+  mutate(sex = "male")
+
+prevFemale <- read_excel("data-raw/dd_vqs_tableau_etude_20180228.xlsx",
+                       sheet = "Graphique 2",
+                       range = "A18:I29")
+names(prevFemale)[1] <- "limitationtype"
+prevFemale <- prevFemale %>%
+  pivot_longer(-c("limitationtype"), names_to = "tempage", values_to = "prevalence") %>%
+  mutate(sex = "female")
+
+FRDreesVQSsurvey2014 <- rbind( prevFemale, prevMale) %>%
+  mutate(prevalence = prevalence / 100,
+         sex = as.factor(sex),
+         age = as.numeric( substr(tempage,0,2) ),
+         agebracket = cut(age, breaks = c(seq(60,95,5),Inf), include.lowest = TRUE, right = FALSE) ) %>%
+  select(-tempage)
 
 # ===================================================================================
 usethis::use_data(FRInseeMortalityForecast2016,
                   FRInseePopulationForecast2016,
+                  FRDreesVQSsurvey2014,
                   sullivan,
                   description_sullivan,
                   overwrite = T)
