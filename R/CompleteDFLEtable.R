@@ -1,10 +1,15 @@
 #' Complete a dataframe with variables useful for the calculation of disability-free life expectancies (DFLE)
 #'
-#' Calculations follow example 1 in the sullivan manual (June 2007 version).
-#' See https://reves.site.ined.fr/en/resources/computation_online/sullivan/ for more explanations.
-#' If some indispensable variables are missing (eg 'age'), the output is the same as the input dataset.
+#' Take an input dataset containing some information on age, mortality rates and prevalences
+#' of disability (at least 'age', 'qx' or 'mx', and 'pix' must be within the input dataset)
+#' and complete it with  variables for life expectancies and disability-free life expectancies.
+#' #' If some indispensable variables are missing (eg 'age'), the output is the same as the input dataset.
+#'
 #' If variables 'sex' and/or 'year' are in the input dataset, calculations are performed for each
 #' separate values of 'sex' and/or 'year'.
+#'
+#' Calculations follow example 1 in the sullivan manual (June 2007 version).
+#' See https://reves.site.ined.fr/en/resources/computation_online/sullivan/ for more explanations.
 #'
 #'
 #' @param tab a dataframe containing some of the variables

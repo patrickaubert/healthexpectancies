@@ -34,4 +34,17 @@
 #'   \item{qx}{mortality rates at each year, age, sex}
 #' }
 #' @source \url{https://www.insee.fr/fr/statistiques/2496716?sommaire=2496793}
-"FRmortalityForecast2016"
+"FRInseeMortalityForecast2016"
+
+#' A dataset with population by sex and age, from Insee's 2016 population forecast (central scenario)
+#'
+#'
+#' @format A data frame with 14036 observations and 4 variables:
+#' \describe{
+#'   \item{age}{age}
+#'   \item{year}{year}
+#'   \item{sex}{sex ('male' or 'female')}
+#'   \item{popx}{population at each year, age, sex}
+#' }
+#' @source \url{https://www.insee.fr/fr/statistiques/2496716?sommaire=2496793}
+"FRInseePopulationForecast2016"
