@@ -1,9 +1,11 @@
 #' Complete a dataframe with variables useful for the calculation of disability-free life expectancies (DFLE)
 #'
-#' Take an input dataset containing some information on age, mortality rates and prevalences
-#' of disability (at least 'age', 'qx' or 'mx', and 'pix' must be within the input dataset)
-#' and complete it with  variables for life expectancies and disability-free life expectancies.
-#' #' If some indispensable variables are missing (eg 'age'), the output is the same as the input dataset.
+#' From an input dataset containing some information on age, mortality rates and prevalences
+#' of disability (at least 'age', 'qx' or 'mx', and 'pix' must be within the input dataset),
+#' the function completes it with values of life expectancies and disability-free life expectancies.
+#' If some indispensable variables are missing (eg 'age'), the output is the same as the input dataset.
+#'
+#' Full headings for the names of variables in the output dataset can be found in the 'description_sullivan' dataframe (in the package).
 #'
 #' If variables 'sex' and/or 'year' are in the input dataset, calculations are performed for each
 #' separate values of 'sex' and/or 'year'.
