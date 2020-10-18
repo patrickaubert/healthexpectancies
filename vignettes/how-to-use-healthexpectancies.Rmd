@@ -1,0 +1,92 @@
+---
+title: "how-to-use-healthexpectancies"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{how-to-use}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(healthexpectancies)
+```
+
+# Function CompleteDFLEtable
+
+This function calculates life expectancies and disability-free life expectancies from a dataset containing (at least) information on age, mortality rates and disability prevalence.
+
+Calculations completelly follow the example 1 provided in the Sullivan manual (June 2007 version), available at https://reves.site.ined.fr/en/resources/computation_online/sullivan/. One minor deviation is that the ad-hoc value for the conditional probability of death (qx) at age 0 is note taken into account.
+
+The input table is a dataset containing at least the 3 variables above. The output table is a dataset containing all input variables and additionnal variables that are useful for the calculations of LE and DFLE. If those variables are already in the input table, they are not calculated and the input variables are used instead.
+
+# Function prevalence_to_polynomial
+
+This function approximates a vector of prevalences (according to age) by a polynomial function.
+
+The degree of the polynomial can be chosen. Default value is 4.
+
+Weights can also be defined (eg. number of survivors at each each). By default, all ages are weighted identically.
+
+# Function polynomial_to_prevalence
+
+This function calculates prevalences at each age, given a polynomial function.
+
+Parameters are the following :
+
+* coefficients : a vector of coefficients for the polynomial.
+* agemin : minimal age in the output vector (default is 60)
+* agemax : maximal age in the output vector (default is 120)
+* ageclass : a vector defining age brackets. If *ageclass* is non null, the output vector are average prevalences within each agebracket
+
+# Function ForecastPrevalence
+
+This function forecast a vector containing initial prevalences according to age, given an hypothesis on the evolution of prevalences.
+
+Parameters are the following :
+
+* yearinit : initial year (ie. year in which the prevalence is observed)
+* maxyear : last year for the forecast (all years between *yearinit* and *maxyear* are in the output table)
+
+Options are :
+
+* 'constant'
+* 'agetranslation'
+* 'prevaltranslation'
+* 'agehomothetic'
+* 'prevalhomothetic'
+* 'constantDFLE'
+* 'constantshareDFLE'
+* 'constantDLE'
+* 'constantshareDLE'
+
+# Datasets included in the package
+
+Several datasets are included in the *healthexpectancies* package. All of them relates to France.
+
+## Insee's population forecast (2016)
+
+Insee is the French national institute for statistics and economic studies. It publishes population forecasts every 5 years (last publication was in 2016). Forecasted mortality rates by sex for the 'central' scenario are included in the package.
+
+See https://www.insee.fr/fr/information/2546485#titre-bloc-3 for more information about the forecasting methods.
+
+## VQS (2014)
+
+The *Vie quotidienne et santé* (VQS) survey is a large sample survey conducted in 2014 by DREES (the statistical directory of the French Ministry for Health and Social affairs).
+
+## CARE (2015)
+
+The CARE survey is a survey conducted in 2015 by DREES (the statistical directory of the French Ministry for Health and Social affairs) in Metropolitan France (*i.e.* excluding French oversea territories).
+
+
+
+
+
+
+

@@ -1,0 +1,23 @@
+Package: healthexpectancies
+Title: Functions to calculate Health and Disability-free Life Expectancies (DFLE) using Sullivan method
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Patrick",
+           family = "Aubert",
+           role = c("aut", "cre"),
+           email = "patrick.aubert@m4x.org",
+           comment = structure("0000-0003-1777-8639", .Names = "ORCID"))
+Description: The package provides useful functions to calculate Disability-free Life Expectancies (DFLE) using Sullivan method. Calculations are base on Newcastle University's Pratical Guide, initially created in the Euro-REVES project and subsequently updated with funding from the European Commission for the European Health Expectancy Monitoring Unit (EHEMU) and the European Health and Life Expectancy Information System (EHLEIS). The package also includes presend and forecasted datatables for France, and functions that estimate a correspondance between hypotheses on the evolutions of DFLE and evolution of prevalences.
+License: EUPL
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
+Imports: 
+    utils
