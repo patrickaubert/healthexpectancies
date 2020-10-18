@@ -64,7 +64,9 @@ mortalityFemale <- mortalityFemale %>%
 FRmortalityForecast2016 <- rbind(
   mortalityFemale %>% mutate(sex = "female"),
   mortalityMale %>% mutate(sex = "male")
-)
+  ) %>%
+  mutate(sex = as.factor(sex))
+
 
 # transform dataset from age at the end of the year to age at last birthday
 
@@ -103,7 +105,8 @@ popFemale <- popFemale %>%
 FRInseePopulationForecast2016 <- rbind(
   popFemale %>% mutate(sex = "female"),
   popMale %>% mutate(sex = "male")
-)
+  ) %>%
+  mutate(sex = as.factor(sex))
 
 # ===================================================================================
 # Disability prevalences after age 60, from DREES' 2014 VQS survey
@@ -133,6 +136,10 @@ FRDreesVQSsurvey2014 <- rbind( prevFemale, prevMale) %>%
          age = as.numeric( substr(tempage,0,2) ),
          agebracket = cut(age, breaks = c(seq(60,95,5),Inf), include.lowest = TRUE, right = FALSE) ) %>%
   select(-tempage)
+
+# essaiVQS <- FRInseeMortalityForecast2016 %>% filter(year==2014, age>=60) %>% mutate(agebracket = cut(age, breaks = c(seq(60,95,5),Inf), include.lowest = TRUE, right = FALSE))
+# prevVQS <- FRDreesVQSsurvey2014 %>% filter(limitationtype == "GALI") %>% mutate(pix = prevalence) %>% select(agebracket,sex,pix)
+# essaiVQS <- essaiVQS %>% left_join(prevVQS, by = c("sex","agebracket"))
 
 # ===================================================================================
 usethis::use_data(FRInseeMortalityForecast2016,

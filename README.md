@@ -10,3 +10,5 @@ To install package:
 
 remotes::install_github("patrickaubert/healthexpectancies",ref='main')
 
+This package is released under EUPL license. This version is a very preliminary version of an on-going work: please be aware of it!
+
