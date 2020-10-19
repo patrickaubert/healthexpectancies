@@ -14,7 +14,9 @@ ui <- dashboardPage(
     selectInput("optionProj",
                 label = "Option de projection",
                 choices = list("Prévalences constantes" = "prevcst",
-                               "Décalage prévalences" = "prevtrans"))
+                               "Décalage prévalences" = "prevagetrans"))
+    # ajout autres options
+    # ajout conditional panel = ampleur du décalage
   ),
 
   # ====================================================================

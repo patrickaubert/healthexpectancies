@@ -66,7 +66,7 @@ CompleteDFLEtable <- function(tab) {
     tab$qx <- tab$mx * tab$agewidth / (1 + 0.5 * tab$agewidth * tab$mx)
   }
 
-  # alternative : adding central death rate (mx), from conditional probability of death (qx)
+  # --- alternative : adding central death rate (mx), from conditional probability of death (qx)
   if (("qx" %in% names(tab)) & !("mx" %in% names(tab))) {
     tab$mx <- tab$qx / tab$agewidth / (1 - 0.5 * tab$qx)
   }
@@ -116,8 +116,20 @@ CompleteDFLEtable <- function(tab) {
 
   # adding proportion of life spent disability-free (pctDFLEx), from ratio of DFLE and LE at each age x
   if (("DFLEx" %in% names(tab)) & ("ex" %in% names(tab)) & !("pctDFLEx" %in% names(tab))) {
-    tab$pctDFLEx <- 100 * tab$DFLEx / tab$ex
+    tab$pctDFLEx <-100 * tab$DFLEx / tab$ex
   }
+
+  # adding in-disability life expectancy (DLEx), from life expectancy (ex) and disability-free life expectancy (DFLEx)
+  if (("DFLEx" %in% names(tab)) & ("ex" %in% names(tab)) & !("DLEx" %in% names(tab))) {
+    tab$DLEx <-tab$ex - tab$DFLEx
+  }
+
+  # --- alternative : adding prevalences (pix), from DLEx or DLFEx
+  # to be done ...
+
+  # --- alternative : adding prevalences (pix), from proportion of life spent in disability (pctDFLEx)
+  # to be done ...
+
 
   # returns enriched dataset
   return(tab)

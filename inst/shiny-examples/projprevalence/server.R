@@ -1,6 +1,15 @@
 server <- function(input, output) {
 
   # ========================================================
+  # mise en forme des graphiques dans l'appli
+
+  ggplotlocal <- function(...) {
+    ggplot(...)
+    # to be done: ajout mis en forme
+  }
+
+
+  # ========================================================
   # table des prévalences en 2014 (source : DREES, VQS 2014)
 
   prevage <- reactive({
@@ -72,6 +81,11 @@ server <- function(input, output) {
   # ========================================================
   # graphiques en output
 
+  #to be done:
+  #       axe vertical = de 0 à 100%
+  #       belle mise en forme (arrondi, etc)
+  #       ajouter plotly
+
   # --- prévalences
   output$prevproj <- renderPlot({
     tab <- prevage()
@@ -91,4 +105,14 @@ server <- function(input, output) {
       geom_line() +
       facet_wrap( ~ sex)
   })
+
+  # ---- Nombre de personnes en incapacité
+  # to be done ...
+
+  # ---- EV et EVSI à 65 ans, pour diverses années (2025, 2030, 2035, 2040, 2050)
+  # to be done ...
+
+  # ---- texte explicatif
+  # to be done ...
+
 }
