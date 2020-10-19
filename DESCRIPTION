@@ -25,4 +25,5 @@ Imports:
     magrittr,
     purrr,
     shiny,
-    shinydashboard
+    shinydashboard,
+    plotly

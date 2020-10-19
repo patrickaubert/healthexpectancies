@@ -99,11 +99,6 @@ CompleteDFLEtable <- function(tab) {
     tab$DFLx <- tab$Lx * (1 - tab$pix)
   }
 
-  # adding person years lived without disability (DFLx), from person years lived at age x (Lx) and proportion with disability (pix)
-  if (("Lx" %in% names(tab)) & ("pix" %in% names(tab)) & !("DFLx" %in% names(tab))) {
-    tab$DFLx <- tab$Lx * (1 - tab$pix)
-  }
-
   # adding total years lived without disability from age x (DFTx), from person years lived without disability (DFLx)
   if (("DFLx" %in% names(tab)) & !("DFTx" %in% names(tab))) {
     tab$DFTx <- rev( cumsum( rev(tab$DFLx) ) )
@@ -114,22 +109,31 @@ CompleteDFLEtable <- function(tab) {
     tab$DFLEx <- tab$DFTx / tab$lx
   }
 
-  # adding proportion of life spent disability-free (pctDFLEx), from ratio of DFLE and LE at each age x
-  if (("DFLEx" %in% names(tab)) & ("ex" %in% names(tab)) & !("pctDFLEx" %in% names(tab))) {
-    tab$pctDFLEx <-100 * tab$DFLEx / tab$ex
-  }
-
   # adding in-disability life expectancy (DLEx), from life expectancy (ex) and disability-free life expectancy (DFLEx)
   if (("DFLEx" %in% names(tab)) & ("ex" %in% names(tab)) & !("DLEx" %in% names(tab))) {
-    tab$DLEx <-tab$ex - tab$DFLEx
+    tab$DLEx <- tab$ex - tab$DFLEx
+  }
+  # --- alternative : adding disability-free life expectancy (DFLEx), from life expectancy (ex) and in-disability life expectancy (DLEx)
+  if (!("DFLEx" %in% names(tab)) & ("ex" %in% names(tab)) & ("DLEx" %in% names(tab))) {
+    tab$DFLEx <- tab$ex - tab$DLEx
   }
 
-  # --- alternative : adding prevalences (pix), from DLEx or DLFEx
-  # to be done ...
+  # adding proportion of life spent disability-free (pctDFLEx), from ratio of DFLE and LE at each age x
+  if (("DFLEx" %in% names(tab)) & ("ex" %in% names(tab)) & !("pctDFLEx" %in% names(tab))) {
+    tab$pctDFLEx <- 100 * tab$DFLEx / tab$ex
+  }
+  # --- alternative : adding disability-free life expectancy (DFLEx), from proportion of life spent disability-free (pctDFLEx) and life-expectancy at each age x
+  if (!("DFLEx" %in% names(tab)) & ("ex" %in% names(tab)) & ("pctDFLEx" %in% names(tab))) {
+    tab$DFLEx <- tab$pctDFLEx/100 * tab$ex
+    if (!("DLEx" %in% names(tab))) { tab$DLEx <- tab$ex - tab$DFLEx }
+  }
 
-  # --- alternative : adding prevalences (pix), from proportion of life spent in disability (pctDFLEx)
-  # to be done ...
-
+  # --- alternative : adding prevalences (pix), from DFLEx
+  if (("lx" %in% names(tab)) & ("Lx" %in% names(tab)) & ("DFLEx" %in% names(tab)) & !("pix" %in% names(tab)) & !("DFLx" %in% names(tab)) & !("DFTx" %in% names(tab))) {
+    tab$DFTx <-  tab$DFLEx * tab$lx
+    tab$DFLx <- tab$DFTx - c( tail(tab$DFTx,-1) , 0 )
+    tab$pix <-  ( 1 - tab$DFLx / tab$Lx )
+  }
 
   # returns enriched dataset
   return(tab)
