@@ -8,46 +8,6 @@ server <- function(input, output) {
     # to be done: ajout mis en forme
   }
 
-
-  # ========================================================
-  # table des prévalences en 2014 (source : DREES, VQS 2014)
-
-  prevage <- reactive({
-
-    # --- récupération des données sources : VQS 2014 pour les prévalences, projections de l'Insee (2016) pour les populations
-
-    donnees <- FRInseePopulationForecast2016 %>%
-      rename(age = age0101) %>%
-      mutate(year = as.numeric(year),
-             age = as.numeric(age),
-             sex = as.factor(sex)) %>%
-      mutate(year = year-1,
-             agebracket = cut(age, breaks = c(seq(60,95,5),Inf), include.lowest = TRUE, right = FALSE)) %>%
-      filter(year==2014, age>=60) %>%
-      left_join( FRDreesVQSsurvey2014  %>% filter(limitationtype == input$limtype ) %>% select(-age),
-                 by = c("sex","agebracket") ) %>%
-      mutate(a = age+0.5-60, a2 = a^2, a3 = a^3, a4 = a^4)
-
-    # --- regressions
-
-    fitted_models <- donnees %>% group_by(sex) %>%
-      do(model = lm(prevalence ~ a + a2 + a3 + a4 , data = ., weights=popx))
-
-    resultats <- fitted_models %>% augment(model) %>%
-      ungroup() %>%
-      mutate(age=a-0.5+60) %>%
-      select(sex, age, prevalence, .fitted) %>%
-      filter(age <= 100) %>%
-      rename(prevalence.2014 = prevalence,
-             prev.approx.2014 = .fitted) %>%
-      pivot_longer(cols=-c(sex,age),
-                   names_to = "typeprev",
-                   values_to = "prevalence")
-
-    resultats
-  })
-
-
   # ========================================================
   # calcul des EVSI
 
@@ -72,25 +32,23 @@ server <- function(input, output) {
       filter(year==2014, age>=60) %>%
       left_join( FRDreesVQSsurvey2014  %>% filter(limitationtype == input$limtype ) %>% select(-age),
                  by = c("sex","agebracket") ) %>%
-      mutate(a = age+0.5-60, a2 = a^2, a3 = a^3, a4 = a^4)
+      rename(prevalence.ref = prevalence) #%>%
+      #mutate(a = age+0.5-60, a2 = a^2, a3 = a^3, a4 = a^4)
 
-    # --- regressions
-    fitted_models <- donneesregr %>% group_by(sex) %>%
-      do(model = lm(prevalence ~ a + a2 + a3 + a4 , data = ., weights=popx))
-    prevalences2014 <- fitted_models %>% augment(model) %>%
+    # --- lissage des prévalences
+    prevalencesref <- donneesregr %>% group_by(sex) %>%
+      mutate(prev.approx = case_when(
+        input$approxPrev ~ prevalence_to_polynomial(age, prevalence.ref, weight=popx),
+        !input$approxPrev ~ prevalence.ref) ) %>%
       ungroup() %>%
-      mutate(age=a-0.5+60) %>%
-      select(sex, age, prevalence, .fitted) %>%
-      filter(age <= 100) %>%
-      rename(prevalence.2014 = prevalence,
-             prev.approx.2014 = .fitted) %>%
+      select(sex, age, prev.approx, prevalence.ref) %>%
       pivot_longer(cols=-c(sex,age),
                    names_to = "indicateur",
                    values_to = "prevalence")
 
     # prévalences en 2014
-    prev2014 <- prevalences2014 %>%
-      filter(indicateur == "prev.approx.2014") %>%
+    prev2014 <- prevalencesref %>%
+      filter(indicateur == "prev.approx") %>%
       rename(pix = prevalence) %>%
       select(sex,age,pix)
 
@@ -100,7 +58,7 @@ server <- function(input, output) {
     qmort2014 <- FRInseeMortalityForecast2016 %>%
       select(year,sex,age,qx) %>%
       filter(age >= 60, year %in% c(2014) ) %>%
-      mutate(mx = qx) %>%
+      #mutate(mx = qx) %>%
       left_join(prev2014, by = c("sex","age")) %>%
       filter(!is.na(pix), !is.na(qx))
     EV2014 <- CompleteDFLEtable(qmort2014)
@@ -111,7 +69,7 @@ server <- function(input, output) {
     qmortproj <- FRInseeMortalityForecast2016 %>%
       select(year,sex,age,qx) %>%
       filter(age >= 60, year %in% c( vyear[vyear != 2014] ) ) %>%
-      mutate(mx = qx) %>%
+      #mutate(mx = qx) %>%
       left_join(EV2014 %>% select(sex,age,DFLEx,DLEx,pctDFLEx,pix), by = c("sex","age")) %>%
       filter(!is.na(DFLEx), !is.na(qx))
     if (input$optionProj == "evsicst") { qmortproj <- qmortproj %>% select(-c(DLEx,pctDFLEx,pix))
@@ -123,6 +81,7 @@ server <- function(input, output) {
 
     # tables avec les valeurs en projections
     projections <- rbind( EV2014, EVproj) %>%
+    #projections <- prevalenceForecast( qmort2014, qmortproj , input$optionProj) %>%
       select(sex,age,year,ex,DFLEx,DLEx,pctDFLEx,pix) %>%
       pivot_longer(cols=-c(sex,age,year),
                    names_to = "indicateur",
@@ -132,7 +91,7 @@ server <- function(input, output) {
 
     # en sortie : tables avec les prévalences et les EV, par sexe et par année
     rbind(
-      prevalences2014 %>%
+      prevalencesref %>%
         rename(ev = prevalence) %>%
         select(sex,age,indicateur,ev) %>%
         mutate(year = 2014),
@@ -146,7 +105,7 @@ server <- function(input, output) {
                                  "DLEx" = "EVI",
                                  "pctDFLEx" = "% EVSI/EV"),
              sex = recode(sex, "male" = "Hommes", "female" = "Femmes"),
-             ev = case_when(indicateur %in% c("prev.proj","prevalence.2014","prev.approx.2014") ~ round( 100 * ev, 1),
+             ev = case_when(indicateur %in% c("prev.proj","prevalence.ref","prev.approx") ~ round( 100 * ev, 1),
                             indicateur %in% c("EV","EVSI","EVI","% EVSI/EV") ~ round( ev, 1) )
       )
   })
@@ -159,7 +118,7 @@ server <- function(input, output) {
     #tab <- prevage() %>%
     tab <- evsi() %>%
       filter(year %in% c( 2014, input$anneeProj),
-             indicateur %in% c("prev.proj","prevalence.2014","prev.approx.2014") ) %>%
+             indicateur %in% c("prev.proj","prevalence.ref","prev.approx") ) %>%
       rename(prevalence = ev)
     g <- ggplot(tab , aes(x=age,y=prevalence,colour=indicateur) ) +
       geom_line() +
@@ -171,11 +130,12 @@ server <- function(input, output) {
   # --- EV et EVSI en 2014
   output$evsi <- renderPlotly({
     tab <- evsi() %>%
-      filter(year == 2014,
+      #filter(year == 2014,
+      filter(year %in% c(2014, input$anneeProj) ,
              indicateur %in% c("EV","EVSI","EVI"))
     g <- ggplot(tab , aes(x=age,y=ev,colour=indicateur) ) +
       geom_line() +
-      facet_wrap( ~ sex)
+      facet_wrap(year ~ sex)
     ggplotly(g)
   })
 

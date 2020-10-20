@@ -2,7 +2,7 @@
 % Please edit documentation in R/CompleteDFLEtable.R
 \name{CompleteDFLEtable}
 \alias{CompleteDFLEtable}
-\title{Complete a dataframe with variables useful for the calculation of disability-free life expectancies (DFLE)}
+\title{Complete a dataframe with useful variables for the calculation of disability-free life expectancies (DFLE)}
 \usage{
 CompleteDFLEtable(tab)
 }
@@ -13,14 +13,16 @@ CompleteDFLEtable(tab)
 a dataframe with all variables that can be calculated from the input dataframe
 }
 \description{
-Take an input dataset containing some information on age, mortality rates and prevalences
-of disability (at least 'age', 'qx' or 'mx', and 'pix' must be within the input dataset)
-and complete it with  variables for life expectancies and disability-free life expectancies.
-#' If some indispensable variables are missing (eg 'age'), the output is the same as the input dataset.
+From an input dataset containing some information on age, mortality rates and prevalences
+of disability (at least 'age', 'qx' or 'mx', and 'pix' must be within the input dataset),
+the function completes it with values of life expectancies and disability-free life expectancies.
+If some indispensable variables are missing (eg 'age'), the output is the same as the input dataset.
 }
 \details{
-If variables 'sex' and/or 'year' are in the input dataset, calculations are performed for each
-separate values of 'sex' and/or 'year'.
+Full headings for the names of variables in the output dataset can be found in the 'description_sullivan' dataframe (in the package).
+
+If variables 'sex' and/or 'year' and/or 'categ' (an undefinite category variable that can be defined by the user)
+are in the input dataset, calculations are performed for each separate values of 'sex', 'year' and/or 'categ'.
 
 Calculations follow example 1 in the sullivan manual (June 2007 version).
 See https://reves.site.ined.fr/en/resources/computation_online/sullivan/ for more explanations.
