@@ -14,7 +14,7 @@
 #' @param tabproj a data frame for projection years, containing variables: year, age, and qx (mortality rate) variables (optional: sex)
 #' @param hypo projection hypotheses ('cstDFLE','cstDLE','cstPreval','cstPctDFLE')
 #'
-#' @return
+#' @return a data frame with DFLE, DLE and share of DFLE in total LE, by year and age (and optionnally sex)
 #' @export
 #'
 #' @examples
@@ -33,10 +33,10 @@ prevalenceForecast <- function(tabref, tabproj, hypo) {
 
   # forecasted prevalences
   tabproj <- tabproj %>%
-    filter(age %in% c( unique(tabref$age))) %>%
+    filter(age %in% c( unique(tabref$age))) %>% ###
     left_join(tabDFLEref[,c(vardim,varkeep)] , by = c(vardim) )
   tabDFLEproj <- CompleteDFLEtable( tabproj )
 
-  rbind( tabDFLEref[,c(vardim,"year","pix","DFLEx","DLEx","pctDFLEx")],
-         tabDFLEproj[,c(vardim,"year","pix","DFLEx","DLEx","pctDFLEx")] )
+  rbind( tabDFLEref[,c(vardim,"year","pix","ex","DFLEx","DLEx","pctDFLEx")],
+         tabDFLEproj[,c(vardim,"year","pix","ex","DFLEx","DLEx","pctDFLEx")] )
 }

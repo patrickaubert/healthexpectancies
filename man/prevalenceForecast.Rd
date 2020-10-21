@@ -14,7 +14,7 @@ prevalenceForecast(tabref, tabproj, hypo)
 \item{hypo}{projection hypotheses ('cstDFLE','cstDLE','cstPreval','cstPctDFLE')}
 }
 \value{
-
+a data frame with DFLE, DLE and share of DFLE in total LE, by year and age (and optionnally sex)
 }
 \description{
 Given a table for the reference year with mortality rates and prevalences of disability, and

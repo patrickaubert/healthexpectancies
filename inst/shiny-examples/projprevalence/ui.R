@@ -1,6 +1,7 @@
 ui <- dashboardPage(
 
-  dashboardHeader(title = "Projection d'EVSI et de prévalences"),
+  dashboardHeader(title = "Projection d'EVSI et de prévalences",
+                  titleWidth = 350),
 
   # ====================================================================
   # options de projections
@@ -59,8 +60,13 @@ ui <- dashboardPage(
       #)
     ),
     fluidRow(
-      box(title = "Nombre de personnes avec limitations",
-          solidHeader = TRUE
+      box(title = "Nombre de personnes avec limitations (en milliers)",
+          solidHeader = TRUE,
+          plotlyOutput("nbIncapProj", height = 250)
+      ),
+      box(title = "Répartition par âge des personnes avec limitations",
+          solidHeader = TRUE,
+          plotlyOutput("nbIncapAge", height = 250)
       )
     )
   )

@@ -92,14 +92,14 @@ FRInseeMortalityForecast2016 <- rbind(
 
 popMale <- read_excel("data-raw/irsocprojpop1370_FECcentESPcentMIGcent.xls",
                             sheet = "populationH",
-                            range = "A5:BG126")
+                            range = "A5:BG114")
 names(popMale) <- c("age0101", tail(names(popMale),-1) )
 popMale <- popMale %>%
   pivot_longer(-c("age0101"), names_to = "year", values_to = "popx")
 
 popFemale <- read_excel("data-raw/irsocprojpop1370_FECcentESPcentMIGcent.xls",
                               sheet = "populationF",
-                              range = "A5:BG126")
+                              range = "A5:BG114")
 names(popFemale) <- c("age0101", tail(names(popFemale),-1) )
 popFemale <- popFemale %>%
   pivot_longer(-c("age0101"), names_to = "year", values_to = "popx")
@@ -108,8 +108,9 @@ FRInseePopulationForecast2016 <- rbind(
   popFemale %>% mutate(sex = "female"),
   popMale %>% mutate(sex = "male")
   ) %>%
-  mutate(year = as.numeric(year),
-         age = as.numeric(age),
+  mutate(age0101 = recode(age0101, "108 et +" = "108"),
+         year = as.numeric(year),
+         age0101 = as.numeric(age0101),
          sex = as.factor(sex))
 
 # ===================================================================================
