@@ -60,7 +60,7 @@ server <- function(input, output) {
     qmortref <- FRInseeMortalityForecast2016 %>%
       # on filtre selon l'âge et l'année
       select(year,sex,age,qx) %>%
-      filter(age >= 60, age <= 105, year %in% c(2014) ) %>%
+      filter(age >= 60, age <= input$ageFinCalcul, year %in% c(2014) ) %>%
       # on ajoute les prévalences en projection
       left_join(prevref, by = c("sex","age")) %>%
       filter(!is.na(pix), !is.na(qx))
@@ -68,7 +68,7 @@ server <- function(input, output) {
     # --- récupération des coefficients de mortalité en projection
     qmortproj <- FRInseeMortalityForecast2016 %>%
       select(year,sex,age,qx) %>%
-      filter(age >= 60, age <= 105, year %in% c( vyear[vyear != 2014] ) )
+      filter(age >= 60, age <= input$ageFinCalcul, year %in% c( vyear[vyear != 2014] ) )
 
     # --- tables avec les valeurs en projections
     projections <- prevalenceForecast( qmortref, qmortproj , input$optionProj) %>%
@@ -214,7 +214,107 @@ server <- function(input, output) {
 
 
 
-  # ---- texte explicatif
-  # to be done ...
+  # ---- textes explicatifs
+  output$textePreval <- renderUI({
+    txt <- paste("Prévalences pour l'incapacité : ",input$limtype,
+                 " (voir documentation) selon l'âge, pour l'année de référence et l'année de projection (",input$anneeProj,"). ",
+                 sep="")
+    if (input$approxPrev) {
+      txt <- paste(txt,
+                   "Les prévalences par âge sont approximées par une fonction polynomiale de degré 4. ",sep = " ")
+    }
+    txt <- paste(
+      txt,
+      "Projections réalisées selon l'hypothèse : ",
+      recode(input$optionProj,
+             "cstDFLE" = "EVSI constante",
+             "cstDLE" = "EVI constante",
+             "cstPctDFLE" = "part de l'EVSI dans l'EV totale constante",
+             "cstPrev" = "prévalences des incapacités constantes"),
+      ".",
+      sep="")
+    txt
+  })
+  output$texteAge <- renderUI({
+    paste("Espérances de vie (avec et sans incapacité) à l'âge de ",input$ageEVSI," ans.",sep="")
+  })
+  output$texteAn <- renderUI({
+    paste("Projections pour l'année ",input$anneeProj,".",sep="")
+  })
+
+  output$documentation <- renderUI({
+    doc <- paste(
+      "Cette application interactive permet de réaliser des <b>projections des espérances de vie, avec et sans incapacité</b>,",
+      "sous certaines hypothèses paramétrables par l'utilisateur.",
+      "<br><br>",
+      "L'application s'appuie sur le <b>package R <i>healthexpectancies</i></b>, dont elle illustre les possibilités.",
+      "Ce package peut être téléchargé à l'adresse suivante : ",
+      "<a href='https://github.com/patrickaubert/healthexpectancies/'> https://github.com/patrickaubert/healthexpectancies</a>.",
+      "Le package contient des fonctions permettant de calculer des espérances de vie (EV), des espérances de vie sans incapacité (EVSI),",
+      "et des espérances de vie en incapacité (EVI) à partir de données sur la mortalité par âge et par année",
+      "et sur les prévalences des incapacités pour une année de référence,",
+      "ainsi que d'hypothèses sur l'évolution des incapacités ou des espérances de vie en incapacité à l'avenir.",
+      "Les calculs mettent en oeuvre la méthode de Sullivan, dont une présentation est disponible sur le site internet de l'INED :",
+      "<a href='https://reves.site.ined.fr/en/resources/computation_online/sullivan/'> https://reves.site.ined.fr/en/resources/computation_online/sullivan/</a>.",
+      "<br><br>",
+      "Les données de base sont les <b>projections démographiques publiées par l'Insee en 2016</b> (scénario central),",
+      "disponibles à l'adresse suivante : ",
+      "<a href='https://www.insee.fr/fr/statistiques/2496793'>https://www.insee.fr/fr/statistiques/2496793</a>",
+      ", ainsi que les données de l'<b>enquête <i>Vie quotidienne et santé</i></b> (VQS), réalisée par la DREES en 2014,",
+      "et dont les premiers résultats ont été publiés dans Carrère et Brunel (2018) :",
+      "<a href='https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/les-dossiers-de-la-drees/article/incapacites-et-perte-d-autonomie-des-personnes-agees-en-france-une-evolution'>",
+      "https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/les-dossiers-de-la-drees/article/incapacites-et-perte-d-autonomie-des-personnes-agees-en-france-une-evolution</a>",
+      "(données du graphique 2 pour les prévalences par âge).",
+      "<br><br>",
+      "La définition des incapacités, l'hypothèse sur leur évolution,",
+      "l'année de projection et l'âge auquel sont calculées les EVSI et EVI",
+      "peuvent être paramétrés par l'utilisateur.",
+      "Par exemple, les paramètres actuels correspondent à une projection en",
+      input$anneeProj,
+      ", un calcul des EVSI et EVI à l'âge de",
+      input$ageEVSI,
+      "ans, pour des incapacités définies comme :",
+      input$limtype,
+      ", et supposées évoluer à l'avenir selon l'hypothèse : ",
+      recode(input$optionProj,
+             "cstDFLE" = "EVSI constante",
+             "cstDLE" = "EVI constante",
+             "cstPctDFLE" = "part de l'EVSI dans l'EV totale constante",
+             "cstPrev" = "prévalences des incapacités constantes"),
+      ".<br><br>",
+      "Les différentes <b>options disponibles pour l'hypothèse d'évolutions des incapacités</b> sont les suivantes :",
+      "<li><i>Prévalences constantes</i> : les prévalences des incapacités par sexe à chaque âge fin restent constantes par rapport à la valeur à l'année de référence",
+      "<li><i>EVSI constante</i> : l'espérance de vie sans incapacité reste constante en projection, pour chaque sexe et à chaque âge fin ; toutes les années de vie gagnées sont donc passés en incapacité",
+      "<li><i>EVI constante</i> l'espérance de vie en incapacité reste constante en projection, pour chaque sexe et à chaque âge fin ; toutes les années de vie gagnées sont donc passés sans incapacité",
+      "<li><i>% EVSI/EV constant</i> : la part de l'espérance de vie sans incapacité dans l'espérance de vie totale reste constante au cours du temps, à chaque âge et pour chaque sexe ; les gains d'espérance de vie se partagent donc entre vie sans et avec incapacité, au prorata de la part observée pour l'année de référence.",
+      ".<br><br>",
+      "Les <b>définitions des incapacités</b> mesurées dans l'enquête VQS de 2014 sont :",
+      "<li>Maladie chronique",
+      "<li>Au moins une LF (limitation fonctionnelle)",
+      "<li>LF physique (au moins une limitation fonctionnelle de nature physique)",
+      "<li>LF sensorielle (au moins une limitation fonctionnelle de nature sensorielle)",
+      "<li>LF cognitive (au moins une limitation fonctionnelle de nature cognitive)",
+      "<li>Très mauvais état de santé (d'après l'état de santé déclaré par le répondant à l'enquête)",
+      "<li>Aide humaine",
+      "<li>AT ou AL (au moins une aide technique ou un aménagement du logement)",
+      "<li>Laver (difficulté à se laver seul)",
+      "<li>Score VQS ≥40 (score de dépendance, construit pour les besoins de l'enquête, au-dessus du seuil de 40)",
+      "<li>GALI (indicateur de limitations d'activité générale : répondre 'oui, fortement limité' à la question : êtes-vous, depuis au moins 6 mois pour un problème de santé, limité dans les activités que les gens font habituellement ?",
+      sep=" ")
+    HTML(doc)
+  })
+
+  output$mentionslegales <- renderUI({
+    mentions <- paste(
+      "Cette application interactive, de même que le package R <i>healthexpectancies</i> sur lequel elle s'appuie",
+      "ont été développés par Patrick Aubert.",
+      "<br><br>",
+      "Le code source est diffusé gratuitement, sous licence EUPL. Il a été développé en dehors du cadre professionnel",
+      "et peut contenir des erreurs. L'utilisateur est averti que la réutilisation des résultats de cette application",
+      "n'engage pas l'auteur du code.",
+      sep=" ")
+    HTML(mentions)
+  })
+
 
 }

@@ -22,9 +22,29 @@ library(healthexpectancies)
 
 This function calculates life expectancies and disability-free life expectancies from a dataset containing (at least) information on age, mortality rates and disability prevalence.
 
-Calculations completelly follow the example 1 provided in the Sullivan manual (June 2007 version), available at https://reves.site.ined.fr/en/resources/computation_online/sullivan/. One minor deviation is that the ad-hoc value for the conditional probability of death (qx) at age 0 is note taken into account.
+As an option, a 'sex' and 'categ' variables can be added in the input dataset. If so, calculations are made for each separate values of 'sex' and 'categ'. The latter is an undefinit category variables, for instance region or social category. If the initial dataset contains variable 'year', calculations are also made for each separate years. 
+
+Calculations are made using the Sullivan method. They completely follow example 1 provided in the Sullivan manual (June 2007 version), available at https://reves.site.ined.fr/en/resources/computation_online/sullivan/. One minor deviation is that the ad-hoc value for the conditional probability of death (qx) at age 0 is note taken into account.
 
 The input table is a dataset containing at least the 3 variables above. The output table is a dataset containing all input variables and additionnal variables that are useful for the calculations of LE and DFLE. If those variables are already in the input table, they are not calculated and the input variables are used instead.
+
+Definitions of variables in the input or output dataset:
+
+* year : Year
+* age : Age
+* Px : Mid-year population at age x
+* Dx : No. deaths
+* mx : central death rate
+* qx : conditional probability of death
+* lx : numbers surviving to age x
+* Lx : person years lived at age x
+* ex : total life expectancy
+* pix : proportion with disability
+* DFLx : person years lived without disability
+* DFTx : total years lived without disability from age x
+* DFLEx : disability-free life expectancy
+* pctDFLEx : proportion of life spent disability-free
+* DLEx :years lived with disability (= ex - DFLEx)
 
 # Function prevalence_to_polynomial
 
@@ -47,24 +67,14 @@ Parameters are the following :
 
 # Function ForecastPrevalence
 
-This function forecast a vector containing initial prevalences according to age, given an hypothesis on the evolution of prevalences.
+This function forecasts the values of disability prevalences and of DFLE according to age, given initial datasets containing age, disability prevalences at a reference year, forecasted mortality rates, and on hypothesis on the evolution of disabilities.
 
-Parameters are the following :
+Forecasting options are :
 
-* yearinit : initial year (ie. year in which the prevalence is observed)
-* maxyear : last year for the forecast (all years between *yearinit* and *maxyear* are in the output table)
-
-Options are :
-
-* 'constant'
-* 'agetranslation'
-* 'prevaltranslation'
-* 'agehomothetic'
-* 'prevalhomothetic'
-* 'constantDFLE'
-* 'constantshareDFLE'
-* 'constantDLE'
-* 'constantshareDLE'
+* 'cstDFLE' : constant disability-free life expectancy over time (ie. every increase in life expectancy is spent in disability)
+* 'cstDLE' : constant in-disability life expectancy (ie. every increase in life expectancy is spent disability-free)
+* 'cstPctDFLE' : constant share of disability-free life expectancy in total life expectancy
+* 'cstPrev' : constant prevalences of disability (at every age and sex) over time
 
 # Datasets included in the package
 
@@ -80,9 +90,7 @@ See https://www.insee.fr/fr/information/2546485#titre-bloc-3 for more informatio
 
 The *Vie quotidienne et santé* (VQS) survey is a large sample survey conducted in 2014 by DREES (the statistical directory of the French Ministry for Health and Social affairs).
 
-## CARE (2015)
 
-The CARE survey is a survey conducted in 2015 by DREES (the statistical directory of the French Ministry for Health and Social affairs) in Metropolitan France (*i.e.* excluding French oversea territories).
 
 
 
