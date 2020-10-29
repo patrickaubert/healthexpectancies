@@ -13,7 +13,7 @@ ui <- dashboardPage(
       menuItem("Paramétrer la projection", tabName = "param", icon = icon("cog"),
                selectInput("limtype",
                            label = "Limitation",
-                           choices = unique(FRDreesVQSsurvey2014$limitationtype),
+                           choices = unique( c( FRDreesVQSsurvey2014$limitationtype, FRDreesAPA2017$typepresta ) ),
                            selected = "GALI"),
                sliderInput("anneeProj", "Année de projection :", 2015, 2050, 1, value = 2030),
                selectInput("optionProj",

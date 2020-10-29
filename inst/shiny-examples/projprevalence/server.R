@@ -10,10 +10,10 @@ server <- function(input, output) {
 
   # ========================================================
   # calcul des EVSI
-
   refyear <- reactive({
-    if (input$limtype == "APA")  { 2018
-    } else { 2014 }
+    nameapa <- unique(FRDreesAPA2017$typepresta)
+    if (input$limtype %in% nameapa)  { 2017 # Source: DREES, enquête Aide sociale 2017 (prévalences de l'APA)
+    } else { 2014 } # Source : DREES, enquête VQS 2014 (prévalences des limitations et restrictions d'activité)
   })
 
   evsi <- reactive({
@@ -26,7 +26,7 @@ server <- function(input, output) {
     # 1) on récupère les prévalences par âge quinquennal et on calcul des prévalences approchées par âge fin
 
     # --- récupération des données sources :  projections de l'Insee (2016) pour les populations
-    donnees <- FRInseePopulationForecast2016 %>%
+    donneespop <- FRInseePopulationForecast2016 %>%
       rename(age = age0101) %>%
       mutate(year = as.numeric(year),
              age = as.numeric( age ),
@@ -34,12 +34,19 @@ server <- function(input, output) {
       mutate(year = year-1) %>%
       filter(age >= 60, year %in% c( vyear ) )
 
-    # --- récupération des données sources : VQS 2014 pour les prévalences, qu'on apprie aux projections de l'Insee (2016) pour les populations
-    donneesregr <- donnees %>%
+    # --- récupération des données sources : VQS 2014 ou Aide sociale 2017 pour les prévalences
+    donneesprev <- rbind(
+      FRDreesVQSsurvey2014,
+      FRDreesAPA2017 %>% rename(limitationtype = typepresta)
+      ) %>%
+      filter(limitationtype == input$limtype ) %>%
+      select(-age)
+
+    # --- récupération des données sources : appariement prévalences aux projections de l'Insee (2016) pour les populations
+    donneesregr <- donneespop %>%
       mutate(agebracket = cut(age, breaks = c(seq(60,95,5),Inf), include.lowest = TRUE, right = FALSE)) %>%
       filter(year == refyear, age>=60) %>%
-      left_join( FRDreesVQSsurvey2014  %>% filter(limitationtype == input$limtype ) %>% select(-age),
-                 by = c("sex","agebracket") ) %>%
+      left_join( donneesprev,   by = c("sex","agebracket") ) %>%
       rename(prevalence.ref = prevalence)
 
     # --- lissage des prévalences
@@ -83,7 +90,7 @@ server <- function(input, output) {
     # 3) on ajoute les effectifs pour avoir des nombres de personnes âgées en incapacité
 
     projections <- projections %>%
-      left_join(donnees, by = c("age","year","sex")) %>%
+      left_join(donneespop, by = c("age","year","sex")) %>%
       mutate(nbIncap = popx * pix)   %>%
       pivot_longer(cols=-c(sex,age,year),
                    names_to = "indicateur",
@@ -144,10 +151,9 @@ server <- function(input, output) {
     ggplotly(g)
   })
 
-  # --- EV et EVSI en 2014
+  # --- EV et EVSI en 2014 (ou 2017)
   output$evsi <- renderPlotly({
     tab <- evsi() %>%
-      #filter(year == 2014,
       filter(year %in% c(refyear(), input$anneeProj) ,
              indicateur %in% c("EV","EVSI","EVI"))
     g <- ggplot(tab , aes(x=age,y=ev,colour=indicateur) ) +
@@ -284,8 +290,13 @@ server <- function(input, output) {
       "et dont les premiers résultats ont été publiés dans Carrère et Brunel (2018) :",
       "<a href='https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/les-dossiers-de-la-drees/article/incapacites-et-perte-d-autonomie-des-personnes-agees-en-france-une-evolution'>",
       "https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/les-dossiers-de-la-drees/article/incapacites-et-perte-d-autonomie-des-personnes-agees-en-france-une-evolution</a>",
-      "(données du graphique 2 pour les prévalences par âge).",
-      "<br><br>",
+      "(données du graphique 2 pour les prévalences par âge). ",
+      "L'application permet aussi de visualiser les parts de bénéficiaires et les espérances de durée dans ",
+      "l'allocation personnalisée d'autonomie (APA), à domicile et/ou en établissement, à partir des données de ",
+      "l'enquête Aide sociale de la DREES pour décembre 2017. Ces données sont tirées du graphique 1 de la fiche 15 ",
+      "du Panorama annuel <i>L'aide et l'action sociales en France - édition 2019</i>, téléchargeable à l'adresse suivante : ",
+      "<a href='https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/panoramas-de-la-drees/article/l-aide-et-l-action-sociales-en-france-perte-d-autonomie-handicap-protection-de'>https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/panoramas-de-la-drees/article/l-aide-et-l-action-sociales-en-france-perte-d-autonomie-handicap-protection-de</a>",
+      ".<br><br>",
       "La définition des incapacités, l'hypothèse sur leur évolution,",
       "l'année de projection et l'âge auquel sont calculées les EVSI et EVI",
       "peuvent être paramétrés par l'utilisateur.",
@@ -320,6 +331,9 @@ server <- function(input, output) {
       "<li>Laver (difficulté à se laver seul)",
       "<li>Score VQS ≥40 (score de dépendance, construit pour les besoins de l'enquête, au-dessus du seuil de 40)",
       "<li>GALI (indicateur de limitations d'activité générale : répondre 'oui, fortement limité' à la question : êtes-vous, depuis au moins 6 mois pour un problème de santé, limité dans les activités que les gens font habituellement ?",
+      "<li>APA à domicile (bénéficiaire de l'allocation personnalisée d'autonomie à domicile)",
+      "<li>APA en établissement (bénéficiaire de l'allocation personnalisée d'autonomie en établissement d'hébergement)",
+      "<li>APA domicile+établissement (bénéficiaire de l'allocation personnalisée d'autonomie à domicile ou en établissement d'hébergement)",
       sep=" ")
     HTML(doc)
   })
@@ -327,7 +341,7 @@ server <- function(input, output) {
   output$mentionslegales <- renderUI({
     mentions <- paste(
       "Cette application interactive, de même que le package R <i>healthexpectancies</i> sur lequel elle s'appuie",
-      "ont été développés par Patrick Aubert.",
+      "ont été développés par Patrick Aubert en octobre 2020.",
       "<br><br>",
       "Le code source est diffusé gratuitement, sous licence EUPL. Il a été développé en dehors du cadre professionnel",
       "et peut contenir des erreurs. L'utilisateur est averti que la réutilisation des résultats de cette application",

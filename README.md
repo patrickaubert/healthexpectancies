@@ -18,9 +18,13 @@ remotes::install_github("patrickaubert/healthexpectancies",ref='main')
 ## To run the example (Shiny app):
 
 library(tidyverse)
+
 library(shiny)
+
 library(shinydashboard)
+
 library(plotly)
+
 library(healthexpectancies)
 
 healthexpectancies::runExample()

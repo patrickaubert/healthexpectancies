@@ -147,9 +147,29 @@ FRDreesVQSsurvey2014 <- rbind( prevFemale, prevMale) %>%
 # essaiVQS <- essaiVQS %>% left_join(prevVQS, by = c("sex","agebracket"))
 
 # ===================================================================================
+# Beneficiaries of APA in December 2017 (Source: DREES, Aide sociale survey)
+# ===================================================================================
+
+# data from "Fiche 15" in "L'aide et l'action sociales en France - édition 2019" can be downloaded on the DREES website:
+# https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/panoramas-de-la-drees/article/l-aide-et-l-action-sociales-en-france-perte-d-autonomie-handicap-protection-de
+
+FRDreesAPA2017 <- read_excel(
+  "data-raw/aas19_15_les_be_ne_ficiaires_et_les_de_penses_d_apa_srok.xlsx",
+  sheet = "G01",
+  range = "D4:G20") %>%
+  select(-...1) %>%
+  mutate(sex = c( rep("male",8), rep("female",8) ) ,
+         age = c( seq(60,95,5), seq(60,95,5) ) ,
+         agebracket = cut( age , breaks = c(seq(60,95,5),Inf), include.lowest = TRUE, right = FALSE)) %>%
+  pivot_longer(cols = -c(sex,age,agebracket), names_to="typepresta",values_to="prevalence") %>%
+  mutate(typepresta = recode(typepresta, "TOTAL" = "APA domicile+établissement"))
+
+
+# ===================================================================================
 usethis::use_data(FRInseeMortalityForecast2016,
                   FRInseePopulationForecast2016,
                   FRDreesVQSsurvey2014,
+                  FRDreesAPA2017,
                   sullivan,
                   description_sullivan,
                   overwrite = T)
