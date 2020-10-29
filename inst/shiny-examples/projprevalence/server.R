@@ -11,10 +11,16 @@ server <- function(input, output) {
   # ========================================================
   # calcul des EVSI
 
+  refyear <- reactive({
+    if (input$limtype == "APA")  { 2018
+    } else { 2014 }
+  })
+
   evsi <- reactive({
 
     # années retenues
-    vyear <- unique( c(2014, input$anneeProj, 2020, 2025, 2030, 2035, 2040, 2050) )
+    refyear <- refyear()
+    vyear <- unique( c(refyear, input$anneeProj, 2020, 2025, 2030, 2035, 2040, 2050) )
     vyear <- vyear[order(vyear)]
 
     # 1) on récupère les prévalences par âge quinquennal et on calcul des prévalences approchées par âge fin
@@ -31,7 +37,7 @@ server <- function(input, output) {
     # --- récupération des données sources : VQS 2014 pour les prévalences, qu'on apprie aux projections de l'Insee (2016) pour les populations
     donneesregr <- donnees %>%
       mutate(agebracket = cut(age, breaks = c(seq(60,95,5),Inf), include.lowest = TRUE, right = FALSE)) %>%
-      filter(year==2014, age>=60) %>%
+      filter(year == refyear, age>=60) %>%
       left_join( FRDreesVQSsurvey2014  %>% filter(limitationtype == input$limtype ) %>% select(-age),
                  by = c("sex","agebracket") ) %>%
       rename(prevalence.ref = prevalence)
@@ -60,7 +66,7 @@ server <- function(input, output) {
     qmortref <- FRInseeMortalityForecast2016 %>%
       # on filtre selon l'âge et l'année
       select(year,sex,age,qx) %>%
-      filter(age >= 60, age <= input$ageFinCalcul, year %in% c(2014) ) %>%
+      filter(age >= 60, age <= input$ageFinCalcul, year %in% c(refyear) ) %>%
       # on ajoute les prévalences en projection
       left_join(prevref, by = c("sex","age")) %>%
       filter(!is.na(pix), !is.na(qx))
@@ -68,7 +74,7 @@ server <- function(input, output) {
     # --- récupération des coefficients de mortalité en projection
     qmortproj <- FRInseeMortalityForecast2016 %>%
       select(year,sex,age,qx) %>%
-      filter(age >= 60, age <= input$ageFinCalcul, year %in% c( vyear[vyear != 2014] ) )
+      filter(age >= 60, age <= input$ageFinCalcul, year %in% c( vyear[vyear != refyear] ) )
 
     # --- tables avec les valeurs en projections
     projections <- prevalenceForecast( qmortref, qmortproj , input$optionProj) %>%
@@ -90,9 +96,9 @@ server <- function(input, output) {
       prevalencesref %>%
         rename(ev = prevalence) %>%
         select(sex,age,indicateur,ev) %>%
-        mutate(year = 2014),
+        mutate(year = refyear),
       projections %>%
-        filter((indicateur != "pix") | (year != 2014))
+        filter((indicateur != "pix") | (year != refyear))
     ) %>%
       mutate(indicateur = recode(indicateur,
                                  "pix" = "prev.proj",
@@ -112,9 +118,8 @@ server <- function(input, output) {
 
   # --- prévalences observées, lissées et projetées
   output$prevproj <- renderPlotly({
-    #tab <- prevage() %>%
     tab <- evsi() %>%
-      filter(year %in% c( 2014, input$anneeProj),
+      filter(year %in% c( refyear(), input$anneeProj),
              indicateur %in% c("prev.proj","prevalence.ref","prev.approx") ) %>%
       rename(prevalence = ev)
     g <- ggplot(tab , aes(x=age,y=prevalence,colour=indicateur) ) +
@@ -124,11 +129,26 @@ server <- function(input, output) {
     ggplotly(g)
   })
 
+  # --- ratio des prévalences projetées par rapport aux observées, par sexe et âge
+  output$ratioprev <- renderPlotly({
+    tab <- evsi() %>%
+      filter(year %in% c( refyear(), input$anneeProj),
+             indicateur %in% c("prev.proj","prev.approx") ) %>%
+      rename(prevalence = ev)
+    tab <- tab %>% filter(indicateur == "prev.approx") %>%
+      left_join(tab %>% filter(indicateur == "prev.proj") %>% rename(ratio = prevalence),
+                by = c("sex","age")) %>%
+      mutate(ratio = round( 100 * ratio / prevalence , 1) )
+    g <- ggplot(tab , aes(x=age,y=ratio,colour=sex) ) +
+      geom_line()
+    ggplotly(g)
+  })
+
   # --- EV et EVSI en 2014
   output$evsi <- renderPlotly({
     tab <- evsi() %>%
       #filter(year == 2014,
-      filter(year %in% c(2014, input$anneeProj) ,
+      filter(year %in% c(refyear(), input$anneeProj) ,
              indicateur %in% c("EV","EVSI","EVI"))
     g <- ggplot(tab , aes(x=age,y=ev,colour=indicateur) ) +
       geom_line() +

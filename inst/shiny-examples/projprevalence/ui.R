@@ -52,7 +52,7 @@ ui <- dashboardPage(
 
         # --- Deuxième ligne : EV, EVSI et EVI (à gauche = à tous âges, pour l'année de référence et l'année projetée ; à droite à l'âge sélectionné, pour toutes les années)
         fluidRow(
-          box(title = "Esp. de vie sans (EVSI) et avec incapacité (EVI)",
+          box(title = "Espérance de vie sans (EVSI) et avec incapacité (EVI)",
               solidHeader = TRUE,
               plotlyOutput("evsi", height = 500)
           ),
@@ -85,6 +85,14 @@ ui <- dashboardPage(
               solidHeader = TRUE,
               htmlOutput("texteAn"),
               plotlyOutput("nbIncapAge", height = 250)
+          )
+        ),
+
+        # --- Quatrième ligne : ratio de prévalences observées (éventuellement lissées et projetées)
+        fluidRow(
+          box(title = "Ratio des prévalences projetées / observées (en %)",
+              solidHeader = TRUE,
+              plotlyOutput("ratioprev", height = 250)
           )
         )
       ),

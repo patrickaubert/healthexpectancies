@@ -10,11 +10,11 @@
 #' * 'cstPreval' : prevalences by age (and sex) constant in all year
 #' * 'cstPctDFLE' : share of disability-free life expectancy in total life-expectancy constant
 #'
-#' @param tabref  a data frame for the reference year, containing variables: year, age, qx (mortality rate) and pix (prevalences) variables (optional: sex)
-#' @param tabproj a data frame for projection years, containing variables: year, age, and qx (mortality rate) variables (optional: sex)
+#' @param tabref  a data frame for the reference year, containing variables: year, age, qx (mortality rate) and pix (prevalences) (+ optional: sex)
+#' @param tabproj a data frame for projection years, containing variables: year, age, and qx (mortality rate) (+optional: sex)
 #' @param hypo projection hypotheses ('cstDFLE','cstDLE','cstPreval','cstPctDFLE')
 #'
-#' @return a data frame with DFLE, DLE and share of DFLE in total LE, by year and age (and optionnally sex)
+#' @return a data frame with prevalences, DFLE, DLE and share of DFLE in total LE, by year and age (and optionnally sex)
 #' @export
 #'
 #' @examples
