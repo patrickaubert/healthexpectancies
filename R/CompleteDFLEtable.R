@@ -20,7 +20,7 @@
 #' @export
 #'
 #' @examples CompleteDFLEtable( sullivan[,c("year","age","mx","qx","pix")] )
-#' @examples CompleteDFLEtable( FRInseeMortalityForecast2016 %>% mutate(pix = (age/150)^2, mx = qx) %>% filter(year %in% c(2013,2015,2020,2030)) )
+#' @examples CompleteDFLEtable( FRInseeMortalityForecast2016 %>% mutate(pix = (age/150)^2) %>% filter(year %in% c(2013,2015,2020,2030)) )
 CompleteDFLEtable <- function(tab) {
 
   # remove columns with missing values
