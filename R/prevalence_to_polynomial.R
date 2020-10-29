@@ -12,8 +12,6 @@
 #' @return a vector with prevalences according to polynomial approximation
 #'
 #' @export
-#'
-#' @examples
 prevalence_to_polynomial <- function (age, prevalence, weight = rep(1,NROW(prevalence)) ) {
 
   if (NROW(age) != NROW(prevalence)) { stop("Error: Different size of input vectors") }

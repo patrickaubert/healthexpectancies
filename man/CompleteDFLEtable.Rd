@@ -17,6 +17,7 @@ From an input dataset containing some information on age, mortality rates and pr
 of disability (at least 'age', 'qx' or 'mx', and 'pix' must be within the input dataset),
 the function completes it with values of life expectancies and disability-free life expectancies.
 If some indispensable variables are missing (eg 'age'), the output is the same as the input dataset.
+If the input dataset contains mortality rates ('qx') but no prevalence of disabilities ('pix'), only total life-expectancy is calculed.
 }
 \details{
 Full headings for the names of variables in the output dataset can be found in the 'description_sullivan' dataframe (in the package).
@@ -29,5 +30,5 @@ See https://reves.site.ined.fr/en/resources/computation_online/sullivan/ for mor
 }
 \examples{
 CompleteDFLEtable( sullivan[,c("year","age","mx","qx","pix")] )
-CompleteDFLEtable( FRInseeMortalityForecast2016 \%>\% mutate(pix = (age/150)^2, mx = qx) \%>\% filter(year \%in\% c(2013,2015,2020,2030)) )
+CompleteDFLEtable( FRInseeMortalityForecast2016[FRInseeMortalityForecast2016$year \%in\% c(2013,2015,2020,2030),] )
 }

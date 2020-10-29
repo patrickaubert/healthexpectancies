@@ -4,6 +4,7 @@
 #' of disability (at least 'age', 'qx' or 'mx', and 'pix' must be within the input dataset),
 #' the function completes it with values of life expectancies and disability-free life expectancies.
 #' If some indispensable variables are missing (eg 'age'), the output is the same as the input dataset.
+#' If the input dataset contains mortality rates ('qx') but no prevalence of disabilities ('pix'), only total life-expectancy is calculed.
 #'
 #' Full headings for the names of variables in the output dataset can be found in the 'description_sullivan' dataframe (in the package).
 #'
@@ -17,10 +18,11 @@
 #' @param tab a dataframe containing some of the variables
 #'
 #' @return a dataframe with all variables that can be calculated from the input dataframe
+#'
 #' @export
 #'
 #' @examples CompleteDFLEtable( sullivan[,c("year","age","mx","qx","pix")] )
-#' @examples CompleteDFLEtable( FRInseeMortalityForecast2016 %>% mutate(pix = (age/150)^2) %>% filter(year %in% c(2013,2015,2020,2030)) )
+#' @examples CompleteDFLEtable( FRInseeMortalityForecast2016[FRInseeMortalityForecast2016$year %in% c(2013,2015,2020,2030),] )
 CompleteDFLEtable <- function(tab) {
 
   # remove columns with missing values
@@ -30,7 +32,8 @@ CompleteDFLEtable <- function(tab) {
   # NB: 'categ' is an undefinite category variable (to be defined by user)
   if ("sex" %in% names(tab)) {
     classsex <- unique(tab$sex)
-    tab <- tab %>% mutate(sex = as.factor(sex))
+    #tab <- tab %>% mutate(sex = as.factor(sex))
+    tab$sex <- as.factor(tab$sex)
     if (NROW(classsex)>1)  {
       bysex <- function(s){ CompleteDFLEtable(tab[tab$sex == s,]) }
       return( do.call(rbind,lapply(classsex,bysex)) )
@@ -38,7 +41,8 @@ CompleteDFLEtable <- function(tab) {
   }
   if ("categ" %in% names(tab)) {
     classcateg <- unique(tab$categ)
-    tab <- tab %>% mutate(categ = as.factor(categ))
+    #tab <- tab %>% mutate(categ = as.factor(categ))
+    tab$categ <- as.factor(tab$categ)
     if (NROW(classcateg)>1)  {
       bycateg <- function(cat){ CompleteDFLEtable(tab[tab$categ == cat,]) }
       return( do.call(rbind,lapply(classcateg,bycateg)) )
@@ -46,7 +50,8 @@ CompleteDFLEtable <- function(tab) {
   }
   if ("year" %in% names(tab)) {
     classyear <- unique(tab$year)
-    tab <- tab %>% mutate(year = as.numeric(year))
+    #tab <- tab %>% mutate(year = as.numeric(year))
+    tab$year <- as.numeric(tab$year)
     if (NROW(classyear)>1)  {
       byyear <- function(y){ CompleteDFLEtable(tab[tab$year == y,]) }
       return( do.call(rbind,lapply(classyear,byyear)) )
@@ -57,7 +62,8 @@ CompleteDFLEtable <- function(tab) {
   # NB: in the sullivan manuel, 'x' means 'age'
   if (!("age" %in% names(tab)) & ("x" %in% names(tab))) { tab$age <- tab$x }
   if (!("age" %in% names(tab))) { return(tab) }
-  tab <- tab %>% mutate(age = as.numeric(age))
+  #tab <- tab %>% mutate(age = as.numeric(age))
+  tab$age <- as.numeric(tab$age)
   tab <- tab[order(tab$age),]
 
   # adding agewidth : should be equal to 1 if all ages are in the input dataset

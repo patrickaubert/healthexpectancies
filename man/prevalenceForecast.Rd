@@ -7,14 +7,14 @@
 prevalenceForecast(tabref, tabproj, hypo)
 }
 \arguments{
-\item{tabref}{a data frame for the reference year, containing variables: year, age, qx (mortality rate) and pix (prevalences) variables (optional: sex)}
+\item{tabref}{a data frame for the reference year, containing variables: year, age, qx (mortality rate) and pix (prevalences) (+ optional: sex)}
 
-\item{tabproj}{a data frame for projection years, containing variables: year, age, and qx (mortality rate) variables (optional: sex)}
+\item{tabproj}{a data frame for projection years, containing variables: year, age, and qx (mortality rate) (+optional: sex)}
 
 \item{hypo}{projection hypotheses ('cstDFLE','cstDLE','cstPreval','cstPctDFLE')}
 }
 \value{
-a data frame with DFLE, DLE and share of DFLE in total LE, by year and age (and optionnally sex)
+a data frame with prevalences, DFLE, DLE and share of DFLE in total LE, by year and age (and optionnally sex)
 }
 \description{
 Given a table for the reference year with mortality rates and prevalences of disability, and

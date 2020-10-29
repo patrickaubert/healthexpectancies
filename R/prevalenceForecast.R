@@ -16,8 +16,6 @@
 #'
 #' @return a data frame with prevalences, DFLE, DLE and share of DFLE in total LE, by year and age (and optionnally sex)
 #' @export
-#'
-#' @examples
 prevalenceForecast <- function(tabref, tabproj, hypo) {
   # add : controls
 
