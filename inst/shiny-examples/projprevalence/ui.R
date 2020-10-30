@@ -1,3 +1,11 @@
+library(tidyverse)
+library(dplyr)
+library(shiny)
+library(shinydashboard)
+library(plotly)
+library(healthexpectancies)
+
+
 ui <- dashboardPage(
 
   dashboardHeader(title = "Projection d'EVSI"#,
