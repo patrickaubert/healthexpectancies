@@ -341,7 +341,7 @@ server <- function(input, output) {
   output$mentionslegales <- renderUI({
     mentions <- paste(
       "Cette application interactive, de même que le package R <i>healthexpectancies</i> sur lequel elle s'appuie",
-      "ont été développés par Patrick Aubert en octobre 2020.",
+      "ont été développés par <a href='https://sites.google.com/site/patrickauber/'>Patrick Aubert</a> en octobre 2020.",
       "<br><br>",
       "Le code source est diffusé gratuitement, sous licence EUPL. Il a été développé en dehors du cadre professionnel",
       "et peut contenir des erreurs. L'utilisateur est averti que la réutilisation des résultats de cette application",

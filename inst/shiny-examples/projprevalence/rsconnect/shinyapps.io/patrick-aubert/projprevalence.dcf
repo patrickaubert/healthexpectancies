@@ -1,0 +1,10 @@
+name: projprevalence
+title:
+username:
+account: patrick-aubert
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3129278
+bundleId: 3800470
+url: https://patrick-aubert.shinyapps.io/projprevalence/
+when: 1604060738.80672
