@@ -26,4 +26,5 @@ Imports:
     purrr,
     shiny,
     shinydashboard,
-    plotly
+    plotly,
+    matlib

@@ -228,9 +228,9 @@ FRDreesAPA2016 <- read_excel(
   mutate(typepresta = recode(typepresta, "TOTAL" = "APA domicile+établissement"))
 
 FRDreesAPA <- rbind(
-  FRDreesAPA2016 %>% mutate(annee = 2016),
-  FRDreesAPA2017 %>% mutate(annee = 2017),
-  FRDreesAPA2018 %>% mutate(annee = 2018)
+  FRDreesAPA2016 %>% mutate(year = 2016),
+  FRDreesAPA2017 %>% mutate(year = 2017),
+  FRDreesAPA2018 %>% mutate(year = 2018)
 )
 
 #library(ggplot2)
