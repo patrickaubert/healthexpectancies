@@ -7,7 +7,7 @@
 \format{
 A data frame with 14036 observations and 4 variables:
 \describe{
-\item{age}{age}
+\item{age0101}{age at January, 1st of the year}
 \item{year}{year}
 \item{sex}{sex ('male' or 'female')}
 \item{popx}{population at each year, age, sex}

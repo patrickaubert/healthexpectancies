@@ -41,13 +41,28 @@
 #'
 #' @format A data frame with 14036 observations and 4 variables:
 #' \describe{
-#'   \item{age}{age}
+#'   \item{age0101}{age at January, 1st of the year}
 #'   \item{year}{year}
 #'   \item{sex}{sex ('male' or 'female')}
 #'   \item{popx}{population at each year, age, sex}
 #' }
 #' @source \url{https://www.insee.fr/fr/statistiques/2496716?sommaire=2496793}
 "FRInseePopulationForecast2016"
+
+#' A dataset with population by sex and age, from Insee's 'bilan démographique' (annual population estimates)
+#'
+#' The current version of the data table was released in January, 2020 and contains observations
+#' from 1991 to 2020. Observations for the last three years (2018 and more) are provisional.
+#'
+#' @format A data frame with 6060 observations and 4 variables:
+#' \describe{
+#'   \item{age0101}{age at January, 1st of the year}
+#'   \item{year}{year}
+#'   \item{sex}{sex ('male' or 'female')}
+#'   \item{popx}{population at each year, age, sex}
+#' }
+#' @source \url{https://www.insee.fr/fr/statistiques/3312958}
+"FRInseePopulation"
 
 #' A dataset with disability prevalences in France (2014)
 #'
@@ -81,3 +96,21 @@
 #' }
 #' @source \url{https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/les-dossiers-de-la-drees/article/incapacites-et-perte-d-autonomie-des-personnes-agees-en-france-une-evolution}
 "FRDreesAPA2017"
+
+#' A dataset with share of APA beneficiaries in France
+#'
+#' APA is a benefit covering long term care expenditures both at home ('à domicile') or in institutions ('en établissement').
+#' Shares of beneficiaries are estimated through the 2016, 2017 and 2018 'Aide sociale' survey.
+#' They are estimated by age brackets (eg. '[60;65)' stands for ages 60 to 64)
+#'
+#' @format A data frame with 138 observations and 6 variables:
+#' \describe{
+#'   \item{typepresta}{type of benefits (eg. 'à domicile' or 'en établissement')}
+#'   \item{prevalence}{share of beneficiaires within the total population in the given age bracket (number between 0 and 1)}
+#'   \item{sex}{sex ('female' or 'male')}
+#'   \item{age}{minimal age within the age bracket}
+#'   \item{agebracket}{age bracket (eg '[60;65)' = between 60 and 64 years old)}
+#'   \item{annee}{year of observation (value for the monthe of December)}
+#' }
+#' @source \url{https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/les-dossiers-de-la-drees/article/incapacites-et-perte-d-autonomie-des-personnes-agees-en-france-une-evolution}
+"FRDreesAPA"

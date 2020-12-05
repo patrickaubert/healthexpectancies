@@ -23,8 +23,8 @@ sullivan$age[nrow(sullivan)] <- 85
 
 sullivan <- sullivan %>%
   mutate(year = as.numeric(year),
-         age = as.numeric(age),
-         sex = as.factor(sex))
+         #sex = as.factor(sex),
+         age = as.numeric(age))
 
 names_sullivan <- read_excel("data-raw/sullivan_manual_jun2007.en.xls",
                              sheet = "Ex 1",
@@ -66,7 +66,7 @@ FRmortalityForecast2016 <- rbind(
   mortalityMale %>% mutate(sex = "male")
   ) %>%
   mutate(year = as.numeric(year),
-         age = as.numeric(age),
+         age3112 = as.numeric(age3112),
          sex = as.factor(sex))
 
 
@@ -112,6 +112,47 @@ FRInseePopulationForecast2016 <- rbind(
          year = as.numeric(year),
          age0101 = as.numeric(age0101),
          sex = as.factor(sex))
+
+# ===================================================================================
+# Observed mortality rates in France, Insee
+# ===================================================================================
+
+# Table : T68 – Table de mortalité des années 2016 - 2018, données provisoires arrêtées à fin décembre 2019 - Séries depuis 1977
+# source : https://www.insee.fr/fr/statistiques/4503155?sommaire=4503178
+# released : June, 9th 2020
+
+# ===================================================================================
+# Population of France, Insee
+# ===================================================================================
+
+# Table : Pyramide des âges 2020 - France et France métropolitaine
+# source : https://www.insee.fr/fr/statistiques/3312958
+# released : January, 14th 2020
+
+popobsMale <- read_excel("data-raw/pyramides-des-ages_bilan-demo_2019.xlsx",
+                        sheet = "France",
+                        range = "B10:AF111")
+names(popobsMale) <- c("age0101",c(1991:2020) )
+popobsMale <- popobsMale %>%
+  pivot_longer(-c("age0101"), names_to = "year", values_to = "popx")
+
+popobsFemale <- read_excel("data-raw/pyramides-des-ages_bilan-demo_2019.xlsx",
+                           sheet = "France",
+                           range = "B114:AF215")
+names(popobsFemale) <- c("age0101",c(1991:2020) )
+popobsFemale <- popobsFemale %>%
+  pivot_longer(-c("age0101"), names_to = "year", values_to = "popx")
+
+FRInseePopulation <- rbind(
+  popobsFemale %>% mutate(sex = "female"),
+  popobsMale %>% mutate(sex = "male")
+) %>%
+  mutate(age0101 = recode(age0101, "100 ou +" = "100"),
+         year = as.numeric(year),
+         age0101 = as.numeric(age0101),
+         sex = as.factor(sex))
+
+
 
 # ===================================================================================
 # Disability prevalences after age 60, from DREES' 2014 VQS survey
@@ -164,12 +205,49 @@ FRDreesAPA2017 <- read_excel(
   pivot_longer(cols = -c(sex,age,agebracket), names_to="typepresta",values_to="prevalence") %>%
   mutate(typepresta = recode(typepresta, "TOTAL" = "APA domicile+établissement"))
 
+FRDreesAPA2018 <- read_excel(
+  "data-raw/dataDrees_APA par sexe et age.xlsx",
+  sheet = "sexeage2018",
+  range = "C4:F18") %>%
+  select(-...1) %>%
+  mutate(sex = c( rep("male",7), rep("female",7) ) ,
+         age = c( seq(60,90,5), seq(60,90,5) ) ,
+         agebracket = cut( age , breaks = c(seq(60,90,5),Inf), include.lowest = TRUE, right = FALSE)) %>%
+  pivot_longer(cols = -c(sex,age,agebracket), names_to="typepresta",values_to="prevalence") %>%
+  mutate(typepresta = recode(typepresta, "TOTAL" = "APA domicile+établissement"))
+
+FRDreesAPA2016 <- read_excel(
+  "data-raw/dataDrees_APA par sexe et age.xlsx",
+  sheet = "sexeage2016",
+  range = "B3:E19") %>%
+  select(-...1) %>%
+  mutate(sex = c( rep("male",8), rep("female",8) ) ,
+         age = c( seq(60,95,5), seq(60,95,5) ) ,
+         agebracket = cut( age , breaks = c(seq(60,95,5),Inf), include.lowest = TRUE, right = FALSE)) %>%
+  pivot_longer(cols = -c(sex,age,agebracket), names_to="typepresta",values_to="prevalence") %>%
+  mutate(typepresta = recode(typepresta, "TOTAL" = "APA domicile+établissement"))
+
+FRDreesAPA <- rbind(
+  FRDreesAPA2016 %>% mutate(annee = 2016),
+  FRDreesAPA2017 %>% mutate(annee = 2017),
+  FRDreesAPA2018 %>% mutate(annee = 2018)
+)
+
+#library(ggplot2)
+#ggplot(FRDreesAPA,aes(y=prevalence,x=age,colour=as.factor(Annee))) +
+#  geom_line() +
+#  facet_wrap(sex ~ typepresta)
+#ggplot(FRDreesAPA,aes(y=prevalence,x=Annee,colour=agebracket)) +
+#  geom_line() +
+#  facet_wrap(sex ~ typepresta)
 
 # ===================================================================================
 usethis::use_data(FRInseeMortalityForecast2016,
                   FRInseePopulationForecast2016,
+                  FRInseePopulation,
                   FRDreesVQSsurvey2014,
                   FRDreesAPA2017,
+                  FRDreesAPA,
                   sullivan,
                   description_sullivan,
                   overwrite = T)
