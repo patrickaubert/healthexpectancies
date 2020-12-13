@@ -7,9 +7,9 @@
 prevalence_to_polynomial(age, prevalence, weight = rep(1, NROW(prevalence)))
 }
 \arguments{
-\item{age}{a vector with observed ages}
+\item{age}{a vector with observed ages (eg. each ages between 60 and 100)}
 
-\item{prevalence}{a vector with observed prevalences}
+\item{prevalence}{a vector with observed prevalences (constant over each age brackets if prevalences are only observed as averages by age bracket)}
 
 \item{weight}{a vector of weights for the regression (optional)}
 }
@@ -17,8 +17,8 @@ prevalence_to_polynomial(age, prevalence, weight = rep(1, NROW(prevalence)))
 a vector with prevalences according to polynomial approximation
 }
 \description{
-Given a vector of ages and a vector of prevalences, the function returns the coefficients
-of a polynomial approximation of degree 4
+Given a vector of ages and a vector of prevalences (constant over each age brackets),
+the function returns the vector of prevalences by age smoothed by polynomial approximation of degree 4.
 }
 \details{
 Prevalences are supposed to be constant for all ages superior to 100

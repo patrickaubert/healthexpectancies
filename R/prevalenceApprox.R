@@ -2,10 +2,13 @@
 #'
 #' Given a vector of prevalences by age brackets and the vector of age cuts (which defines the age brackets),
 #' the function returns a vector of prevalences at all ages.
-#' The calculation minimises the sum of squares of differences between prevalences
-#' at ages A and A+1, under the constraint that average prevalences by age brackets
+#' The calculation minimises the sum of squares of second-differences of prevalences
+#' by age, under the constraint that average prevalences by age brackets
 #' (weight according to the 'weight' vector, usually the vector of population size at each age)
-#' are equal to the 'prevalence' input vector
+#' are equal to the 'prevalence' input vector.
+#'
+#' Note : Second-differences rather than first-differences are used
+#' in the minimisation function, since prevalences according to age are usually parabolic.
 #'
 #' @param prevalence a vector with observed prevalences by age bracket
 #' @param agecuts a vector with age defining the age brackets (minimum age in each age bracket)
@@ -45,19 +48,32 @@ prevalenceApprox <- function (prevalence, agecuts, agemin, agemax, weight = rep(
   wprev <- outer(1:(agemax-agemin+1), 1:NROW(prevalence),wbr)
 
   agr <- (outer(1:(agemax-agemin+1), 1:(agemax-agemin+1),function(i,j){ifelse(i<=j,1,0)}))
-  wprevagr <- agr %*% wprev
+
+  # Minimise the sum of first differences
+  #wprevagr1 <- agr %*% wprev
+  # Minimise the sum of second differences
+  wprevagr <- (agr %*% agr) %*% wprev
 
   # exact solution of minimisation problem under linear constraint
-  deltaprev <- wprevagr %*%  matlib::inv(t(wprevagr) %*% wprevagr) %*% prevalence
+
+  # *** Minimise the sum of first differences
+  #deltaprev <- wprevagr1 %*%  matlib::inv(t(wprevagr1) %*% wprevagr1) %*% prevalence
+  #prevapprox1 <- cumsum(deltaprev)
+  # *** Minimise the sum of second differences
+  delta2prev <- wprevagr %*%  matlib::inv(t(wprevagr) %*% wprevagr) %*% prevalence
+  deltaprev <- cumsum(delta2prev)
+  prevapprox <- cumsum(deltaprev)
 
   # verifications
   # t(deltaprev) %*% wprevagr
   #comp <- weightstab %>%
-  #  mutate(prevapprox = cumsum(deltaprev)) %>%
+  #  mutate(age = c(agemin:agemax),
+  #         prevapprox1 = prevapprox1,
+  #         prevapprox = prevapprox) %>%
   #  left_join(data.frame(prev = prevalence, agebracket = unique(weightstab$agebracket)),
   #            by="agebracket")
-  #g <- ggplot(comp,aes(x=age))+geom_line(aes(y=prev),colour="red")+geom_line(aes(y=prevapprox),colour="blue")
+  #g <- ggplot(comp,aes(x=age))+geom_line(aes(y=prev),colour="red")+geom_line(aes(y=prevapprox),colour="blue")+geom_line(aes(y=prevapprox1),colour="green")
   #return(g)
 
-  return(cumsum(deltaprev))
+  #return(cumsum(deltaprev))
 }

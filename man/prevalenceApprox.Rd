@@ -29,10 +29,14 @@ a vector with prevalences according to polynomial approximation
 \description{
 Given a vector of prevalences by age brackets and the vector of age cuts (which defines the age brackets),
 the function returns a vector of prevalences at all ages.
-The calculation minimises the sum of squares of differences between prevalences
-at ages A and A+1, under the constraint that average prevalences by age brackets
+The calculation minimises the sum of squares of second-differences of prevalences
+by age, under the constraint that average prevalences by age brackets
 (weight according to the 'weight' vector, usually the vector of population size at each age)
-are equal to the 'prevalence' input vector
+are equal to the 'prevalence' input vector.
+}
+\details{
+Note : Second-differences rather than first-differences are used
+in the minimisation function, since prevalences according to age are usually parabolic.
 }
 \examples{
 prevalenceApprox(prevalence = (FRDreesAPA2017 \%>\% filter(sex=="female",typepresta=="APA Ã  domicile"))$prevalence, agecuts=c(seq(60,95,5)), agemin=60, agemax=100, weight=(FRInseePopulation \%>\% filter(sex=="female",year==2018,age0101>=60) \%>\% arrange(age0101))$popx)
