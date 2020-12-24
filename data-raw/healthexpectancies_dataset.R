@@ -128,7 +128,7 @@ mr_fr <- function(path) {
   for (an in 1:NROW(onglets)) {
     year <- onglets[an]
     cases <- case_when(year>=2012 ~ "A4:J109",
-                       year>=2010 ~ "A12:J119",
+                       year>=2011 ~ "A12:J119",
                        year>=1990 ~ "A12:J114",
                        year>=1977 ~ "A12:G114")
     colkeep <- c(1,3,6,9)
@@ -146,6 +146,7 @@ mr_fr <- function(path) {
       pivot_longer(cols=-c("age"),names_to="sex",values_to="qx") %>%
       mutate(qx = qx/100000,
              sex = as.factor(sex),
+             age = as.numeric(age),
              year = as.numeric(year)-1)
     lionglets[[an]] <- tab
   }
