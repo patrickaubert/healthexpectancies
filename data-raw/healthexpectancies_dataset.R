@@ -121,6 +121,42 @@ FRInseePopulationForecast2016 <- rbind(
 # source : https://www.insee.fr/fr/statistiques/4503155?sommaire=4503178
 # released : June, 9th 2020
 
+mr_fr <- function(path) {
+  onglets <- excel_sheets(path)
+  lionglets <- list()
+
+  for (an in 1:NROW(onglets)) {
+    year <- onglets[an]
+    cases <- case_when(year>=2012 ~ "A4:J109",
+                       year>=2010 ~ "A12:J119",
+                       year>=1990 ~ "A12:J114",
+                       year>=1977 ~ "A12:G114")
+    colkeep <- c(1,3,6,9)
+    colnames <- c("age","male","female","all")
+    tab <- read_excel(
+      "data-raw/fm_t68.xlsx",
+      sheet = year,
+      range = cases
+    )
+    colkeep <- colkeep[colkeep<=ncol(tab)]
+    tab <- tab[,colkeep]
+    names(tab) <- colnames[1:ncol(tab)]
+    tab <- tab %>%
+      filter(!is.na(age)) %>%
+      pivot_longer(cols=-c("age"),names_to="sex",values_to="qx") %>%
+      mutate(qx = qx/100000,
+             sex = as.factor(sex),
+             year = as.numeric(year)-1)
+    lionglets[[an]] <- tab
+  }
+  return( do.call("rbind", lionglets) )
+}
+
+FRInseeMortalityrates <- rbind(
+  mr_fr("data-raw/fe_t68.xlsx") %>% mutate(geo = "france"),
+  mr_fr("data-raw/fm_t68.xlsx") %>% mutate(geo = "metropolitan france")
+)
+
 # ===================================================================================
 # Population of France, Insee
 # ===================================================================================
@@ -244,6 +280,7 @@ FRDreesAPA <- rbind(
 # ===================================================================================
 usethis::use_data(FRInseeMortalityForecast2016,
                   FRInseePopulationForecast2016,
+                  FRInseeMortalityrates,
                   FRInseePopulation,
                   FRDreesVQSsurvey2014,
                   FRDreesAPA2017,
