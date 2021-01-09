@@ -1,0 +1,21 @@
+reference:
+- title: Main functions
+- contents:
+  - CompleteDFLEtable
+  - prevalenceForecast
+- title: Auxiliary functions
+- contents:
+  - prevalenceApprox
+  - prevalence_to_polynomial
+- title: Datasets
+  desc:  Datasets provide examples for calculations. Most are data provided by Insee (the French INS) or DREES (the statistical unit of the French Ministry for Health and Social affairs)
+- contents:
+  - FRDreesAPA
+  - FRDreesAPA2017
+  - FRDreesVQSsurvey2014
+  - FRInseeMortalityForecast2016
+  - FRInseeMortalityrates
+  - FRInseePopulation
+  - FRInseePopulationForecast2016
+  - sullivan
+  - description_sullivan
