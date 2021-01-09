@@ -1,3 +1,8 @@
+title: healthexpectancies
+url: https://patrickaubert.github.io/healthexpectancies/
+template:
+  params:
+    bootswatch: flatly
 reference:
 - title: Main functions
 - contents:
@@ -19,3 +24,8 @@ reference:
   - FRInseePopulationForecast2016
   - sullivan
   - description_sullivan
+navbar:
+ right:
+    - icon: fa-github fa-lg
+      text: "github"
+      href: https://github.com/patrickaubert/healthexpectancies/
