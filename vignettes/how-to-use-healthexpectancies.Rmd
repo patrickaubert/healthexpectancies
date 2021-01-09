@@ -2,7 +2,7 @@
 title: "how-to-use-healthexpectancies"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{how-to-use}
+  %\VignetteIndexEntry{how-to-use-healthexpectancies}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
