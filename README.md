@@ -4,6 +4,10 @@ A R package containing functions that calculate disability-free life expectancy 
 
 The package also includes several data bases as examples (an example from the sullivan manual, forecasted population and mortality rates for France, prevalences of disability among elder people from the French VQS survey) and a Shiny app (also available online at: https://patrick-aubert.shinyapps.io/projprevalence/).
 
+## Documentation:
+
+https://patrickaubert.github.io/healthexpectancies/index.html
+
 ## References:
 
 Calculations are derived from the Sullivan manual, available on the INED website:

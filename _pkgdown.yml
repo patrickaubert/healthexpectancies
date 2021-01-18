@@ -3,6 +3,9 @@ url: https://patrickaubert.github.io/healthexpectancies/
 template:
   params:
     bootswatch: yeti
+authors:
+  Patrick Aubert:
+    href: https://sites.google.com/site/patrickauber/
 reference:
 - title: Main functions
 - contents:
@@ -26,9 +29,6 @@ reference:
   - description_sullivan
 navbar:
  right:
-    - icon: fa-user
-      text: "author"
-      href: https://sites.google.com/site/patrickauber/
     - icon: fa-github fa-lg
       text: "github"
       href: https://github.com/patrickaubert/healthexpectancies/
