@@ -134,7 +134,7 @@ mr_fr <- function(path) {
     colkeep <- c(1,3,6,9)
     colnames <- c("age","male","female","all")
     tab <- read_excel(
-      "data-raw/fm_t68.xlsx",
+      path,
       sheet = year,
       range = cases
     )
@@ -157,6 +157,9 @@ FRInseeMortalityrates <- rbind(
   mr_fr("data-raw/fe_t68.xlsx") %>% mutate(geo = "france"),
   mr_fr("data-raw/fm_t68.xlsx") %>% mutate(geo = "metropolitan france")
 )
+
+# == correction of errors :
+# 2021/06/21: data for france were erroneously those from metropolitan france
 
 # ===================================================================================
 # Population of France, Insee
