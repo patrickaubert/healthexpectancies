@@ -117,9 +117,9 @@ FRInseePopulationForecast2016 <- rbind(
 # Observed mortality rates in France, Insee
 # ===================================================================================
 
-# Table : T68 – Table de mortalité des années 2016 - 2018, données provisoires arrêtées à fin décembre 2019 - Séries depuis 1977
-# source : https://www.insee.fr/fr/statistiques/4503155?sommaire=4503178
-# released : June, 9th 2020
+# Table : Table de mortalité des années 2016 - 2019, données provisoires arrêtées à fin décembre 2019 - Séries depuis 1977
+# source : https://www.insee.fr/fr/statistiques/5390366?sommaire=5390468
+# released : June, 2d 2021
 
 mr_fr <- function(path) {
   onglets <- excel_sheets(path)
@@ -159,40 +159,56 @@ FRInseeMortalityrates <- rbind(
 )
 
 # == correction of errors :
+# 2021/07/17: add value for 2018 (2017-2019 average, published in June 2021)
 # 2021/06/21: data for france were erroneously those from metropolitan france
 
 # ===================================================================================
 # Population of France, Insee
 # ===================================================================================
 
-# Table : Pyramide des âges 2020 - France et France métropolitaine
-# source : https://www.insee.fr/fr/statistiques/3312958
-# released : January, 14th 2020
+# Table : Pyramide des âges interactive - France et France métropolitaine
+# source : https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm
+# released : ?
 
-popobsMale <- read_excel("data-raw/pyramides-des-ages_bilan-demo_2019.xlsx",
-                        sheet = "France",
-                        range = "B10:AF111")
-names(popobsMale) <- c("age0101",c(1991:2020) )
-popobsMale <- popobsMale %>%
-  pivot_longer(-c("age0101"), names_to = "year", values_to = "popx")
-
-popobsFemale <- read_excel("data-raw/pyramides-des-ages_bilan-demo_2019.xlsx",
-                           sheet = "France",
-                           range = "B114:AF215")
-names(popobsFemale) <- c("age0101",c(1991:2020) )
-popobsFemale <- popobsFemale %>%
-  pivot_longer(-c("age0101"), names_to = "year", values_to = "popx")
-
-FRInseePopulation <- rbind(
-  popobsFemale %>% mutate(sex = "female"),
-  popobsMale %>% mutate(sex = "male")
-) %>%
-  mutate(age0101 = recode(age0101, "100 ou +" = "100"),
-         year = as.numeric(year),
+FRInseePopulation <- bind_rows(
+  read_csv2("data-raw/donnees_pyramide_act.csv") %>% mutate(geo="france"),
+  read_csv2("data-raw/donnees_pyramide_act_fm.csv") %>% mutate(geo="metropolitan france")  )  %>%
+  rename(year = ANNEE,
+         sex = SEXE,
+         popx = POP,
+         age0101 = AGE) %>%
+  mutate(year = as.numeric(year),
          age0101 = as.numeric(age0101),
-         sex = as.factor(sex))
+         sex = as.factor(sex),
+         geo = as.factor(geo))
 
+# == An earlier version used the another file released by Insee
 
+#popobsMale <- read_excel("data-raw/pyramides-des-ages_bilan-demo_2019.xlsx",
+#                        sheet = "France",
+#                        range = "B10:AF111")
+#names(popobsMale) <- c("age0101",c(1991:2020) )
+#popobsMale <- popobsMale %>%
+#  pivot_longer(-c("age0101"), names_to = "year", values_to = "popx")
+#
+#popobsFemale <- read_excel("data-raw/pyramides-des-ages_bilan-demo_2019.xlsx",
+#                           sheet = "France",
+#                           range = "B114:AF215")
+#names(popobsFemale) <- c("age0101",c(1991:2020) )
+#popobsFemale <- popobsFemale %>%
+#  pivot_longer(-c("age0101"), names_to = "year", values_to = "popx")
+#
+#FRInseePopulation <- rbind(
+#  popobsFemale %>% mutate(sex = "female"),
+#  popobsMale %>% mutate(sex = "male")
+#) %>%
+#  mutate(age0101 = recode(age0101, "100 ou +" = "100"),
+#         year = as.numeric(year),
+#         age0101 = as.numeric(age0101),
+#         sex = as.factor(sex))
+
+# == revision :
+# 2021/07/17: add value for 2021
 
 # ===================================================================================
 # Disability prevalences after age 60, from DREES' 2014 VQS survey

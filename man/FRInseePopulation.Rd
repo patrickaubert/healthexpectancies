@@ -5,22 +5,24 @@
 \alias{FRInseePopulation}
 \title{A dataset with population by sex and age, from Insee's 'bilan démographique' (annual population estimates)}
 \format{
-A data frame with 6060 observations and 4 variables:
+A data frame with 30 400 observations and 5 variables:
 \describe{
 \item{age0101}{age at January, 1st of the year}
 \item{year}{year}
 \item{sex}{sex ('male' or 'female')}
+\item{geo}{geographical field ('france' or 'metropolitan france')}
 \item{popx}{population at each year, age, sex}
 }
 }
 \source{
-\url{https://www.insee.fr/fr/statistiques/3312958}
+\url{https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm}
 }
 \usage{
 FRInseePopulation
 }
 \description{
-The current version of the data table was released in January, 2020 and contains observations
-from 1991 to 2020. Observations for the last three years (2018 and more) are provisional.
+The current version of the data table was released in 2021 and contains observations
+from 1991 (France) or 1901 (metropolitan France) to 2021.
+Observations for the last three years (2019 and more) are provisional.
 }
 \keyword{datasets}

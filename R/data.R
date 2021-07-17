@@ -51,28 +51,30 @@
 
 #' A dataset with population by sex and age, from Insee's 'bilan démographique' (annual population estimates)
 #'
-#' The current version of the data table was released in January, 2020 and contains observations
-#' from 1991 to 2020. Observations for the last three years (2018 and more) are provisional.
+#' The current version of the data table was released in 2021 and contains observations
+#' from 1991 (France) or 1901 (metropolitan France) to 2021.
+#' Observations for the last three years (2019 and more) are provisional.
 #'
-#' @format A data frame with 6060 observations and 4 variables:
+#' @format A data frame with 30 400 observations and 5 variables:
 #' \describe{
 #'   \item{age0101}{age at January, 1st of the year}
 #'   \item{year}{year}
 #'   \item{sex}{sex ('male' or 'female')}
+#'   \item{geo}{geographical field ('france' or 'metropolitan france')}
 #'   \item{popx}{population at each year, age, sex}
 #' }
-#' @source \url{https://www.insee.fr/fr/statistiques/3312958}
+#' @source \url{https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm}
 "FRInseePopulation"
 
 #' A dataset with observed mortality rates by sex and age, from Insee
 #'
-#' The current version of the data table was released in June, 2020 and contains observations
-#' from 1976 (Metropolitan France) or 1998 (France including oversea territories) to 2017.
+#' The current version of the data table was released in June, 2021 and contains observations
+#' from 1976 (Metropolitan France) or 1998 (France including oversea territories) to 2018
 #' Observations correspond to an average over 3 years: for instance, values for 2017
 #' are actually an average between 2016 and 2018.
 #' Data are from 'tableau 68' (TM68) released by Insee.
 #'
-#' @format A data frame with 17552 observations and 5 variables:
+#' @format A data frame with 18170 observations and 5 variables:
 #' \describe{
 #'   \item{age}{age}
 #'   \item{year}{year}
@@ -80,7 +82,7 @@
 #'   \item{sex}{sex ('male' or 'female' or 'all)}
 #'   \item{qx}{mortality rate at each year, age, sex}
 #' }
-#' @source \url{https://www.insee.fr/fr/statistiques/4503155?sommaire=4503178}
+#' @source \url{https://www.insee.fr/fr/statistiques/5390366?sommaire=5390468}
 "FRInseeMortalityrates"
 
 #' A dataset with disability prevalences in France (2014)
