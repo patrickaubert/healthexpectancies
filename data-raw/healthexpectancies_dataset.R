@@ -30,8 +30,24 @@ names_sullivan <- read_excel("data-raw/sullivan_manual_jun2007.en.xls",
                              sheet = "Ex 1",
                              range = "A4:O4")
 description_sullivan <- data.frame(
-  heading = names(sullivan),
-  description = names(names_sullivan)
+  heading = c(
+    names(sullivan),
+    "DLx",
+    "DLEx",
+    "pctDLEx",
+    "MeanDAx",
+    "MedianDAx",
+    "ModalDAx"
+    ),
+  description = c(
+    names(names_sullivan),
+    "person years lived with disability",
+    "with disability life expectancy",
+    "proportion of life spent with disability",
+    "average conjonctural age of person years lived with disability",
+    "median conjonctural age of person years lived with disability",
+    "modal conjonctural age of person years lived with disability"
+  )
 )
 
 # tab <- sullivan %>% select(year,age,Px,Dx,pix)

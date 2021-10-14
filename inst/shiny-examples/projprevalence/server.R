@@ -84,8 +84,9 @@ server <- function(input, output) {
       filter(age >= 60, age <= input$ageFinCalcul, year %in% c( vyear[vyear != refyear] ) )
 
     # --- tables avec les valeurs en projections
-    projections <- prevalenceForecast( qmortref, qmortproj , input$optionProj) %>%
-      select(sex,age,year,ex,DFLEx,DLEx,pctDFLEx,pix)
+    projections <- prevalenceForecast( qmortref, qmortproj , input$optionProj,
+                                       includevars  = c("MeanDAx","MedianDAx","ModalDAx")) %>%
+      select(sex,age,year,ex,DFLEx,DLEx,pctDFLEx,pix,MeanDAx,MedianDAx,ModalDAx)
 
     # 3) on ajoute les effectifs pour avoir des nombres de personnes âgées en incapacité
 
@@ -112,11 +113,15 @@ server <- function(input, output) {
                                  "ex" = "EV",
                                  "DFLEx" = "EVSI",
                                  "DLEx" = "EVI",
-                                 "pctDFLEx" = "% EVSI/EV"),
+                                 "pctDFLEx" = "% EVSI/EV",
+                                 "MeanDAx" = "âge moyen",
+                                 "MedianDAx" = "âge médian",
+                                 "ModalDAx" = "âge modal"),
              sex = recode(sex, "male" = "Hommes", "female" = "Femmes"),
              ev = case_when(indicateur %in% c("prev.proj","prevalence.ref","prev.approx") ~ round( 100 * ev, 1),
                             indicateur %in% c("EV","EVSI","EVI","% EVSI/EV") ~ round( ev, 1),
-                            indicateur %in% c("popx","nbIncap") ~ round( ev, 1))
+                            indicateur %in% c("popx","nbIncap") ~ round( ev, 1),
+                            indicateur %in% c("âge moyen","âge médian","âge modal") ~ round( ev, 1))
       )
   })
 
@@ -239,6 +244,19 @@ server <- function(input, output) {
   })
 
 
+  # ---- Âges conjoncturels des personnes en incapacité, selon l'année
+  output$agesconj <- renderPlotly({
+    tab <- evsi() %>%
+      filter(indicateur %in% c("âge moyen","âge médian","âge modal"),
+             age == input$ageEVSI) %>%
+      select(year,sex,indicateur,age,ev) %>%
+      rename(age.conj = ev)
+    g <- ggplot(tab , aes(x=year,y=age.conj,colour=indicateur, group=indicateur) ) +
+      geom_line() +
+      facet_wrap( ~ sex)
+    ggplotly(g)
+  })
+
 
   # ---- textes explicatifs
   output$textePreval <- renderUI({
@@ -266,6 +284,9 @@ server <- function(input, output) {
   })
   output$texteAn <- renderUI({
     paste("Projections pour l'année ",input$anneeProj,".",sep="")
+  })
+  output$texteAgesconj <- renderUI({
+    paste("Parmi les personnes en vie à l'âge de ",input$ageEVSI," ans.",sep="")
   })
 
   output$documentation <- renderUI({
@@ -334,6 +355,17 @@ server <- function(input, output) {
       "<li>APA à domicile (bénéficiaire de l'allocation personnalisée d'autonomie à domicile)",
       "<li>APA en établissement (bénéficiaire de l'allocation personnalisée d'autonomie en établissement d'hébergement)",
       "<li>APA domicile+établissement (bénéficiaire de l'allocation personnalisée d'autonomie à domicile ou en établissement d'hébergement)",
+      ".<br><br>",
+      "Les <b>âges conjoncturels</b> des personnes en incapacités sont définis à partir de la distribution ",
+      "des périodes de vie en incapacité en fonction de l'âge pour une génération fictive soumise aux ",
+      "conditions de mortalité et aux prévalences des incapacités du moment. L'âge conjoncturel moyen ",
+      "correspond à la moyenne des âges des personnes de la génération en incapacité (c'est-à-dire la ",
+      "moyenne des âges pondérés par le nombre de personnes encore en vie et en incapacité à chaque âge) ; ",
+      "l'âge conjoncturel médian correspond quant à lui à la médiane de cette distribution. ",
+      "L'âge conjoncturel modal correspond enfin à l'âge auquel la proportion des personnes ",
+      "qui sont encore en vie mais en incapacité est la plus élevée Ces trois âges conjoncturels ",
+      "sont calculés au sein d'une population en vie à un âge minimal donné : l'âge conjoncturel est donc ",
+      "défini à cet âge.",
       sep=" ")
     HTML(doc)
   })
@@ -341,7 +373,6 @@ server <- function(input, output) {
   output$mentionslegales <- renderUI({
     mentions <- paste(
       "Cette application interactive, de même que le package R <i>healthexpectancies</i> sur lequel elle s'appuie",
-      "ont été développés par <a href='https://sites.google.com/site/patrickauber/'>Patrick Aubert</a> en octobre 2020.",
       "<br><br>",
       "Le code source est diffusé gratuitement, sous licence EUPL. Il a été développé en dehors du cadre professionnel",
       "et peut contenir des erreurs. L'utilisateur est averti que la réutilisation des résultats de cette application",

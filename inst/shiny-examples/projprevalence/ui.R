@@ -96,11 +96,16 @@ ui <- dashboardPage(
           )
         ),
 
-        # --- Quatrième ligne : ratio de prévalences observées (éventuellement lissées et projetées)
+        # --- Quatrième ligne : ratio de prévalences observées (éventuellement lissées et projetées) et âges conjoncturels
         fluidRow(
           box(title = "Ratio des prévalences projetées / observées (en %)",
               solidHeader = TRUE,
               plotlyOutput("ratioprev", height = 250)
+          ),
+          box(title = "Âges conjoncturels des personnes en incapacité",
+              solidHeader = TRUE,
+              htmlOutput("texteAgesconj"),
+              plotlyOutput("agesconj", height = 250)
           )
         )
       ),

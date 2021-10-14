@@ -13,10 +13,11 @@
 #' @param tabref  a data frame for the reference year, containing variables: year, age, qx (mortality rate) and pix (prevalences) (+ optional: sex)
 #' @param tabproj a data frame for projection years, containing variables: year, age, and qx (mortality rate) (+optional: sex)
 #' @param hypo projection hypotheses ('cstDFLE','cstDLE','cstPreval','cstPctDFLE')
+#' @param includevars a vector of names of variables that must be included in the output table (otherwise, only pix, ex, DFLEx, DLEx and pctDFLEx are kept)
 #'
 #' @return a data frame with prevalences, DFLE, DLE and share of DFLE in total LE, by year and age (and optionnally sex)
 #' @export
-prevalenceForecast <- function(tabref, tabproj, hypo) {
+prevalenceForecast <- function(tabref, tabproj, hypo, includevars = c() ) {
   # add : controls
 
   vardim <- intersect( c("sex","age","categ") , intersect(names(tabref), names(tabproj)) )
@@ -35,6 +36,6 @@ prevalenceForecast <- function(tabref, tabproj, hypo) {
     left_join(tabDFLEref[,c(vardim,varkeep)] , by = c(vardim) )
   tabDFLEproj <- CompleteDFLEtable( tabproj )
 
-  rbind( tabDFLEref[,c(vardim,"year","pix","ex","DFLEx","DLEx","pctDFLEx")],
-         tabDFLEproj[,c(vardim,"year","pix","ex","DFLEx","DLEx","pctDFLEx")] )
+  rbind( tabDFLEref[,c(vardim,"year","pix","ex","DFLEx","DLEx","pctDFLEx",c(includevars))],
+         tabDFLEproj[,c(vardim,"year","pix","ex","DFLEx","DLEx","pctDFLEx",c(includevars))] )
 }

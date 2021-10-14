@@ -117,10 +117,16 @@ CompleteDFLEtable <- function(tab) {
     tab$ex <- tab$Tx / tab$lx
   }
 
-  # =================== Lx, pix -> DFLx ====================
-  # adding person years lived without disability (DFLx), from person years lived at age x (Lx) and proportion with disability (pix)
+  # =================== Lx, pix -> DFLx, DLx ====================
+
+  # adding person-years lived without disability (DFLx), from person years lived at age x (Lx) and proportion with disability (pix)
   if (("Lx" %in% names(tab)) & ("pix" %in% names(tab)) & !("DFLx" %in% names(tab))) {
     tab$DFLx <- tab$Lx * (1 - tab$pix)
+  }
+
+  # adding person-years lived with disability (DLx), from person years lived at age x (Lx) and proportion with disability (pix)
+  if (("Lx" %in% names(tab)) & ("pix" %in% names(tab)) & !("DLx" %in% names(tab))) {
+    tab$DLx <- tab$Lx * tab$pix
   }
 
   # =================== DFLx -> DFTx ====================
@@ -137,7 +143,8 @@ CompleteDFLEtable <- function(tab) {
     tab$DFLEx <- tab$DFTx / tab$lx
   }
 
-  # =================== DFLEx <-> DFLx ====================
+  # =================== DFLEx <-> DLEx ====================
+
   # adding in-disability life expectancy (DLEx), from life expectancy (ex) and disability-free life expectancy (DFLEx)
   if (("DFLEx" %in% names(tab)) & ("ex" %in% names(tab)) & !("DLEx" %in% names(tab))) {
     tab$DLEx <- tab$ex - tab$DFLEx
@@ -157,6 +164,44 @@ CompleteDFLEtable <- function(tab) {
   if (!("DFLEx" %in% names(tab)) & ("ex" %in% names(tab)) & ("pctDFLEx" %in% names(tab))) {
     tab$DFLEx <- tab$pctDFLEx/100 * tab$ex
     if (!("DLEx" %in% names(tab))) { tab$DLEx <- tab$ex - tab$DFLEx }
+  }
+
+  # =================== DLEx <-> pctDLEx ====================
+
+  # adding proportion of life spent with disability (pctDLEx), from ratio of DLE and LE at each age x
+  if (("DLEx" %in% names(tab)) & ("ex" %in% names(tab)) & !("pctDLEx" %in% names(tab))) {
+    tab$pctDLEx <- 100 * tab$DLEx / tab$ex
+  }
+  # --- alternative : adding with disability life expectancy (DLEx), from proportion of life spent with disability (pctDLEx) and life-expectancy at each age x
+  if (!("DLEx" %in% names(tab)) & ("ex" %in% names(tab)) & ("pctDLEx" %in% names(tab))) {
+    tab$DLEx <- tab$pctDLEx/100 * tab$ex
+  }
+
+  # =================== DLx -> MeanDAx, MedianDAx, ModalDAx ====================
+
+  # adding mean conjonctural age of life with disability (MeanDAx) from person-years lived at age x (DLx)
+  if (("DLx" %in% names(tab)) & !("MeanDAx" %in% names(tab))) {
+    MeanDAx <- function(n) { sum( tab$DLx[n:nrow(tab)] * tab$age[n:nrow(tab)]) / sum(tab$DLx[n:nrow(tab)])}
+    tab$MeanDAx <- sapply( c(1:nrow(tab)) , MeanDAx)
+  }
+
+  # adding median conjonctural age of life with disability (MedianDAx) from person-years lived at age x (DLx)
+  if (("DLx" %in% names(tab)) & !("MedianDAx" %in% names(tab))) {
+    MedianDAx <- function(n) {
+      tab2 <- tab[c(n:nrow(tab)),]
+      tab2$cumDLx <- cumsum(tab2$DLx)
+      return(min(tab2[tab2$cumDLx >= sum(tab2$DLx)/2,"age"]))
+    }
+    tab$MedianDAx <- sapply( c(1:nrow(tab)) , MedianDAx)
+  }
+
+  # adding modal conjonctural age of life with disability (ModalDAx) from person-years lived at age x (DLx)
+  if (("DLx" %in% names(tab)) & !("ModalDAx" %in% names(tab))) {
+    ModalDAx <- function(n) {
+      tab2 <- tab[c(n:nrow(tab)),]
+      return(min(tab2[tab2$DLx == max(tab2$DLx),"age"]))
+    }
+    tab$ModalDAx <- sapply( c(1:nrow(tab)) , ModalDAx)
   }
 
   # =================== lx, Lx, DFLEx -> pix (& DFLx, DFTx) ====================
