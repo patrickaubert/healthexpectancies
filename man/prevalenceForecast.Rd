@@ -4,7 +4,7 @@
 \alias{prevalenceForecast}
 \title{Forecasts prevalences of disability and DFLEs}
 \usage{
-prevalenceForecast(tabref, tabproj, hypo)
+prevalenceForecast(tabref, tabproj, hypo, includevars = c())
 }
 \arguments{
 \item{tabref}{a data frame for the reference year, containing variables: year, age, qx (mortality rate) and pix (prevalences) (+ optional: sex)}
@@ -12,6 +12,8 @@ prevalenceForecast(tabref, tabproj, hypo)
 \item{tabproj}{a data frame for projection years, containing variables: year, age, and qx (mortality rate) (+optional: sex)}
 
 \item{hypo}{projection hypotheses ('cstDFLE','cstDLE','cstPreval','cstPctDFLE')}
+
+\item{includevars}{a vector of names of variables that must be included in the output table (otherwise, only pix, ex, DFLEx, DLEx and pctDFLEx are kept)}
 }
 \value{
 a data frame with prevalences, DFLE, DLE and share of DFLE in total LE, by year and age (and optionnally sex)
