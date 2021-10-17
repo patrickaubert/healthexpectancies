@@ -44,7 +44,13 @@ Definitions of variables in the input or output dataset:
 * DFTx : total years lived without disability from age x
 * DFLEx : disability-free life expectancy
 * pctDFLEx : proportion of life spent disability-free
-* DLEx :years lived with disability (= ex - DFLEx)
+* DLEx : years lived with disability (= ex - DFLEx)
+* DLx : person years lived with disability,
+* DLEx : with-disability life expectancy
+* pctDLEx : proportion of life spent with disability
+* MeanDAx : average conjonctural age of person years lived with disability
+* MedianDAx : median conjonctural age of person years lived with disability
+* ModalDAx : modal conjonctural age of person years lived with disability
 
 # Function prevalence_to_polynomial
 
