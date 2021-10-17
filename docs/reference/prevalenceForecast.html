@@ -74,7 +74,7 @@ life expectancies." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">healthexpectancies</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9001</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@ life expectancies." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -134,7 +134,7 @@ a projection table with mortality rates, the function calculates prevalences and
 life expectancies.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>prevalenceForecast</span><span class='op'>(</span><span class='va'>tabref</span>, <span class='va'>tabproj</span>, <span class='va'>hypo</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>prevalenceForecast</span><span class='op'>(</span><span class='va'>tabref</span>, <span class='va'>tabproj</span>, <span class='va'>hypo</span>, includevars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -150,6 +150,10 @@ life expectancies.</p>
     <tr>
       <th>hypo</th>
       <td><p>projection hypotheses ('cstDFLE','cstDLE','cstPreval','cstPctDFLE')</p></td>
+    </tr>
+    <tr>
+      <th>includevars</th>
+      <td><p>a vector of names of variables that must be included in the output table (otherwise, only pix, ex, DFLEx, DLEx and pctDFLEx are kept)</p></td>
     </tr>
     </table>
 
