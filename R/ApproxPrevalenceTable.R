@@ -88,19 +88,20 @@ ApproxPrevalenceTable <- function(tab,
     if (is.null(weights.tab)) { weights.loc <- rep(1,(agemax-agemin+1))
     } else { weights.loc <- weights.tab[weights.tab$categ.w == cases$categ.w[i],c(name.w)]   }
 
-    if (option == "polynomial") {
-
-    } else {
-      truc<-data.frame(
-        categloc = rep(cases$categloc[i],(agemax-agemin+1)),
-        age = c(agemin:agemax),
-        prevalence = prevalenceApprox(
-          prevalence = tab[tab$categloc == cases$categloc[i],c(name.prev)],
-          agecuts = agecuts, agemin = agemin, agemax = agemax,
-          weight = weights.loc ),
-        stringsAsFactors = FALSE
-      )
+    approxloc <- function(...) {
+      if (option == "polynomial") { prevalence_to_polynomial(...)
+      } else { prevalenceApprox(...)    }
     }
+
+    data.frame(
+      categloc = rep(cases$categloc[i],(agemax-agemin+1)),
+      age = c(agemin:agemax),
+      prevalence = approxloc(
+        prevalence = tab[tab$categloc == cases$categloc[i],c(name.prev)],
+        agecuts = agecuts, agemin = agemin, agemax = agemax,
+        weight = weights.loc ),
+      stringsAsFactors = FALSE
+    )
   }
 
   tabout <- do.call("bind_rows",lapply(c(1:nrow(cases)),approxloc))

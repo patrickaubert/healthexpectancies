@@ -4,12 +4,22 @@
 \alias{prevalence_to_polynomial}
 \title{Estimates a polynomial approximation for prevalences by age}
 \usage{
-prevalence_to_polynomial(age, prevalence, weight = rep(1, NROW(prevalence)))
+prevalence_to_polynomial(
+  prevalence,
+  agecuts = NULL,
+  agemin,
+  agemax,
+  weight = rep(1, (agemax - agemin + 1))
+)
 }
 \arguments{
-\item{age}{a vector with observed ages (eg. each ages between 60 and 100)}
+\item{prevalence}{a vector with observed prevalences by age or agebracket}
 
-\item{prevalence}{a vector with observed prevalences (constant over each age brackets if prevalences are only observed as averages by age bracket)}
+\item{agecuts}{an optional vector with age defining the age brackets (minimum age in each age bracket)}
+
+\item{agemin}{minimum age in the output vector}
+
+\item{agemax}{maximum age in the output vector}
 
 \item{weight}{a vector of weights for the regression (optional)}
 }
