@@ -75,7 +75,7 @@ CompleteDFLEtable <- function(tab, categories = c("")) {
     tab$sex <- as.factor(tab$sex)
     if (NROW(classsex)>1)  {
       bysex <- function(s){ CompleteDFLEtable(tab[tab$sex == s,]) }
-      return( do.call(rbind,lapply(classsex,bysex)) )
+      return( do.call(rbind,lapply(classsex,bysex)) %>% restore_categories() )
     }
   }
   if ("categ" %in% names(tab)) {
