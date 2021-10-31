@@ -4,10 +4,12 @@
 \alias{CompleteDFLEtable}
 \title{Complete a dataframe with useful variables for the calculation of disability-free life expectancies (DFLE)}
 \usage{
-CompleteDFLEtable(tab)
+CompleteDFLEtable(tab, categories = c(""))
 }
 \arguments{
 \item{tab}{a dataframe containing some of the variables}
+
+\item{categories}{a vector of names of variables of the 'tab' dataframe, representing categories (optional)}
 }
 \value{
 a dataframe with all variables that can be calculated from the input dataframe
@@ -24,6 +26,8 @@ Full headings for the names of variables in the output dataset can be found in t
 
 If variables 'sex' and/or 'year' and/or 'categ' (an undefinite category variable that can be defined by the user)
 are in the input dataset, calculations are performed for each separate values of 'sex', 'year' and/or 'categ'.
+If 'categories' is provided (a vector of variable names in 'tab'), a 'categ' variable is created in a
+first step from all the variables in 'categories'.
 
 Calculations follow example 1 in the sullivan manual (June 2007 version).
 See https://reves.site.ined.fr/en/resources/computation_online/sullivan/ for more explanations.

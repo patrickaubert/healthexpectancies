@@ -33,16 +33,17 @@ ApproxPrevalenceTable(
 a table containing the same categorisation variables than the input table, plus prevalences by age
 }
 \description{
-Given a vector of prevalences by age brackets and the vector of age cuts (which defines the age brackets),
-the function returns a vector of prevalences at all ages.
+This function transforms a table with prevalences by age brackets and by (optional) sex, year and categories
+into a table with smoothed prevalences at all ages (for all sex, year and categories).
+Parameters must include the vector of age cuts, which defines the age brackets. For instance, c(60,70,80)
+defines age brackets [60,70), [70,80) and \link{80,Inf}.
 The calculation minimises the sum of squares of second-differences of prevalences
 by age, under the constraint that average prevalences by age brackets
-(weight according to the 'weight' vector, usually the vector of population size at each age)
-are equal to the 'prevalence' input vector.
-}
-\details{
-Note : Second-differences rather than first-differences are used
-in the minimisation function, since prevalences according to age are usually parabolic.
+(weighted according to the 'weight' vector, usually the vector of population size at each age)
+are equal to the 'prevalence' input vector. Alternatively, if 'option' is set to 'polynomial',
+polynomial approximation is calculated.
+In the output table, 'prevalence.raw' corresponds to input values of prevalences (constant by age bracket)
+while 'prevalence.approx' corresponds to smoothed values (different value at every age).
 }
 \examples{
 prevalenceApprox(prevalence = (FRDreesAPA2017 \%>\% filter(sex=="female",typepresta=="APA Ã  domicile"))$prevalence, agecuts=c(seq(60,95,5)), agemin=60, agemax=100, weight=(FRInseePopulation \%>\% filter(sex=="female",year==2018,age0101>=60) \%>\% arrange(age0101))$popx)

@@ -10,12 +10,15 @@
 #'
 #' If variables 'sex' and/or 'year' and/or 'categ' (an undefinite category variable that can be defined by the user)
 #' are in the input dataset, calculations are performed for each separate values of 'sex', 'year' and/or 'categ'.
+#' If 'categories' is provided (a vector of variable names in 'tab'), a 'categ' variable is created in a
+#' first step from all the variables in 'categories'.
 #'
 #' Calculations follow example 1 in the sullivan manual (June 2007 version).
 #' See https://reves.site.ined.fr/en/resources/computation_online/sullivan/ for more explanations.
 #'
 #'
 #' @param tab a dataframe containing some of the variables
+#' @param categories a vector of names of variables of the 'tab' dataframe, representing categories (optional)
 #'
 #' @return a dataframe with all variables that can be calculated from the input dataframe
 #'
@@ -23,10 +26,46 @@
 #'
 #' @examples CompleteDFLEtable( sullivan[,c("year","age","mx","qx","pix")] )
 #' @examples CompleteDFLEtable( FRInseeMortalityForecast2016[FRInseeMortalityForecast2016$year %in% c(2013,2015,2020,2030),] )
-CompleteDFLEtable <- function(tab) {
+CompleteDFLEtable <- function(tab, categories = c("")) {
 
   # remove columns with missing values
   tab <- tab[,colSums(is.na(tab))==0]
+
+  # if 'categories' is provided, a 'categ' variable is first created
+  categories <- categories[!(categories %in% c("sex","year"))]
+  categories.true <- categories[categories != ""]
+
+  if (NROW(categories.true)>=1) {
+
+    # if 'categories' is provided and a 'categ' variable is in the 'tab' dataframe, the latter is ignored
+    if ("categ" %in% names(tab)) {
+      if (NROW(categories)==1) {
+        warning(paste0("The 'categ' variable in the 'tab' dataframe will be ignored. ",
+                       categories," variable is used instead."  ))
+      } else  if (NROW(categories)>1) {
+        warning(paste0("The 'categ' variable in the 'tab' dataframe will be ignored. ",
+                       paste(categories,collapse = ", ")," variables are used instead."  ))
+      }
+      tab <- tab[ , names(tab)[!(names(tab) == "categ")]]
+    }
+
+    for (k in 1:NROW(categories)) { tab[,categories[k]] <- paste0("#",k,tab[,categories[k]],"#") }
+
+    tab <- tab %>% unite(categ,all_of(categories),sep="")
+  }
+
+  # if 'categories' is provided, a function to restore the initial names and values of them
+  restore_categories <- function(tabloc) {
+    if (NROW(categories.true)>=1)  {
+      for (j in c(1:NROW(categories))) {
+        tabloc[,categories[j]] <- str_extract(tabloc$categ,paste0("(?<=#",j,")[^#]*(?=#)"))
+      }
+      tabloc <- tabloc[ , names(tabloc)[!(names(tabloc) == "categ")]]
+    } else {
+      tabloc
+    }
+  } # and of restore_categories
+
 
   # if 'sex' and/or 'year' and/or 'categ' are in the input dataset, calculations is made for each values of these 2 variables
   # NB: 'categ' is an undefinite category variable (to be defined by user)
@@ -45,7 +84,7 @@ CompleteDFLEtable <- function(tab) {
     tab$categ <- as.factor(tab$categ)
     if (NROW(classcateg)>1)  {
       bycateg <- function(cat){ CompleteDFLEtable(tab[tab$categ == cat,]) }
-      return( do.call(rbind,lapply(classcateg,bycateg)) )
+      return( do.call(rbind,lapply(classcateg,bycateg)) %>% restore_categories() )
     }
   }
   if ("year" %in% names(tab)) {

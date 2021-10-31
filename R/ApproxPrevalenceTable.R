@@ -1,14 +1,16 @@
 #' Transforms a table with prevalences by age brackets into a table with (smoothed) prevalences by age
 #'
-#' Given a vector of prevalences by age brackets and the vector of age cuts (which defines the age brackets),
-#' the function returns a vector of prevalences at all ages.
+#' This function transforms a table with prevalences by age brackets and by (optional) sex, year and categories
+#' into a table with smoothed prevalences at all ages (for all sex, year and categories).
+#' Parameters must include the vector of age cuts, which defines the age brackets. For instance, c(60,70,80)
+#' defines age brackets [60,70), [70,80) and [80,Inf].
 #' The calculation minimises the sum of squares of second-differences of prevalences
 #' by age, under the constraint that average prevalences by age brackets
-#' (weight according to the 'weight' vector, usually the vector of population size at each age)
-#' are equal to the 'prevalence' input vector.
-#'
-#' Note : Second-differences rather than first-differences are used
-#' in the minimisation function, since prevalences according to age are usually parabolic.
+#' (weighted according to the 'weight' vector, usually the vector of population size at each age)
+#' are equal to the 'prevalence' input vector. Alternatively, if 'option' is set to 'polynomial',
+#' polynomial approximation is calculated.
+#' In the output table, 'prevalence.raw' corresponds to input values of prevalences (constant by age bracket)
+#' while 'prevalence.approx' corresponds to smoothed values (different value at every age).
 #'
 #' @param tab a dataframe containing categorisation variables (year, sex, categ) and prevalences by age bracket
 #' @param agecuts a vector with age defining the age brackets (minimum age in each age bracket)
@@ -37,7 +39,7 @@ ApproxPrevalenceTable <- function(tab,
 
   # == extract names of variables in input tables
 
-    # in 'tab'
+    # -- in 'tab'
 
   categories <- intersect( names(tab), unique( c( categories, "year","sex","categ") ) )
 
@@ -45,7 +47,7 @@ ApproxPrevalenceTable <- function(tab,
   if (NROW(name.prev)>1) { stop("More than one prevalence variable in 'tab'")
   } else { message(paste0("'",name.prev,"' is used as prevalence variable."))}
 
-    # in 'weights.tab'
+    # -- in 'weights.tab'
 
   categories.w <- categories[categories %in% names(weights.tab) ]
 
@@ -55,6 +57,8 @@ ApproxPrevalenceTable <- function(tab,
   if (NROW(name.w)>1) { stop("More than one weight variable in 'weights.tab'")}
 
   # == if relevent, aggregates categories (including sex and year) into a unique categ variable
+
+    # -- in 'tab'
 
   if (NROW(categories)==0) { tab$categloc <- rep("#",nrow(tab))
   } else {
@@ -71,6 +75,8 @@ ApproxPrevalenceTable <- function(tab,
   } else {
     tab <- tab %>% unite(categ.w,all_of(categories.w),sep="", remove = FALSE)
   }
+
+    # -- in 'weights.tab'
 
   if (NROW(categories.w)==0) { weights.tab$categ.w <- rep("#",nrow(weights.tab))
   } else {
@@ -89,18 +95,27 @@ ApproxPrevalenceTable <- function(tab,
     } else { weights.loc <- weights.tab[weights.tab$categ.w == cases$categ.w[i],c(name.w)]   }
 
     approxloc <- function(...) {
-      if (option == "polynomial") { prevalence_to_polynomial(...)
+      if (option %in% c("polynomial")) { prevalence_to_polynomial(...)
       } else { prevalenceApprox(...)    }
     }
+
+    agebracket <- cut(c(agemin:agemax), breaks = c(agecuts,Inf), include.lowest = TRUE, right = FALSE)
+    prevalence.raw <- tab[tab$categloc == cases$categloc[i],c(name.prev)]
 
     data.frame(
       categloc = rep(cases$categloc[i],(agemax-agemin+1)),
       age = c(agemin:agemax),
-      prevalence = approxloc(
-        prevalence = tab[tab$categloc == cases$categloc[i],c(name.prev)],
+      agebracket = agebracket,
+      prevalence.approx = approxloc(
+        prevalence = prevalence.raw,
         agecuts = agecuts, agemin = agemin, agemax = agemax,
         weight = weights.loc ),
       stringsAsFactors = FALSE
+    ) %>% left_join(
+      data.frame(prevalence.raw = prevalence.raw,
+                 agebracket = unique(agebracket),
+                 stringsAsFactors = False),
+      by = "agebracket"
     )
   }
 
@@ -112,7 +127,7 @@ ApproxPrevalenceTable <- function(tab,
     tabout[,categories[j]] <- str_extract(tabout$categloc,paste0("(?<=#",j,")[^#]*(?=#)"))
   }
 
-  return(tabout[,c(categories,"age","prevalence")])
+  return(tabout[,c(categories,"age","agebracket","prevalence.raw","prevalence.approx")])
 
 }
 
