@@ -9,7 +9,8 @@ prevalence_to_polynomial(
   agecuts = NULL,
   agemin,
   agemax,
-  weight = rep(1, (agemax - agemin + 1))
+  weight = rep(1, (agemax - agemin + 1)),
+  degree = 4
 )
 }
 \arguments{
@@ -22,13 +23,15 @@ prevalence_to_polynomial(
 \item{agemax}{maximum age in the output vector}
 
 \item{weight}{a vector of weights for the regression (optional)}
+
+\item{degree}{the degree of the polynomial function used to smooth prevalences (default value is 4)}
 }
 \value{
 a vector with prevalences according to polynomial approximation
 }
 \description{
 Given a vector of ages and a vector of prevalences (constant over each age brackets),
-the function returns the vector of prevalences by age smoothed by polynomial approximation of degree 4.
+the function returns the vector of prevalences by age smoothed by polynomial approximation of degree 4 (default).
 }
 \details{
 Prevalences are supposed to be constant for all ages superior to 100

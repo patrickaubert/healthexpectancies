@@ -1,7 +1,7 @@
 #' Estimates a polynomial approximation for prevalences by age
 #'
 #' Given a vector of ages and a vector of prevalences (constant over each age brackets),
-#' the function returns the vector of prevalences by age smoothed by polynomial approximation of degree 4.
+#' the function returns the vector of prevalences by age smoothed by polynomial approximation of degree 4 (default).
 #'
 #' Prevalences are supposed to be constant for all ages superior to 100
 #'
@@ -10,13 +10,15 @@
 #' @param agemin minimum age in the output vector
 #' @param agemax maximum age in the output vector
 #' @param weight a vector of weights for the regression (optional)
+#' @param degree the degree of the polynomial function used to smooth prevalences (default value is 4)
 #'
 #' @return a vector with prevalences according to polynomial approximation
 #'
 #' @export
 prevalence_to_polynomial <- function (prevalence,
                                       agecuts = NULL, agemin, agemax,
-                                      weight = rep(1,(agemax-agemin+1)) ) {
+                                      weight = rep(1,(agemax-agemin+1)),
+                                      degree = 4) {
 
   if (NROW(weight) != (agemax-agemin+1)) { stop("Error: Size of weights vector not compatible with agemin and agemax") }
 
@@ -43,8 +45,19 @@ prevalence_to_polynomial <- function (prevalence,
   tab <- data.frame(prevalence) %>%
     mutate(a = pmin(100,as.numeric(age)), a2 = a^2, a3 = a^3, a4 = a^4)
 
-  fitted_models <- tab %>%
-    do(model = lm(prevalence ~ a + a2 + a3 + a4 , data = ., weights = weight))
+  if (degree == 4) {
+    fitted_models <- tab %>%
+      do(model = lm(prevalence ~ a + a2 + a3 + a4 , data = ., weights = weight))
+  } else if (degree == 3) {
+    fitted_models <- tab %>%
+      do(model = lm(prevalence ~ a + a2 + a3 , data = ., weights = weight))
+  } else if (degree == 2) {
+    fitted_models <- tab %>%
+      do(model = lm(prevalence ~ a + a2 , data = ., weights = weight))
+  } else if (degree == 1) {
+    fitted_models <- tab %>%
+      do(model = lm(prevalence ~ a , data = ., weights = weight))
+  }
 
   return( fitted_models$model[[1]]$fitted.values )
 }

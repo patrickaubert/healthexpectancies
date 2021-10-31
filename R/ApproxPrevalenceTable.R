@@ -2,13 +2,17 @@
 #'
 #' This function transforms a table with prevalences by age brackets and by (optional) sex, year and categories
 #' into a table with smoothed prevalences at all ages (for all sex, year and categories).
+#'
 #' Parameters must include the vector of age cuts, which defines the age brackets. For instance, c(60,70,80)
 #' defines age brackets [60,70), [70,80) and [80,Inf].
+#'
 #' The calculation minimises the sum of squares of second-differences of prevalences
 #' by age, under the constraint that average prevalences by age brackets
 #' (weighted according to the 'weight' vector, usually the vector of population size at each age)
 #' are equal to the 'prevalence' input vector. Alternatively, if 'option' is set to 'polynomial',
-#' polynomial approximation is calculated.
+#' polynomial approximation is calculated. The degree of the polynomial function can be constrained
+#' by setting option to 'polynomialD' (with D = degree, between 1 and 4) ; default value is 4.
+#'
 #' In the output table, 'prevalence.raw' corresponds to input values of prevalences (constant by age bracket)
 #' while 'prevalence.approx' corresponds to smoothed values (different value at every age).
 #'
@@ -89,13 +93,21 @@ ApproxPrevalenceTable <- function(tab,
 
   # == call approximation function for every category, sex and year
 
+  option <- tolower(option)
+  degree <- 4
+  if (grepl("polynomial[[:digit:]]",option)) {
+    degree <- gsub("[^[:digit:]]","",option) %>% as.numeric()
+    degree <- min(4,max(1,degree))
+    option <- "polynomial"
+  }
+
   approxloc <- function(i) {
 
     if (is.null(weights.tab)) { weights.loc <- rep(1,(agemax-agemin+1))
     } else { weights.loc <- weights.tab[weights.tab$categ.w == cases$categ.w[i],c(name.w)]   }
 
     approxloc <- function(...) {
-      if (option %in% c("polynomial")) { prevalence_to_polynomial(...)
+      if (option %in% c("polynomial")) { prevalence_to_polynomial(degree = degree, ...)
       } else { prevalenceApprox(...)    }
     }
 
