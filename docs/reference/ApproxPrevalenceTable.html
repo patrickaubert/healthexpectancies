@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>An example of calculation using Sullivan's method. — sullivan • healthexpectancies</title>
+<title>Transforms a table with prevalences by age brackets into a table with (smoothed) prevalences by age — ApproxPrevalenceTable • healthexpectancies</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="An example of calculation using Sullivan's method. — sullivan" />
-<meta property="og:description" content="A dataset taken from the 'Ex 1' example in the Sullivan manual (june 2007 version)
-available at https://reves.site.ined.fr/en/resources/computation_online/sullivan/" />
+<meta property="og:title" content="Transforms a table with prevalences by age brackets into a table with (smoothed) prevalences by age — ApproxPrevalenceTable" />
+<meta property="og:description" content="This function transforms a table with prevalences by age brackets and by (optional) sex, year and categories
+into a table with smoothed prevalences at all ages (for all sex, year and categories)." />
 
 
 
@@ -122,29 +122,74 @@ available at https://reves.site.ined.fr/en/resources/computation_online/sullivan
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>An example of calculation using Sullivan's method.</h1>
+    <h1>Transforms a table with prevalences by age brackets into a table with (smoothed) prevalences by age</h1>
     
-    <div class="hidden name"><code>sullivan.Rd</code></div>
+    <div class="hidden name"><code>ApproxPrevalenceTable.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A dataset taken from the 'Ex 1' example in the Sullivan manual (june 2007 version)
-available at https://reves.site.ined.fr/en/resources/computation_online/sullivan/</p>
+    <p>This function transforms a table with prevalences by age brackets and by (optional) sex, year and categories
+into a table with smoothed prevalences at all ages (for all sex, year and categories).</p>
     </div>
 
-    <pre class="usage"><span class='va'>sullivan</span></pre>
+    <pre class="usage"><span class='fu'>ApproxPrevalenceTable</span><span class='op'>(</span>
+  <span class='va'>tab</span>,
+  <span class='va'>agecuts</span>,
+  <span class='va'>agemin</span>,
+  <span class='va'>agemax</span>,
+  weights.tab <span class='op'>=</span> <span class='cn'>NULL</span>,
+  categories <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"categ"</span><span class='op'>)</span>,
+  option <span class='op'>=</span> <span class='st'>""</span>
+<span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>tab</th>
+      <td><p>a dataframe containing categorisation variables (year, sex, categ) and prevalences by age bracket</p></td>
+    </tr>
+    <tr>
+      <th>agecuts</th>
+      <td><p>a vector with age defining the age brackets (minimum age in each age bracket)</p></td>
+    </tr>
+    <tr>
+      <th>agemin</th>
+      <td><p>minimum age in the output table</p></td>
+    </tr>
+    <tr>
+      <th>agemax</th>
+      <td><p>maximum age in the output table</p></td>
+    </tr>
+    <tr>
+      <th>weights.tab</th>
+      <td><p>a dataframe with weights (ie population) by age and some of the categorisation variables of the 'tab' dataframe</p></td>
+    </tr>
+    <tr>
+      <th>categories</th>
+      <td><p>a vector of names of variables of the 'tab' dataframe, representing categories</p></td>
+    </tr>
+    <tr>
+      <th>option</th>
+      <td><p>maximum age in the output table</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame with  rows and  variables:</p><dl>
-<dt>year</dt><dd><p>year</p></dd>
+    <p>a table containing the same categorisation variables than the input table, plus prevalences by age</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-</dl>
-
-    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
-
-    <p><a href='https://reves.site.ined.fr/fichier/s_rubrique/20182/sullivan_manual_jun2007.en.xls'>https://reves.site.ined.fr/fichier/s_rubrique/20182/sullivan_manual_jun2007.en.xls</a></p>
+    <p>Parameters must include the vector of age cuts, which defines the age brackets. For instance, c(60,70,80)
+defines age brackets [60,70), [70,80) and 80,Inf.</p>
+<p>The calculation minimises the sum of squares of second-differences of prevalences
+by age, under the constraint that average prevalences by age brackets
+(weighted according to the 'weight' vector, usually the vector of population size at each age)
+are equal to the 'prevalence' input vector. Alternatively, if 'option' is set to 'polynomial',
+polynomial approximation is calculated. The degree of the polynomial function can be constrained
+by setting option to 'polynomialD' (with D = degree, between 1 and 4) ; default value is 4.</p>
+<p>In the output table, 'prevalence.raw' corresponds to input values of prevalences (constant by age bracket)
+while 'prevalence.approx' corresponds to smoothed values (different value at every age).</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

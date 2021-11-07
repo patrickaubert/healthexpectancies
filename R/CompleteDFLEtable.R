@@ -28,6 +28,9 @@
 #' @examples CompleteDFLEtable( FRInseeMortalityForecast2016[FRInseeMortalityForecast2016$year %in% c(2013,2015,2020,2030),] )
 CompleteDFLEtable <- function(tab, categories = c("")) {
 
+  # impose data.Frame format
+  tab <- as.data.frame(tab)
+
   # remove columns with missing values
   tab <- tab[,colSums(is.na(tab))==0]
 

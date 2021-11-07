@@ -50,7 +50,3 @@ by setting option to 'polynomialD' (with D = degree, between 1 and 4) ; default 
 In the output table, 'prevalence.raw' corresponds to input values of prevalences (constant by age bracket)
 while 'prevalence.approx' corresponds to smoothed values (different value at every age).
 }
-\examples{
-prevalenceApprox(prevalence = (FRDreesAPA2017 \%>\% filter(sex=="female",typepresta=="APA Ã  domicile"))$prevalence, agecuts=c(seq(60,95,5)), agemin=60, agemax=100, weight=(FRInseePopulation \%>\% filter(sex=="female",year==2018,age0101>=60) \%>\% arrange(age0101))$popx)
-prevalenceApprox(prevalence = (FRDreesAPA \%>\% filter(year==2018,sex=="male",typepresta=="APA Ã  domicile"))$prevalence, agecuts=c(seq(60,90,5)), agemin=60, agemax=100, weight=(FRInseePopulation \%>\% filter(sex=="male",year==2019,age0101>=60) \%>\% arrange(age0101))$popx)
-}

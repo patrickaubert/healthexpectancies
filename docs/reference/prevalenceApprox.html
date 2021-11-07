@@ -77,7 +77,7 @@ are equal to the 'prevalence' input vector." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">healthexpectancies</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9003</span>
       </span>
     </div>
 
@@ -145,7 +145,7 @@ are equal to the 'prevalence' input vector.</p>
   <span class='va'>agecuts</span>,
   <span class='va'>agemin</span>,
   <span class='va'>agemax</span>,
-  weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>NROW</a></span><span class='op'>(</span><span class='va'>age</span><span class='op'>)</span><span class='op'>)</span>
+  weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='op'>(</span><span class='va'>agemax</span> <span class='op'>-</span> <span class='va'>agemin</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -196,7 +196,7 @@ in the minimisation function, since prevalences according to age are usually par
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://sites.google.com/site/patrickauber/'>Patrick Aubert</a>.</p>
+  <p>Developed by <a href='https://patrickaubert.netlify.app/'>Patrick Aubert</a>.</p>
 </div>
 
 <div class="pkgdown">

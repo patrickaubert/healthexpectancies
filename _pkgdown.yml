@@ -5,12 +5,13 @@ template:
     bootswatch: yeti
 authors:
   Patrick Aubert:
-    href: https://sites.google.com/site/patrickauber/
+    href: https://patrickaubert.netlify.app/
 reference:
 - title: Main functions
 - contents:
   - CompleteDFLEtable
   - prevalenceForecast
+  - ApproxPrevalenceTable
 - title: Auxiliary functions
 - contents:
   - prevalenceApprox

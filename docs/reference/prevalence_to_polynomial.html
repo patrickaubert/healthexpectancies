@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Estimates a polynomial approximation for prevalences by age — prevalence_to_polynomial" />
 <meta property="og:description" content="Given a vector of ages and a vector of prevalences (constant over each age brackets),
-the function returns the vector of prevalences by age smoothed by polynomial approximation of degree 4." />
+the function returns the vector of prevalences by age smoothed by polynomial approximation of degree 4 (default)." />
 
 
 
@@ -73,7 +73,7 @@ the function returns the vector of prevalences by age smoothed by polynomial app
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">healthexpectancies</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9003</span>
       </span>
     </div>
 
@@ -129,25 +129,44 @@ the function returns the vector of prevalences by age smoothed by polynomial app
 
     <div class="ref-description">
     <p>Given a vector of ages and a vector of prevalences (constant over each age brackets),
-the function returns the vector of prevalences by age smoothed by polynomial approximation of degree 4.</p>
+the function returns the vector of prevalences by age smoothed by polynomial approximation of degree 4 (default).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>prevalence_to_polynomial</span><span class='op'>(</span><span class='va'>age</span>, <span class='va'>prevalence</span>, weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>NROW</a></span><span class='op'>(</span><span class='va'>prevalence</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>prevalence_to_polynomial</span><span class='op'>(</span>
+  <span class='va'>prevalence</span>,
+  agecuts <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>agemin</span>,
+  <span class='va'>agemax</span>,
+  weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='op'>(</span><span class='va'>agemax</span> <span class='op'>-</span> <span class='va'>agemin</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>,
+  degree <span class='op'>=</span> <span class='fl'>4</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>age</th>
-      <td><p>a vector with observed ages (eg. each ages between 60 and 100)</p></td>
+      <th>prevalence</th>
+      <td><p>a vector with observed prevalences by age or agebracket</p></td>
     </tr>
     <tr>
-      <th>prevalence</th>
-      <td><p>a vector with observed prevalences (constant over each age brackets if prevalences are only observed as averages by age bracket)</p></td>
+      <th>agecuts</th>
+      <td><p>an optional vector with age defining the age brackets (minimum age in each age bracket)</p></td>
+    </tr>
+    <tr>
+      <th>agemin</th>
+      <td><p>minimum age in the output vector</p></td>
+    </tr>
+    <tr>
+      <th>agemax</th>
+      <td><p>maximum age in the output vector</p></td>
     </tr>
     <tr>
       <th>weight</th>
       <td><p>a vector of weights for the regression (optional)</p></td>
+    </tr>
+    <tr>
+      <th>degree</th>
+      <td><p>the degree of the polynomial function used to smooth prevalences (default value is 4)</p></td>
     </tr>
     </table>
 
@@ -169,7 +188,7 @@ the function returns the vector of prevalences by age smoothed by polynomial app
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://sites.google.com/site/patrickauber/'>Patrick Aubert</a>.</p>
+  <p>Developed by <a href='https://patrickaubert.netlify.app/'>Patrick Aubert</a>.</p>
 </div>
 
 <div class="pkgdown">

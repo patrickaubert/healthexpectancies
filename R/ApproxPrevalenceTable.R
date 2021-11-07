@@ -27,9 +27,6 @@
 #' @return a table containing the same categorisation variables than the input table, plus prevalences by age
 #'
 #' @export ApproxPrevalenceTable
-#'
-#' @examples prevalenceApprox(prevalence = (FRDreesAPA2017 %>% filter(sex=="female",typepresta=="APA à domicile"))$prevalence, agecuts=c(seq(60,95,5)), agemin=60, agemax=100, weight=(FRInseePopulation %>% filter(sex=="female",year==2018,age0101>=60) %>% arrange(age0101))$popx)
-#' @examples prevalenceApprox(prevalence = (FRDreesAPA %>% filter(year==2018,sex=="male",typepresta=="APA à domicile"))$prevalence, agecuts=c(seq(60,90,5)), agemin=60, agemax=100, weight=(FRInseePopulation %>% filter(sex=="male",year==2019,age0101>=60) %>% arrange(age0101))$popx)
 ApproxPrevalenceTable <- function(tab,
                                   agecuts,agemin,agemax,
                                   weights.tab = NULL,
