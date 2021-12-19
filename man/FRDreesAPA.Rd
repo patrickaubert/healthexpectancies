@@ -10,9 +10,8 @@ A data frame with 138 observations and 6 variables:
 \item{typepresta}{type of benefits (eg. 'à domicile' or 'en établissement')}
 \item{prevalence}{share of beneficiaires within the total population in the given age bracket (number between 0 and 1)}
 \item{sex}{sex ('female' or 'male')}
-\item{age}{minimal age within the age bracket}
 \item{agebracket}{age bracket (eg '[60;65)' = between 60 and 64 years old)}
-\item{annee}{year of observation (value for the monthe of December)}
+\item{year}{year of observation (value for the monthe of December)}
 }
 }
 \source{

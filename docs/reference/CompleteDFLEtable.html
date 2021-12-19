@@ -168,36 +168,268 @@ See https://reves.site.ined.fr/en/resources/computation_online/sullivan/ for mor
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>CompleteDFLEtable</span><span class='op'>(</span> <span class='va'>sullivan</span><span class='op'>[</span>,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"year"</span>,<span class='st'>"age"</span>,<span class='st'>"mx"</span>,<span class='st'>"qx"</span>,<span class='st'>"pix"</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 86 x 20</span><span>
-#&gt;     year   age      mx      qx   pix agewidth     lx     Lx     Tx    ex   DFLx
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'> 1</span><span>  </span><span style='text-decoration: underline;'>2</span><span>004     0 3.69</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-3</span><span> 3.61</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-3</span><span> 0            1 1.00</span><span style='color: #555555;'>e</span><span>5 </span><span style='text-decoration: underline;'>99</span><span>711. 8.14</span><span style='color: #555555;'>e</span><span>6  81.4 </span><span style='text-decoration: underline;'>99</span><span>711.
-#&gt; </span><span style='color: #555555;'> 2</span><span>  </span><span style='text-decoration: underline;'>2</span><span>004     1 3.83</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 3.83</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 0.048        1 9.96</span><span style='color: #555555;'>e</span><span>4 </span><span style='text-decoration: underline;'>99</span><span>620. 8.04</span><span style='color: #555555;'>e</span><span>6  80.7 </span><span style='text-decoration: underline;'>94</span><span>839.
-#&gt; </span><span style='color: #555555;'> 3</span><span>  </span><span style='text-decoration: underline;'>2</span><span>004     2 1.98</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 1.98</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 0.048        1 9.96</span><span style='color: #555555;'>e</span><span>4 </span><span style='text-decoration: underline;'>99</span><span>591. 7.94</span><span style='color: #555555;'>e</span><span>6  79.7 </span><span style='text-decoration: underline;'>94</span><span>811.
-#&gt; </span><span style='color: #555555;'> 4</span><span>  </span><span style='text-decoration: underline;'>2</span><span>004     3 1.43</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 1.43</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 0.048        1 9.96</span><span style='color: #555555;'>e</span><span>4 </span><span style='text-decoration: underline;'>99</span><span>574. 7.84</span><span style='color: #555555;'>e</span><span>6  78.8 </span><span style='text-decoration: underline;'>94</span><span>795.
-#&gt; </span><span style='color: #555555;'> 5</span><span>  </span><span style='text-decoration: underline;'>2</span><span>004     4 2.15</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 2.15</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 0.048        1 9.96</span><span style='color: #555555;'>e</span><span>4 </span><span style='text-decoration: underline;'>99</span><span>557. 7.74</span><span style='color: #555555;'>e</span><span>6  77.8 </span><span style='text-decoration: underline;'>94</span><span>778.
-#&gt; </span><span style='color: #555555;'> 6</span><span>  </span><span style='text-decoration: underline;'>2</span><span>004     5 1.42</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 1.42</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 0.03         1 9.95</span><span style='color: #555555;'>e</span><span>4 </span><span style='text-decoration: underline;'>99</span><span>539. 7.64</span><span style='color: #555555;'>e</span><span>6  76.8 </span><span style='text-decoration: underline;'>96</span><span>553.
-#&gt; </span><span style='color: #555555;'> 7</span><span>  </span><span style='text-decoration: underline;'>2</span><span>004     6 1.04</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 1.04</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 0.03         1 9.95</span><span style='color: #555555;'>e</span><span>4 </span><span style='text-decoration: underline;'>99</span><span>527. 7.54</span><span style='color: #555555;'>e</span><span>6  75.8 </span><span style='text-decoration: underline;'>96</span><span>541.
-#&gt; </span><span style='color: #555555;'> 8</span><span>  </span><span style='text-decoration: underline;'>2</span><span>004     7 1.89</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 1.89</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 0.03         1 9.95</span><span style='color: #555555;'>e</span><span>4 </span><span style='text-decoration: underline;'>99</span><span>512. 7.44</span><span style='color: #555555;'>e</span><span>6  74.8 </span><span style='text-decoration: underline;'>96</span><span>527.
-#&gt; </span><span style='color: #555555;'> 9</span><span>  </span><span style='text-decoration: underline;'>2</span><span>004     8 8.52</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-5</span><span> 8.52</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-5</span><span> 0.03         1 9.95</span><span style='color: #555555;'>e</span><span>4 </span><span style='text-decoration: underline;'>99</span><span>498. 7.34</span><span style='color: #555555;'>e</span><span>6  73.8 </span><span style='text-decoration: underline;'>96</span><span>513.
-#&gt; </span><span style='color: #555555;'>10</span><span>  </span><span style='text-decoration: underline;'>2</span><span>004     9 1.01</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 1.01</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-4</span><span> 0.03         1 9.95</span><span style='color: #555555;'>e</span><span>4 </span><span style='text-decoration: underline;'>99</span><span>489. 7.25</span><span style='color: #555555;'>e</span><span>6  72.8 </span><span style='text-decoration: underline;'>96</span><span>504.
-#&gt; </span><span style='color: #555555;'># ... with 76 more rows, and 9 more variables: DLx </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, DFTx </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   DFLEx </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, DLEx </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, pctDFLEx </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, pctDLEx </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, MeanDAx </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   MedianDAx </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, ModalDAx </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='fu'>CompleteDFLEtable</span><span class='op'>(</span> <span class='va'>FRInseeMortalityForecast2016</span><span class='op'>[</span><span class='va'>FRInseeMortalityForecast2016</span><span class='op'>$</span><span class='va'>year</span> <span class='op'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2013</span>,<span class='fl'>2015</span>,<span class='fl'>2020</span>,<span class='fl'>2030</span><span class='op'>)</span>,<span class='op'>]</span> <span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 968 x 10</span><span>
-#&gt;     year sex      age        qx agewidth        mx      lx     Lx       Tx    ex
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'> 1</span><span>  </span><span style='text-decoration: underline;'>2</span><span>013 female     0 0.003</span><span style='text-decoration: underline;'>22</span><span>          1 0.003</span><span style='text-decoration: underline;'>22</span><span>   </span><span style='text-decoration: underline;'>100</span><span>000  </span><span style='text-decoration: underline;'>99</span><span>743. 8</span><span style='text-decoration: underline;'>501</span><span>250.  85.0
-#&gt; </span><span style='color: #555555;'> 2</span><span>  </span><span style='text-decoration: underline;'>2</span><span>013 female     1 0.000</span><span style='text-decoration: underline;'>364</span><span>         1 0.000</span><span style='text-decoration: underline;'>364</span><span>   </span><span style='text-decoration: underline;'>99</span><span>678. </span><span style='text-decoration: underline;'>99</span><span>660. 8</span><span style='text-decoration: underline;'>401</span><span>507.  84.3
-#&gt; </span><span style='color: #555555;'> 3</span><span>  </span><span style='text-decoration: underline;'>2</span><span>013 female     2 0.000</span><span style='text-decoration: underline;'>168</span><span>         1 0.000</span><span style='text-decoration: underline;'>168</span><span>   </span><span style='text-decoration: underline;'>99</span><span>642. </span><span style='text-decoration: underline;'>99</span><span>634. 8</span><span style='text-decoration: underline;'>301</span><span>847.  83.3
-#&gt; </span><span style='color: #555555;'> 4</span><span>  </span><span style='text-decoration: underline;'>2</span><span>013 female     3 0.000</span><span style='text-decoration: underline;'>130</span><span>         1 0.000</span><span style='text-decoration: underline;'>130</span><span>   </span><span style='text-decoration: underline;'>99</span><span>625. </span><span style='text-decoration: underline;'>99</span><span>619. 8</span><span style='text-decoration: underline;'>202</span><span>214.  82.3
-#&gt; </span><span style='color: #555555;'> 5</span><span>  </span><span style='text-decoration: underline;'>2</span><span>013 female     4 0.000</span><span style='text-decoration: underline;'>127</span><span>         1 0.000</span><span style='text-decoration: underline;'>127</span><span>   </span><span style='text-decoration: underline;'>99</span><span>612. </span><span style='text-decoration: underline;'>99</span><span>606. 8</span><span style='text-decoration: underline;'>102</span><span>595.  81.3
-#&gt; </span><span style='color: #555555;'> 6</span><span>  </span><span style='text-decoration: underline;'>2</span><span>013 female     5 0.000</span><span style='text-decoration: underline;'>105</span><span>         1 0.000</span><span style='text-decoration: underline;'>105</span><span>   </span><span style='text-decoration: underline;'>99</span><span>600. </span><span style='text-decoration: underline;'>99</span><span>594. 8</span><span style='text-decoration: underline;'>002</span><span>989.  80.4
-#&gt; </span><span style='color: #555555;'> 7</span><span>  </span><span style='text-decoration: underline;'>2</span><span>013 female     6 0.000</span><span style='text-decoration: underline;'>084</span><span>4        1 0.000</span><span style='text-decoration: underline;'>084</span><span>4  </span><span style='text-decoration: underline;'>99</span><span>589. </span><span style='text-decoration: underline;'>99</span><span>585. 7</span><span style='text-decoration: underline;'>903</span><span>395.  79.4
-#&gt; </span><span style='color: #555555;'> 8</span><span>  </span><span style='text-decoration: underline;'>2</span><span>013 female     7 0.000</span><span style='text-decoration: underline;'>082</span><span>0        1 0.000</span><span style='text-decoration: underline;'>082</span><span>0  </span><span style='text-decoration: underline;'>99</span><span>581. </span><span style='text-decoration: underline;'>99</span><span>577. 7</span><span style='text-decoration: underline;'>803</span><span>810.  78.4
-#&gt; </span><span style='color: #555555;'> 9</span><span>  </span><span style='text-decoration: underline;'>2</span><span>013 female     8 0.000</span><span style='text-decoration: underline;'>076</span><span>7        1 0.000</span><span style='text-decoration: underline;'>076</span><span>7  </span><span style='text-decoration: underline;'>99</span><span>573. </span><span style='text-decoration: underline;'>99</span><span>569. 7</span><span style='text-decoration: underline;'>704</span><span>233.  77.4
-#&gt; </span><span style='color: #555555;'>10</span><span>  </span><span style='text-decoration: underline;'>2</span><span>013 female     9 0.000</span><span style='text-decoration: underline;'>065</span><span>6        1 0.000</span><span style='text-decoration: underline;'>065</span><span>6  </span><span style='text-decoration: underline;'>99</span><span>565. </span><span style='text-decoration: underline;'>99</span><span>562. 7</span><span style='text-decoration: underline;'>604</span><span>664.  76.4
-#&gt; </span><span style='color: #555555;'># ... with 958 more rows</span><span></div></span></pre>
+</div><div class='output co'>#&gt;    year age           mx           qx   pix agewidth        lx        Lx
+#&gt; 1  2004   0 3.686434e-03 3.606258e-03 0.000        1 100000.00  99711.50
+#&gt; 2  2004   1 3.830858e-04 3.830125e-04 0.048        1  99639.37  99620.29
+#&gt; 3  2004   2 1.976089e-04 1.975894e-04 0.048        1  99601.21  99591.37
+#&gt; 4  2004   3 1.429350e-04 1.429248e-04 0.048        1  99581.53  99574.41
+#&gt; 5  2004   4 2.150326e-04 2.150095e-04 0.048        1  99567.30  99556.59
+#&gt; 6  2004   5 1.418402e-04 1.418301e-04 0.030        1  99545.89  99538.83
+#&gt; 7  2004   6 1.043760e-04 1.043705e-04 0.030        1  99531.77  99526.58
+#&gt; 8  2004   7 1.886906e-04 1.886728e-04 0.030        1  99521.38  99512.00
+#&gt; 9  2004   8 8.521299e-05 8.520936e-05 0.030        1  99502.61  99498.37
+#&gt; 10 2004   9 1.005328e-04 1.005278e-04 0.030        1  99494.13  99489.13
+#&gt; 11 2004  10 3.229009e-05 3.228957e-05 0.072        1  99484.13  99482.52
+#&gt; 12 2004  11 7.913271e-05 7.912957e-05 0.072        1  99480.91  99476.98
+#&gt; 13 2004  12 2.057711e-04 2.057499e-04 0.072        1  99473.04  99462.81
+#&gt; 14 2004  13 1.451976e-04 1.451870e-04 0.072        1  99452.58  99445.36
+#&gt; 15 2004  14 1.488218e-04 1.488108e-04 0.072        1  99438.14  99430.74
+#&gt; 16 2004  15 1.672073e-04 1.671933e-04 0.098        1  99423.34  99415.03
+#&gt; 17 2004  16 1.696367e-04 1.696223e-04 0.098        1  99406.72  99398.28
+#&gt; 18 2004  17 2.031282e-04 2.031075e-04 0.098        1  99389.85  99379.76
+#&gt; 19 2004  18 3.892071e-04 3.891314e-04 0.098        1  99369.67  99350.33
+#&gt; 20 2004  19 3.963110e-04 3.962325e-04 0.098        1  99331.00  99311.32
+#&gt; 21 2004  20 2.272930e-04 2.272672e-04 0.087        1  99291.64  99280.36
+#&gt; 22 2004  21 4.289289e-04 4.288369e-04 0.087        1  99269.08  99247.79
+#&gt; 23 2004  22 3.593132e-04 3.592487e-04 0.087        1  99226.51  99208.68
+#&gt; 24 2004  23 3.747921e-04 3.747219e-04 0.087        1  99190.86  99172.27
+#&gt; 25 2004  24 2.542043e-04 2.541720e-04 0.087        1  99153.69  99141.09
+#&gt; 26 2004  25 3.172111e-04 3.171608e-04 0.096        1  99128.49  99112.77
+#&gt; 27 2004  26 3.963253e-04 3.962468e-04 0.096        1  99097.05  99077.41
+#&gt; 28 2004  27 4.738363e-04 4.737241e-04 0.096        1  99057.78  99034.32
+#&gt; 29 2004  28 3.302536e-04 3.301991e-04 0.096        1  99010.85  98994.51
+#&gt; 30 2004  29 3.786158e-04 3.785441e-04 0.096        1  98978.16  98959.43
+#&gt; 31 2004  30 4.266588e-04 4.265678e-04 0.089        1  98940.69  98919.59
+#&gt; 32 2004  31 4.257252e-04 4.256346e-04 0.089        1  98898.49  98877.44
+#&gt; 33 2004  32 3.310390e-04 3.309843e-04 0.089        1  98856.39  98840.03
+#&gt; 34 2004  33 5.058895e-04 5.057616e-04 0.089        1  98823.67  98798.68
+#&gt; 35 2004  34 5.954354e-04 5.952582e-04 0.089        1  98773.69  98744.30
+#&gt; 36 2004  35 6.960246e-04 6.957825e-04 0.142        1  98714.90  98680.56
+#&gt; 37 2004  36 8.000472e-04 7.997273e-04 0.142        1  98646.21  98606.77
+#&gt; 38 2004  37 7.719907e-04 7.716928e-04 0.142        1  98567.32  98529.29
+#&gt; 39 2004  38 7.429145e-04 7.426386e-04 0.142        1  98491.26  98454.69
+#&gt; 40 2004  39 9.558668e-04 9.554102e-04 0.142        1  98418.12  98371.10
+#&gt; 41 2004  40 1.003647e-03 1.003144e-03 0.122        1  98324.09  98274.77
+#&gt; 42 2004  41 1.274547e-03 1.273736e-03 0.122        1  98225.45  98162.90
+#&gt; 43 2004  42 1.183709e-03 1.183009e-03 0.122        1  98100.34  98042.31
+#&gt; 44 2004  43 1.298726e-03 1.297883e-03 0.122        1  97984.29  97920.70
+#&gt; 45 2004  44 1.422120e-03 1.421110e-03 0.122        1  97857.11  97787.58
+#&gt; 46 2004  45 1.573433e-03 1.572196e-03 0.195        1  97718.05  97641.23
+#&gt; 47 2004  46 1.725310e-03 1.723823e-03 0.195        1  97564.42  97480.32
+#&gt; 48 2004  47 2.217354e-03 2.214898e-03 0.195        1  97396.23  97288.37
+#&gt; 49 2004  48 1.973893e-03 1.971947e-03 0.195        1  97180.51  97084.69
+#&gt; 50 2004  49 2.678199e-03 2.674618e-03 0.195        1  96988.88  96859.17
+#&gt; 51 2004  50 2.761415e-03 2.757608e-03 0.161        1  96729.47  96596.10
+#&gt; 52 2004  51 3.183363e-03 3.178304e-03 0.161        1  96462.73  96309.43
+#&gt; 53 2004  52 3.712271e-03 3.705393e-03 0.161        1  96156.14  95977.99
+#&gt; 54 2004  53 3.988382e-03 3.980445e-03 0.161        1  95799.84  95609.18
+#&gt; 55 2004  54 4.028525e-03 4.020427e-03 0.161        1  95418.51  95226.70
+#&gt; 56 2004  55 4.411490e-03 4.401781e-03 0.298        1  95034.89  94825.73
+#&gt; 57 2004  56 4.277353e-03 4.268224e-03 0.298        1  94616.57  94414.65
+#&gt; 58 2004  57 4.074623e-03 4.066339e-03 0.298        1  94212.72  94021.17
+#&gt; 59 2004  58 4.201045e-03 4.192239e-03 0.298        1  93829.62  93632.95
+#&gt; 60 2004  59 4.271398e-03 4.262295e-03 0.298        1  93436.27  93237.14
+#&gt; 61 2004  60 5.089647e-03 5.076728e-03 0.234        1  93038.01  92801.85
+#&gt; 62 2004  61 6.322002e-03 6.302081e-03 0.234        1  92565.69  92274.01
+#&gt; 63 2004  62 7.128420e-03 7.103103e-03 0.234        1  91982.33  91655.65
+#&gt; 64 2004  63 7.015370e-03 6.990848e-03 0.234        1  91328.97  91009.74
+#&gt; 65 2004  64 6.946817e-03 6.922771e-03 0.234        1  90690.50  90376.59
+#&gt; 66 2004  65 6.877320e-03 6.853752e-03 0.257        1  90062.67  89754.04
+#&gt; 67 2004  66 9.063532e-03 9.022643e-03 0.257        1  89445.41  89041.89
+#&gt; 68 2004  67 9.571043e-03 9.525459e-03 0.257        1  88638.37  88216.21
+#&gt; 69 2004  68 1.116834e-02 1.110632e-02 0.257        1  87794.05  87306.52
+#&gt; 70 2004  69 1.311612e-02 1.303067e-02 0.257        1  86818.98  86253.33
+#&gt; 71 2004  70 1.397621e-02 1.387922e-02 0.345        1  85687.67  85093.03
+#&gt; 72 2004  71 1.498467e-02 1.487324e-02 0.345        1  84498.39  83870.01
+#&gt; 73 2004  72 1.570196e-02 1.557965e-02 0.345        1  83241.63  82593.19
+#&gt; 74 2004  73 1.792241e-02 1.776323e-02 0.345        1  81944.75  81216.95
+#&gt; 75 2004  74 2.138077e-02 2.115461e-02 0.345        1  80489.15  79637.79
+#&gt; 76 2004  75 2.343253e-02 2.316117e-02 0.431        1  78786.43  77874.04
+#&gt; 77 2004  76 3.081565e-02 3.034805e-02 0.431        1  76961.65  75793.83
+#&gt; 78 2004  77 3.779442e-02 3.709346e-02 0.431        1  74626.01  73241.94
+#&gt; 79 2004  78 4.207316e-02 4.120632e-02 0.431        1  71857.87  70377.37
+#&gt; 80 2004  79 4.687396e-02 4.580054e-02 0.431        1  68896.88  67319.12
+#&gt; 81 2004  80 4.950053e-02 4.830496e-02 0.431        1  65741.36  64153.54
+#&gt; 82 2004  81 4.816614e-02 4.703343e-02 0.431        1  62565.73  61094.39
+#&gt; 83 2004  82 4.386501e-02 4.292359e-02 0.431        1  59623.05  58343.43
+#&gt; 84 2004  83 3.655573e-02 3.589956e-02 0.431        1  57063.81  56039.53
+#&gt; 85 2004  84 5.922821e-02 5.752467e-02 0.431        1  55015.25  53432.88
+#&gt; 86 2004  85 1.861576e-01 1.703058e-01 0.513        1  51850.51 278530.14
+#&gt;           Tx        ex      DFLx        DLx      DFTx     DFLEx      DLEx
+#&gt; 1  8141517.4 81.415174  99711.50      0.000 6657315.8 66.573158 14.842015
+#&gt; 2  8041805.9 80.709117  94838.52   4781.774 6557604.3 65.813384 14.895733
+#&gt; 3  7942185.6 79.739849  94810.99   4780.386 6462765.8 64.886418 14.853431
+#&gt; 4  7842594.2 78.755509  94794.84   4779.572 6367954.8 63.947147 14.808362
+#&gt; 5  7743019.8 77.766696  94777.88   4778.717 6273160.0 63.004220 14.762475
+#&gt; 6  7643463.2 76.783312  96552.67   2986.165 6178382.1 62.065667 14.717645
+#&gt; 7  7543924.4 75.794133  96540.78   2985.797 6081829.5 61.104403 14.689731
+#&gt; 8  7444397.8 74.801992  96526.64   2985.360 5985288.7 60.140730 14.661262
+#&gt; 9  7344885.8 73.816014  96513.42   2984.951 5888762.0 59.181988 14.634026
+#&gt; 10 7245387.4 72.822262  96504.45   2984.674 5792248.6 58.216990 14.605272
+#&gt; 11 7145898.3 71.829533  92319.78   7162.741 5695744.2 57.252794 14.576739
+#&gt; 12 7046415.8 70.831836  92314.64   7162.342 5603424.4 56.326628 14.505208
+#&gt; 13 6946938.8 69.837402  92301.49   7161.322 5511109.8 55.403048 14.434353
+#&gt; 14 6847476.0 68.851671  92285.29   7160.066 5418808.3 54.486354 14.365316
+#&gt; 15 6748030.6 67.861596  92271.72   7159.013 5326523.0 53.566199 14.295397
+#&gt; 16 6648599.9 66.871622  89672.35   9742.673 5234251.3 52.646102 14.225519
+#&gt; 17 6549184.9 65.882720  89657.25   9741.032 5144578.9 51.752830 14.129890
+#&gt; 18 6449786.6 64.893813  89640.54   9739.217 5054921.7 50.859534 14.034279
+#&gt; 19 6350406.8 63.906894  89614.00   9736.333 4965281.1 49.967774 13.939120
+#&gt; 20 6251056.5 62.931577  89578.81   9732.509 4875667.1 49.085050 13.846527
+#&gt; 21 6151745.2 61.956325  90642.97   8637.391 4786088.3 48.202328 13.753996
+#&gt; 22 6052464.8 60.970295  90613.23   8634.558 4695445.3 47.300182 13.670113
+#&gt; 23 5953217.0 59.996238  90577.53   8631.155 4604832.1 46.407279 13.588959
+#&gt; 24 5854008.3 59.017620  90544.29   8627.988 4514254.6 45.510792 13.506827
+#&gt; 25 5754836.1 58.039556  90515.81   8625.275 4423710.3 44.614682 13.424874
+#&gt; 26 5655695.0 57.054184  89597.94   9514.826 4333194.5 43.712908 13.341276
+#&gt; 27 5556582.2 56.072127  89565.98   9511.432 4243596.5 42.822633 13.249493
+#&gt; 28 5457504.8 55.094156  89527.02   9507.294 4154030.5 41.935429 13.158727
+#&gt; 29 5358470.5 54.120031  89491.04   9503.473 4064503.5 41.051090 13.068940
+#&gt; 30 5259476.0 53.137742  89459.32   9500.105 3975012.5 40.160500 12.977241
+#&gt; 31 5160516.5 52.157675  90115.75   8803.844 3885553.2 39.271537 12.886137
+#&gt; 32 5061597.0 51.179720  90077.35   8800.092 3795437.4 38.377102 12.802618
+#&gt; 33 4962719.5 50.201300  90043.27   8796.763 3705360.1 37.482250 12.719050
+#&gt; 34 4863879.5 49.217756  90005.60   8793.083 3615316.8 36.583509 12.634247
+#&gt; 35 4765080.8 48.242408  89956.05   8788.242 3525311.2 35.690791 12.551617
+#&gt; 36 4666336.5 47.270844  84667.92  14012.639 3435355.1 34.800777 12.470067
+#&gt; 37 4567655.9 46.303409  84604.61  14002.161 3350687.2 33.966709 12.336700
+#&gt; 38 4469049.2 45.340068  84538.13  13991.159 3266082.6 33.135552 12.204517
+#&gt; 39 4370519.9 44.374698  84474.12  13980.566 3181544.5 32.302810 12.071887
+#&gt; 40 4272065.2 43.407305  84402.40  13968.696 3097070.4 31.468499 11.938806
+#&gt; 41 4173694.1 42.448338  86285.25  11989.522 3012668.0 30.640183 11.808156
+#&gt; 42 4075419.3 41.490461  86187.02  11975.873 2926382.7 29.792509 11.697952
+#&gt; 43 3977256.4 40.542739  86081.15  11961.162 2840195.7 28.951945 11.590793
+#&gt; 44 3879214.1 39.590166  85974.37  11946.325 2754114.5 28.107717 11.482449
+#&gt; 45 3781293.4 38.640966  85857.50  11930.085 2668140.2 27.265674 11.375292
+#&gt; 46 3683505.8 37.695246  78601.19  19040.040 2582282.7 26.425852 11.269394
+#&gt; 47 3585864.6 36.753816  78471.66  19008.663 2503681.5 25.661830 11.091986
+#&gt; 48 3488384.3 35.816419  78317.14  18971.232 2425209.8 24.900448 10.915971
+#&gt; 49 3391095.9 34.894815  78153.18  18931.515 2346892.7 24.149829 10.744986
+#&gt; 50 3294011.2 33.962774  77971.63  18887.538 2268739.5 23.391750 10.571024
+#&gt; 51 3197152.0 33.052514  81044.12  15551.971 2190767.9 22.648402 10.404112
+#&gt; 52 3100555.9 32.142529  80803.61  15505.818 2109723.7 21.870870 10.271659
+#&gt; 53 3004246.5 31.243419  80525.53  15452.456 2028920.1 21.100267 10.143153
+#&gt; 54 2908268.5 30.357759  80216.10  15393.078 1948394.6 20.338182 10.019577
+#&gt; 55 2812659.3 29.477082  79895.20  15331.499 1868178.5 19.578784  9.898298
+#&gt; 56 2717432.6 28.594052  66567.66  28258.068 1788283.3 18.817123  9.776929
+#&gt; 57 2622606.9 27.718263  66279.08  28135.565 1721715.6 18.196767  9.521496
+#&gt; 58 2528192.3 26.834934  66002.86  28018.310 1655436.5 17.571263  9.263671
+#&gt; 59 2434171.1 25.942458  65730.33  27902.618 1589433.7 16.939572  9.002886
+#&gt; 60 2340538.1 25.049568  65452.47  27784.668 1523703.4 16.307408  8.742160
+#&gt; 61 2247301.0 24.154654  71086.22  21715.633 1458250.9 15.673710  8.480943
+#&gt; 62 2154499.2 23.275355  70681.89  21592.118 1387164.7 14.985733  8.289621
+#&gt; 63 2062225.1 22.419797  70208.23  21447.422 1316482.8 14.312344  8.107453
+#&gt; 64 1970569.5 21.576609  69713.46  21296.278 1246274.5 13.645994  7.930616
+#&gt; 65 1879559.8 20.724990  69228.47  21148.121 1176561.1 12.973366  7.751624
+#&gt; 66 1789183.2 19.865979  66687.25  23066.788 1107332.6 12.295134  7.570845
+#&gt; 67 1699429.1 18.999625  66158.12  22883.765 1040645.4 11.634420  7.365205
+#&gt; 68 1610387.2 18.168060  65544.64  22671.566  974487.3 10.993966  7.174094
+#&gt; 69 1522171.0 17.337975  64868.74  22437.775  908942.6 10.353123  6.984852
+#&gt; 70 1434864.5 16.527083  64086.22  22167.105  844073.9  9.722227  6.804856
+#&gt; 71 1348611.2 15.738684  55735.94  29357.096  779987.6  9.102682  6.636002
+#&gt; 72 1263518.2 14.953162  54934.86  28935.154  724251.7  8.571189  6.381973
+#&gt; 73 1179648.2 14.171373  54098.54  28494.651  669316.8  8.040651  6.130722
+#&gt; 74 1097055.0 13.387739  53197.10  28019.848  615218.3  7.507721  5.880018
+#&gt; 75 1015838.0 12.620807  52162.75  27475.038  562021.2  6.982571  5.638236
+#&gt; 76  936200.2 11.882759  44310.33  33563.711  509858.5  6.471399  5.411360
+#&gt; 77  858326.2 11.152648  43126.69  32667.141  465548.1  6.049092  5.103556
+#&gt; 78  782532.3 10.486053  41674.67  31567.277  422421.4  5.660512  4.825541
+#&gt; 79  709290.4  9.870740  40044.73  30332.649  380746.8  5.298609  4.572131
+#&gt; 80  638913.0  9.273469  38304.58  29014.540  340702.0  4.945101  4.328367
+#&gt; 81  571593.9  8.694586  36503.37  27650.178  302397.5  4.599805  4.094781
+#&gt; 82  507440.4  8.110517  34762.71  26331.681  265894.1  4.249836  3.860680
+#&gt; 83  446346.0  7.486132  33197.41  25146.018  231131.4  3.876544  3.609587
+#&gt; 84  388002.5  6.799450  31886.49  24153.037  197934.0  3.468643  3.330807
+#&gt; 85  331963.0  6.034019  30403.31  23029.571  166047.5  3.018209  3.015810
+#&gt; 86  278530.1  5.371792 135644.18 142885.963  135644.2  2.616062  2.755729
+#&gt;    pctDFLEx  pctDLEx  MeanDAx MedianDAx ModalDAx
+#&gt; 1  81.76996 18.23004 57.71153        62       85
+#&gt; 2  81.54393 18.45607 57.71153        62       85
+#&gt; 3  81.37264 18.62736 57.89484        62       85
+#&gt; 4  81.19705 18.80295 58.07603        62       85
+#&gt; 5  81.01697 18.98303 58.25512        62       85
+#&gt; 6  80.83223 19.16777 58.43209        62       85
+#&gt; 7  80.61891 19.38109 58.54122        62       85
+#&gt; 8  80.39990 19.60010 58.64874        62       85
+#&gt; 9  80.17500 19.82500 58.75463        62       85
+#&gt; 10 79.94395 20.05605 58.85888        62       85
+#&gt; 11 79.70648 20.29352 58.96150        62       85
+#&gt; 12 79.52163 20.47837 59.20454        63       85
+#&gt; 13 79.33149 20.66851 59.44500        63       85
+#&gt; 14 79.13585 20.86415 59.68282        63       85
+#&gt; 15 78.93448 21.06552 59.91796        63       85
+#&gt; 16 78.72712 21.27288 60.15038        63       85
+#&gt; 17 78.55297 21.44703 60.46355        64       85
+#&gt; 18 78.37347 21.62653 60.77406        64       85
+#&gt; 19 78.18839 21.81161 61.08185        64       85
+#&gt; 20 77.99749 22.00251 61.38683        64       85
+#&gt; 21 77.80050 22.19950 61.68890        64       85
+#&gt; 22 77.57906 22.42094 61.95425        65       85
+#&gt; 23 77.35031 22.64969 62.21651        65       85
+#&gt; 24 77.11391 22.88609 62.47560        65       85
+#&gt; 25 76.86944 23.13056 62.73147        65       85
+#&gt; 26 76.61648 23.38352 62.98407        65       85
+#&gt; 27 76.37062 23.62938 63.25933        66       85
+#&gt; 28 76.11593 23.88407 63.53121        66       85
+#&gt; 29 75.85193 24.14807 63.79962        66       85
+#&gt; 30 75.57811 24.42189 64.06449        66       85
+#&gt; 31 75.29388 24.70612 64.32577        66       85
+#&gt; 32 74.98498 25.01502 64.56444        67       85
+#&gt; 33 74.66390 25.33610 64.79936        67       85
+#&gt; 34 74.32990 25.67010 65.03044        67       85
+#&gt; 35 73.98219 26.01781 65.25762        67       85
+#&gt; 36 73.61996 26.38004 65.48077        67       85
+#&gt; 37 73.35682 26.64318 65.83174        68       85
+#&gt; 38 73.08227 26.91773 66.17897        68       85
+#&gt; 39 72.79556 27.20444 66.52233        68       85
+#&gt; 40 72.49586 27.50414 66.86171        69       85
+#&gt; 41 72.18229 27.81771 67.19692        69       85
+#&gt; 42 71.80568 28.19432 67.48070        69       85
+#&gt; 43 71.41093 28.58907 67.75961        70       85
+#&gt; 44 70.99671 29.00329 68.03346        70       85
+#&gt; 45 70.56157 29.43843 68.30212        70       85
+#&gt; 46 70.10394 29.89606 68.56540        70       85
+#&gt; 47 69.82086 30.17914 68.98001        70       85
+#&gt; 48 69.52244 30.47756 69.39087        71       85
+#&gt; 49 69.20750 30.79250 69.79767        71       85
+#&gt; 50 68.87467 31.12533 70.20016        71       85
+#&gt; 51 68.52248 31.47752 70.59804        72       85
+#&gt; 52 68.04340 31.95660 70.92135        72       85
+#&gt; 53 67.53507 32.46493 71.23806        72       85
+#&gt; 54 66.99500 33.00500 71.54776        73       85
+#&gt; 55 66.42036 33.57964 71.85005        73       85
+#&gt; 56 65.80782 34.19218 72.14459        73       85
+#&gt; 57 65.64902 34.35098 72.68236        74       85
+#&gt; 58 65.47906 34.52094 73.22016        74       85
+#&gt; 59 65.29671 34.70329 73.75815        75       85
+#&gt; 60 65.10056 34.89944 74.29644        75       85
+#&gt; 61 64.88899 35.11101 74.83507        75       85
+#&gt; 62 64.38455 35.61545 75.25490        76       85
+#&gt; 63 63.83798 36.16202 75.66763        76       85
+#&gt; 64 63.24438 36.75562 76.07235        76       85
+#&gt; 65 62.59770 37.40230 76.46836        77       85
+#&gt; 66 61.89040 38.10960 76.85508        77       85
+#&gt; 67 61.23500 38.76500 77.27017        77       85
+#&gt; 68 60.51260 39.48740 77.67575        78       85
+#&gt; 69 59.71357 40.28643 78.07044        78       85
+#&gt; 70 58.82603 41.17397 78.45290        79       85
+#&gt; 71 57.83636 42.16364 78.82141        79       85
+#&gt; 72 57.32024 42.67976 79.30164        79       85
+#&gt; 73 56.73869 43.26131 79.77234        80       85
+#&gt; 74 56.07908 43.92092 80.23197        81       85
+#&gt; 75 55.32587 44.67413 80.67849        81       85
+#&gt; 76 54.46041 45.53959 81.10888        82       85
+#&gt; 77 54.23907 45.76093 81.63090        82       85
+#&gt; 78 53.98134 46.01866 82.14170        83       85
+#&gt; 79 53.67995 46.32005 82.63573        84       85
+#&gt; 80 53.32526 46.67474 83.10725        84       85
+#&gt; 81 52.90425 47.09575 83.54994        85       85
+#&gt; 82 52.39908 47.60092 83.95631        85       85
+#&gt; 83 51.78301 48.21699 84.31801        85       85
+#&gt; 84 51.01358 48.98642 84.62468        85       85
+#&gt; 85 50.01987 49.98013 84.86120        85       85
+#&gt; 86 48.70000 51.30000 85.00000        85       85</div><div class='input'><span class='fu'>CompleteDFLEtable</span><span class='op'>(</span> <span class='va'>FRInseeMortalityForecast2016</span><span class='op'>[</span><span class='va'>FRInseeMortalityForecast2016</span><span class='op'>$</span><span class='va'>year</span> <span class='op'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2013</span>,<span class='fl'>2015</span>,<span class='fl'>2020</span>,<span class='fl'>2030</span><span class='op'>)</span>,<span class='op'>]</span> <span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in do.call(rbind, lapply(classsex, bysex)) %&gt;% restore_categories(): impossible de trouver la fonction "%&gt;%"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

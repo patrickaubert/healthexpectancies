@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A dataset with share of APA beneficiaries in France — FRDreesAPA • healthexpectancies</title>
+<title>A dataset with prevalence of general activity limitations (GALI) in France — FRGaliEUSilc • healthexpectancies</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,9 @@
 
 
 
-<meta property="og:title" content="A dataset with share of APA beneficiaries in France — FRDreesAPA" />
-<meta property="og:description" content="APA is a benefit covering long term care expenditures both at home ('à domicile') or in institutions ('en établissement').
-Shares of beneficiaries are estimated through the 2016, 2017 and 2018 'Aide sociale' survey.
-They are estimated by age brackets (eg. '[60;65)' stands for ages 60 to 64)" />
+<meta property="og:title" content="A dataset with prevalence of general activity limitations (GALI) in France — FRGaliEUSilc" />
+<meta property="og:description" content="Prevalences are measured in the SRCV survey ie. the French version of EU-SILC.
+They are measured by sex and age bracket, for severe general activity limitations and for limitations including moderate ones." />
 
 
 
@@ -123,34 +122,34 @@ They are estimated by age brackets (eg. '[60;65)' stands for ages 60 to 64)" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A dataset with share of APA beneficiaries in France</h1>
+    <h1>A dataset with prevalence of general activity limitations (GALI) in France</h1>
     
-    <div class="hidden name"><code>FRDreesAPA.Rd</code></div>
+    <div class="hidden name"><code>FRGaliEUSilc.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>APA is a benefit covering long term care expenditures both at home ('à domicile') or in institutions ('en établissement').
-Shares of beneficiaries are estimated through the 2016, 2017 and 2018 'Aide sociale' survey.
-They are estimated by age brackets (eg. '[60;65)' stands for ages 60 to 64)</p>
+    <p>Prevalences are measured in the SRCV survey ie. the French version of EU-SILC.
+They are measured by sex and age bracket, for severe general activity limitations and for limitations including moderate ones.</p>
     </div>
 
-    <pre class="usage"><span class='va'>FRDreesAPA</span></pre>
+    <pre class="usage"><span class='va'>FRGaliEUSilc</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A data frame with 138 observations and 6 variables:</p><dl>
-<dt>typepresta</dt><dd><p>type of benefits (eg. 'à domicile' or 'en établissement')</p></dd>
-<dt>prevalence</dt><dd><p>share of beneficiaires within the total population in the given age bracket (number between 0 and 1)</p></dd>
+    <p>A data frame with 1248 observations and 5 variables:</p><dl>
+<dt>incap</dt><dd><p>type of general activity limitations ('gali_incl_moderate' or 'gali_severe')</p></dd>
+<dt>prevalence</dt><dd><p>share of people with general activity limitations in the given age bracket (number between 0 and 1)</p></dd>
 <dt>sex</dt><dd><p>sex ('female' or 'male')</p></dd>
+<dt>age</dt><dd><p>minimal age within the age bracket</p></dd>
 <dt>agebracket</dt><dd><p>age bracket (eg '[60;65)' = between 60 and 64 years old)</p></dd>
-<dt>year</dt><dd><p>year of observation (value for the monthe of December)</p></dd>
+<dt>annee</dt><dd><p>year of observation (value for the monthe of December)</p></dd>
 
 </dl>
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p><a href='https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/les-dossiers-de-la-drees/article/incapacites-et-perte-d-autonomie-des-personnes-agees-en-france-une-evolution'>https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/les-dossiers-de-la-drees/article/incapacites-et-perte-d-autonomie-des-personnes-agees-en-france-une-evolution</a></p>
+    <p><a href='https://drees.solidarites-sante.gouv.fr/publications/etudes-et-resultats/en-2020-lesperance-de-vie-sans-incapacite-65-ans-est-de-121-ans'>https://drees.solidarites-sante.gouv.fr/publications/etudes-et-resultats/en-2020-lesperance-de-vie-sans-incapacite-65-ans-est-de-121-ans</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

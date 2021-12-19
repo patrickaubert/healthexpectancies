@@ -3,7 +3,7 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   how-to-use-healthexpectancies: how-to-use-healthexpectancies.html
-last_built: 2021-11-07T16:21Z
+last_built: 2021-12-19T14:23Z
 urls:
   reference: https://patrickaubert.github.io/healthexpectancies//reference
   article: https://patrickaubert.github.io/healthexpectancies//articles

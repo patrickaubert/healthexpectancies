@@ -1,6 +1,7 @@
 # data-raw/healthexpectancies_dataset.R
 # Data import and processing pipeline
 
+library(devtools)
 library(readxl)
 library(tidyverse)
 
@@ -313,6 +314,68 @@ FRDreesAPA <- rbind(
 #  geom_line() +
 #  facet_wrap(sex ~ typepresta)
 
+
+# ===================================================================================
+# Prevalence of GALI from Insee's SRCV survey (French version of EU-SILC)
+# ===================================================================================
+
+# Data are taken from DREES's yearly publication about Disability-free life expectancies
+# Additional tables with prevalences of GALI by age brackets are disseminated with the publication
+
+
+# == prévalences des incapacités (au sens du GALI)
+
+library(httr)
+
+httr::GET("https://drees.solidarites-sante.gouv.fr/sites/default/files/2021-10/ER1213.xls",
+          write_disk(fileloc <- tempfile(fileext = ".xls")))
+txincap <- bind_rows(
+  read_excel(path = fileloc, sheet="DC-8", range = "B4:O20") %>%
+    mutate(sex="male",incap="gali_incl_moderate"),
+  read_excel(path = fileloc, sheet="DC-9", range = "B4:O20") %>%
+    mutate(sex="male",incap="gali_severe"),
+  read_excel(path = fileloc, sheet="DC-10", range = "B4:O20") %>%
+    mutate(sex="female",incap="gali_incl_moderate"),
+  read_excel(path = fileloc, sheet="DC-11", range = "B4:O20") %>%
+    mutate(sex="female",incap="gali_severe")
+)
+unlink(fileloc)
+
+txincap <- txincap %>%
+  rename(age=Âge) %>%
+  pivot_longer(cols=-c("age","sex","incap"),names_to="year",values_to="txincap") %>%
+  arrange(sex,incap,year,age) %>%
+  mutate(year=as.numeric(year),
+         agelow = str_extract(age,"^[[:digit:]]{1,2}(?<=[![:digit:]])"),
+         agehigh = str_extract(age,"(?<=[[:digit:]]{1,2}\\-)[[:digit:]]{2}"),
+         age =ifelse(!is.na(agehigh),
+                     paste0("[",agelow,",",(as.numeric(agehigh)+1),")"),
+                     paste0("[",agelow,",Inf]"))) %>%
+  select(-agelow,-agehigh)
+
+poploc <- FRInseePopulation %>%
+  rename(age = age0101) %>%
+  mutate(year = year-1,
+         sex = recode(sex, "M" = "male", "F" = "female")) %>%
+  filter(year>=2008,geo=="metropolitan france")
+
+txincap_all <- poploc %>%
+  mutate(age = cut(age, c(0,seq(15,85,5),Inf), include.lowest = TRUE, right=FALSE)) %>%
+  filter(year %in% unique(txincap$year)) %>%
+  select(age,sex,year,popx) %>%
+  left_join(txincap, by=c("year","age","sex")) %>%
+  mutate(nbincap=popx*txincap/100) %>%
+  select(-sex,-txincap) %>%
+  group_by(year,age,incap) %>% summarise_all(sum) %>% ungroup() %>%
+  mutate(txincap=100*nbincap/popx,
+         sex="all") %>%
+  select(-popx,-nbincap)
+
+FRGaliEUSilc <- bind_rows(txincap, txincap_all) %>%
+  arrange(sex,year,incap) %>%
+  rename(agebracket = age, prevalence=txincap) %>%
+  mutate(prevalence=prevalence/100)
+
 # ===================================================================================
 usethis::use_data(FRInseeMortalityForecast2016,
                   FRInseePopulationForecast2016,
@@ -321,6 +384,7 @@ usethis::use_data(FRInseeMortalityForecast2016,
                   FRDreesVQSsurvey2014,
                   FRDreesAPA2017,
                   FRDreesAPA,
+                  FRGaliEUSilc,
                   sullivan,
                   description_sullivan,
                   overwrite = T)
