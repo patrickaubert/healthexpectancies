@@ -52,7 +52,11 @@ server <- function(input, output) {
     # --- lissage des prévalences
     prevalencesref <- donneesregr %>% group_by(sex) %>%
       mutate(prev.approx = case_when(
-        input$approxPrev ~ prevalence_to_polynomial(age, prevalence.ref, weight=popx),
+        #input$approxPrev ~ prevalence_to_polynomial(age, prevalence.ref, weight=popx),
+        input$approxPrev ~ prevalence_to_polynomial(prevalence = prevalence.ref,
+                                                    agemin=min(donneesregr$age),
+                                                    agemax=max(donneesregr$age),
+                                                    weight=popx),
         !input$approxPrev ~ prevalence.ref) ) %>%
       ungroup() %>%
       select(sex, age, prev.approx, prevalence.ref) %>%
