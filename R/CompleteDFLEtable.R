@@ -219,6 +219,16 @@ CompleteDFLEtable <- function(tab, categories = c("")) {
     tab$DLEx <- tab$pctDLEx/100 * tab$ex
   }
 
+  # =================== lx, Lx, DFLEx -> pix (& DFLx, DFTx, DLx) ====================
+
+  # --- alternative : adding prevalences (pix), from DFLEx
+  if (("lx" %in% names(tab)) & ("Lx" %in% names(tab)) & ("DFLEx" %in% names(tab)) & !("pix" %in% names(tab)) & !("DFLx" %in% names(tab)) & !("DFTx" %in% names(tab))) {
+    tab$DFTx <-  tab$DFLEx * tab$lx
+    tab$DFLx <- tab$DFTx - c( tail(tab$DFTx,-1) , 0 )
+    tab$pix <-  ( 1 - tab$DFLx / tab$Lx )
+    tab$DLx <- tab$Lx * tab$pix
+  }
+
   # =================== DLx -> MeanDAx, MedianDAx, ModalDAx ====================
 
   # adding mean conjonctural age of life with disability (MeanDAx) from person-years lived at age x (DLx)
@@ -244,15 +254,6 @@ CompleteDFLEtable <- function(tab, categories = c("")) {
       return(min(tab2[tab2$DLx == max(tab2$DLx),"age"]))
     }
     tab$ModalDAx <- sapply( c(1:nrow(tab)) , ModalDAx)
-  }
-
-  # =================== lx, Lx, DFLEx -> pix (& DFLx, DFTx) ====================
-
-  # --- alternative : adding prevalences (pix), from DFLEx
-  if (("lx" %in% names(tab)) & ("Lx" %in% names(tab)) & ("DFLEx" %in% names(tab)) & !("pix" %in% names(tab)) & !("DFLx" %in% names(tab)) & !("DFTx" %in% names(tab))) {
-    tab$DFTx <-  tab$DFLEx * tab$lx
-    tab$DFLx <- tab$DFTx - c( tail(tab$DFTx,-1) , 0 )
-    tab$pix <-  ( 1 - tab$DFLx / tab$Lx )
   }
 
   # add row names
