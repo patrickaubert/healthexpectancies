@@ -5,6 +5,7 @@ account: patrick-aubert
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3129278
-bundleId: 5147927
+bundleId: 5763952
 url: https://patrick-aubert.shinyapps.io/projprevalence/
-when: 1634504722.0597
+when: 1649099355.09484
+lastSyncTime: 1649099355.09484
