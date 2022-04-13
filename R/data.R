@@ -85,6 +85,26 @@
 #' @source \url{https://www.insee.fr/fr/statistiques/5390366?sommaire=5390468}
 "FRInseeMortalityrates"
 
+#' An (alternative) dataset with observed mortality rates by sex and age, from Insee
+#'
+#' This dataset corresponds to data released by Insee as T69, as comparison to the FRInseeMortalityrates, which
+#' corresponds to T68 (see Insee's website for a presentation of the differences).
+#'
+#' The current version of the data table was released in January, 2022 and contains observations
+#' from 1994 to 2021. The geographical field is France including oversea territories.
+#'
+#' @format A data frame with 22624 observations and 5 variables:
+#' \describe{
+#'   \item{age}{age}
+#'   \item{def.age}{definition of age: at the end of the year vs. current age}
+#'   \item{year}{year}
+#'   \item{sex}{sex ('male' or 'female' or 'all)}
+#'   \item{qx}{mortality rate at each year, age, sex}
+#' }
+#' @source \url{https://www.insee.fr/fr/statistiques/5390366?sommaire=5390468}
+"FRInseeMortalityrates_t69"
+
+
 #' A dataset with disability prevalences in France (2014)
 #'
 #' Prevalences are estimated through the 2014 'Vie quotidienne et santé' (VQS) survey.

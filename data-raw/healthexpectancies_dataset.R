@@ -3,6 +3,7 @@
 
 library(devtools)
 library(readxl)
+library(openxlsx)
 library(tidyverse)
 
 # ===================================================================================
@@ -178,6 +179,70 @@ FRInseeMortalityrates <- rbind(
 # == correction of errors :
 # 2021/07/17: add value for 2018 (2017-2019 average, published in June 2021)
 # 2021/06/21: data for france were erroneously those from metropolitan france
+
+# == Alternative: mortality data from table 'T69' released by Insee
+
+# quotient de mortalité d'après les tableaux T69 de l'Insee (table de mortalité abrégée)
+# données téléchargées le 13/04/2022 à l'adresse https://www.insee.fr/fr/statistiques/6036439?sommaire=6036447
+# (Bilan démographique 2021 - Chiffres détaillés - Paru le : 18/01/2022 )
+
+url_t69 <- "https://www.insee.fr/fr/statistiques/fichier/6036439/fe_dod_quotients_mortalite.xlsx"
+
+qmort_t69 <- bind_rows(
+  read.xlsx(
+    #xlsxFile = "data-raw/fe_dod_quotients_mortalite.xlsx",
+    xlsxFile = url_t69,
+    sheet = "Qmort-F", #"qmortf",
+    startRow = 5,
+    colNames = TRUE, skipEmptyRows = TRUE, skipEmptyCols = TRUE) %>%
+    filter(grepl("^[[:digit:]]{4}",Année)) %>%
+    pivot_longer(cols=-"Année",names_to="age",values_to="qx") %>%
+    mutate(sex = "female"),
+  read.xlsx(
+    #xlsxFile = "data-raw/fe_dod_quotients_mortalite.xlsx",
+    xlsxFile = url_t69,
+    sheet = "Qmort-H", #"qmorth",
+    startRow = 5,
+    colNames = TRUE, skipEmptyRows = TRUE, skipEmptyCols = TRUE) %>%
+    filter(grepl("^[[:digit:]]{4}",Année)) %>%
+    pivot_longer(cols=-"Année",names_to="age",values_to="qx") %>%
+    mutate(sex = "male")
+) %>%
+  rename(year=Année) %>%
+  mutate(age = str_extract(age,"^[[:digit:]]+") %>% as.numeric(),
+         year= as.numeric(year),
+         qx = qx/100000)
+
+# correction pour tenir compte du fait qu'il s'agit de l'âge atteint en fin d'année => on considère que les décès à l'âge A au 31/12 se répartissent pour moitié entre les âges A-1 et 1 en année révolue
+
+qmort_t69_bis <- bind_rows(
+  qmort_t69 %>% mutate(qx=qx/2,age=pmax(0,age-1)),
+  qmort_t69 %>% mutate(qx=qx/2)
+) %>%
+  group_by(year,sex,age) %>% summarise_all(sum) %>% ungroup()
+
+qmort_t69 <- bind_rows(
+  qmort_t69 %>% mutate(def.age = "age at end of year"),
+  qmort_t69_bis %>% mutate(def.age = "current age (approx)")
+) %>%
+  mutate(def.age = as.factor(def.age))
+
+# ajout des quotients de mortalité pour l'ensemble des sexes, en faisant l'hypothèse d'un partage 50/50 d'hommes et de femmes à la naissance
+
+qmort_t69_all <- qmort_t69 %>%
+  mutate(qx=1-qx) %>%
+  arrange(year,sex,def.age,age) %>% group_by(year,sex,def.age) %>% mutate(qx=cumprod(qx)) %>% ungroup() %>%
+  select(-sex) %>% group_by(year,def.age,age) %>% summarise_all(mean) %>% ungroup()
+
+qmort_t69_all <- qmort_t69_all %>%
+  left_join(qmort_t69_all %>% mutate(age=age+1) %>% rename(lqx=qx), by=c("year","age","def.age")) %>%
+  mutate(qx = ifelse(age==0,1-qx,1-qx/lqx),
+         sex = "all") %>%
+  select(-lqx)
+
+qmort_t69 <- bind_rows( qmort_t69 , qmort_t69_all)
+
+FRInseeMortalityrates_t69 <- qmort_t69
 
 # ===================================================================================
 # Population of France, Insee
@@ -380,6 +445,7 @@ FRGaliEUSilc <- bind_rows(txincap, txincap_all) %>%
 usethis::use_data(FRInseeMortalityForecast2016,
                   FRInseePopulationForecast2016,
                   FRInseeMortalityrates,
+                  FRInseeMortalityrates_t69,
                   FRInseePopulation,
                   FRDreesVQSsurvey2014,
                   FRDreesAPA2017,
