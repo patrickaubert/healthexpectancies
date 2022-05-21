@@ -441,7 +441,7 @@ FRGaliEUSilc <- bind_rows(txincap, txincap_all) %>%
   rename(agebracket = age, prevalence=txincap) %>%
   mutate(prevalence=prevalence/100)
 
-# ===================================================================================
+# ====================================================================================
 usethis::use_data(FRInseeMortalityForecast2016,
                   FRInseePopulationForecast2016,
                   FRInseeMortalityrates,
