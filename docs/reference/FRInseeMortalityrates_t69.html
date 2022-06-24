@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A dataset with population by sex and age, from Insee's 2016 population forecast (central scenario) — FRInseePopulationForecast2016 • healthexpectancies</title>
+<title>An (alternative) dataset with observed mortality rates by sex and age, from Insee — FRInseeMortalityrates_t69 • healthexpectancies</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="A dataset with population by sex and age, from Insee's 2016 population forecast (central scenario) — FRInseePopulationForecast2016" />
-<meta property="og:description" content="A dataset with population by sex and age, from Insee's 2016 population forecast (central scenario)" />
+<meta property="og:title" content="An (alternative) dataset with observed mortality rates by sex and age, from Insee — FRInseeMortalityrates_t69" />
+<meta property="og:description" content="This dataset corresponds to data released by Insee as T69, as comparison to the FRInseeMortalityrates, which
+corresponds to T68 (see Insee's website for a presentation of the differences)." />
 
 
 
@@ -121,31 +122,37 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A dataset with population by sex and age, from Insee's 2016 population forecast (central scenario)</h1>
+    <h1>An (alternative) dataset with observed mortality rates by sex and age, from Insee</h1>
     
-    <div class="hidden name"><code>FRInseePopulationForecast2016.Rd</code></div>
+    <div class="hidden name"><code>FRInseeMortalityrates_t69.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A dataset with population by sex and age, from Insee's 2016 population forecast (central scenario)</p>
+    <p>This dataset corresponds to data released by Insee as T69, as comparison to the FRInseeMortalityrates, which
+corresponds to T68 (see Insee's website for a presentation of the differences).</p>
     </div>
 
-    <pre class="usage"><span class='va'>FRInseePopulationForecast2016</span></pre>
+    <pre class="usage"><span class='va'>FRInseeMortalityrates_t69</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A data frame with 14036 observations and 4 variables:</p><dl>
-<dt>age0101</dt><dd><p>age at January, 1st of the year</p></dd>
+    <p>A data frame with 22624 observations and 5 variables:</p><dl>
+<dt>age</dt><dd><p>age</p></dd>
+<dt>def.age</dt><dd><p>definition of age: at the end of the year vs. current age</p></dd>
 <dt>year</dt><dd><p>year</p></dd>
-<dt>sex</dt><dd><p>sex ('male' or 'female')</p></dd>
-<dt>popx</dt><dd><p>population at each year, age, sex</p></dd>
+<dt>sex</dt><dd><p>sex ('male' or 'female' or 'all)</p></dd>
+<dt>qx</dt><dd><p>mortality rate at each year, age, sex</p></dd>
 
 </dl>
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p><a href='https://www.insee.fr/fr/statistiques/2496716?sommaire=2496793'>https://www.insee.fr/fr/statistiques/2496716?sommaire=2496793</a></p>
+    <p><a href='https://www.insee.fr/fr/statistiques/5390366?sommaire=5390468'>https://www.insee.fr/fr/statistiques/5390366?sommaire=5390468</a></p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The current version of the data table was released in January, 2022 and contains observations
+from 1994 to 2021. The geographical field is France including oversea territories.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

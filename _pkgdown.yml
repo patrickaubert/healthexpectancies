@@ -23,10 +23,12 @@ reference:
   - FRDreesAPA2017
   - FRDreesVQSsurvey2014
   - FRGaliEUSilc
-  - FRInseeMortalityForecast2016
-  - FRInseeMortalityrates
   - FRInseePopulation
   - FRInseePopulationForecast2016
+  - FRInseePopulationForecast2021
+  - FRInseeMortalityForecast2016
+  - FRInseeMortalityrates
+  - FRInseeMortalityrates_t69
   - sullivan
   - description_sullivan
 navbar:

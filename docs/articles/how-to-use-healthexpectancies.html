@@ -47,7 +47,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -77,7 +77,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="how-to-use-healthexpectancies_files/header-attrs-2.14/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>how-to-use-healthexpectancies</h1>
@@ -95,10 +95,24 @@
 <div id="function-completedfletable" class="section level1">
 <h1 class="hasAnchor">
 <a href="#function-completedfletable" class="anchor"></a>Function CompleteDFLEtable</h1>
-<p>This function calculates life expectancies and disability-free life expectancies from a dataset containing (at least) information on age, mortality rates and disability prevalence.</p>
-<p>As an option, a ‘sex’ and ‘categ’ variables can be added in the input dataset. If so, calculations are made for each separate values of ‘sex’ and ‘categ’. The latter is an undefinit category variables, for instance region or social category. If the initial dataset contains variable ‘year’, calculations are also made for each separate years.</p>
-<p>Calculations are made using the Sullivan method. They completely follow example 1 provided in the Sullivan manual (June 2007 version), available at <a href="https://reves.site.ined.fr/en/resources/computation_online/sullivan/" class="uri">https://reves.site.ined.fr/en/resources/computation_online/sullivan/</a>. One minor deviation is that the ad-hoc value for the conditional probability of death (qx) at age 0 is note taken into account.</p>
-<p>The input table is a dataset containing at least the 3 variables above. The output table is a dataset containing all input variables and additionnal variables that are useful for the calculations of LE and DFLE. If those variables are already in the input table, they are not calculated and the input variables are used instead.</p>
+<p>This function calculates life expectancies and disability-free life
+expectancies from a dataset containing (at least) information on age,
+mortality rates and disability prevalence.</p>
+<p>As an option, a ‘sex’ and ‘categ’ variables can be added in the input
+dataset. If so, calculations are made for each separate values of ‘sex’
+and ‘categ’. The latter is an undefinit category variables, for instance
+region or social category. If the initial dataset contains variable
+‘year’, calculations are also made for each separate years.</p>
+<p>Calculations are made using the Sullivan method. They completely
+follow example 1 provided in the Sullivan manual (June 2007 version),
+available at <a href="https://reves.site.ined.fr/en/resources/computation_online/sullivan/" class="uri">https://reves.site.ined.fr/en/resources/computation_online/sullivan/</a>.
+One minor deviation is that the ad-hoc value for the conditional
+probability of death (qx) at age 0 is note taken into account.</p>
+<p>The input table is a dataset containing at least the 3 variables
+above. The output table is a dataset containing all input variables and
+additionnal variables that are useful for the calculations of LE and
+DFLE. If those variables are already in the input table, they are not
+calculated and the input variables are used instead.</p>
 <p>Definitions of variables in the input or output dataset:</p>
 <ul>
 <li>year : Year</li>
@@ -119,56 +133,78 @@
 <li>DLx : person years lived with disability,</li>
 <li>DLEx : with-disability life expectancy</li>
 <li>pctDLEx : proportion of life spent with disability</li>
-<li>MeanDAx : average conjonctural age of person years lived with disability</li>
-<li>MedianDAx : median conjonctural age of person years lived with disability</li>
-<li>ModalDAx : modal conjonctural age of person years lived with disability</li>
+<li>MeanDAx : average conjonctural age of person years lived with
+disability</li>
+<li>MedianDAx : median conjonctural age of person years lived with
+disability</li>
+<li>ModalDAx : modal conjonctural age of person years lived with
+disability</li>
 </ul>
 </div>
 <div id="function-prevalence_to_polynomial" class="section level1">
 <h1 class="hasAnchor">
 <a href="#function-prevalence_to_polynomial" class="anchor"></a>Function prevalence_to_polynomial</h1>
-<p>This function approximates a vector of prevalences (according to age) by a polynomial function.</p>
+<p>This function approximates a vector of prevalences (according to age)
+by a polynomial function.</p>
 <p>The degree of the polynomial can be chosen. Default value is 4.</p>
-<p>Weights can also be defined (eg. number of survivors at each each). By default, all ages are weighted identically.</p>
+<p>Weights can also be defined (eg. number of survivors at each each).
+By default, all ages are weighted identically.</p>
 </div>
 <div id="function-polynomial_to_prevalence" class="section level1">
 <h1 class="hasAnchor">
 <a href="#function-polynomial_to_prevalence" class="anchor"></a>Function polynomial_to_prevalence</h1>
-<p>This function calculates prevalences at each age, given a polynomial function.</p>
+<p>This function calculates prevalences at each age, given a polynomial
+function.</p>
 <p>Parameters are the following :</p>
 <ul>
 <li>coefficients : a vector of coefficients for the polynomial.</li>
 <li>agemin : minimal age in the output vector (default is 60)</li>
 <li>agemax : maximal age in the output vector (default is 120)</li>
-<li>ageclass : a vector defining age brackets. If <em>ageclass</em> is non null, the output vector are average prevalences within each agebracket</li>
+<li>ageclass : a vector defining age brackets. If <em>ageclass</em> is
+non null, the output vector are average prevalences within each
+agebracket</li>
 </ul>
 </div>
 <div id="function-forecastprevalence" class="section level1">
 <h1 class="hasAnchor">
 <a href="#function-forecastprevalence" class="anchor"></a>Function ForecastPrevalence</h1>
-<p>This function forecasts the values of disability prevalences and of DFLE according to age, given initial datasets containing age, disability prevalences at a reference year, forecasted mortality rates, and on hypothesis on the evolution of disabilities.</p>
+<p>This function forecasts the values of disability prevalences and of
+DFLE according to age, given initial datasets containing age, disability
+prevalences at a reference year, forecasted mortality rates, and on
+hypothesis on the evolution of disabilities.</p>
 <p>Forecasting options are :</p>
 <ul>
-<li>‘cstDFLE’ : constant disability-free life expectancy over time (ie. every increase in life expectancy is spent in disability)</li>
-<li>‘cstDLE’ : constant in-disability life expectancy (ie. every increase in life expectancy is spent disability-free)</li>
-<li>‘cstPctDFLE’ : constant share of disability-free life expectancy in total life expectancy</li>
-<li>‘cstPrev’ : constant prevalences of disability (at every age and sex) over time</li>
+<li>‘cstDFLE’ : constant disability-free life expectancy over time (ie.
+every increase in life expectancy is spent in disability)</li>
+<li>‘cstDLE’ : constant in-disability life expectancy (ie. every
+increase in life expectancy is spent disability-free)</li>
+<li>‘cstPctDFLE’ : constant share of disability-free life expectancy in
+total life expectancy</li>
+<li>‘cstPrev’ : constant prevalences of disability (at every age and
+sex) over time</li>
 </ul>
 </div>
 <div id="datasets-included-in-the-package" class="section level1">
 <h1 class="hasAnchor">
 <a href="#datasets-included-in-the-package" class="anchor"></a>Datasets included in the package</h1>
-<p>Several datasets are included in the <em>healthexpectancies</em> package. All of them relates to France.</p>
+<p>Several datasets are included in the <em>healthexpectancies</em>
+package. All of them relates to France.</p>
 <div id="insees-population-forecast-2016" class="section level2">
 <h2 class="hasAnchor">
 <a href="#insees-population-forecast-2016" class="anchor"></a>Insee’s population forecast (2016)</h2>
-<p>Insee is the French national institute for statistics and economic studies. It publishes population forecasts every 5 years (last publication was in 2016). Forecasted mortality rates by sex for the ‘central’ scenario are included in the package.</p>
-<p>See <a href="https://www.insee.fr/fr/information/2546485#titre-bloc-3" class="uri">https://www.insee.fr/fr/information/2546485#titre-bloc-3</a> for more information about the forecasting methods.</p>
+<p>Insee is the French national institute for statistics and economic
+studies. It publishes population forecasts every 5 years (last
+publication was in 2016). Forecasted mortality rates by sex for the
+‘central’ scenario are included in the package.</p>
+<p>See <a href="https://www.insee.fr/fr/information/2546485#titre-bloc-3" class="uri">https://www.insee.fr/fr/information/2546485#titre-bloc-3</a>
+for more information about the forecasting methods.</p>
 </div>
 <div id="vqs-2014" class="section level2">
 <h2 class="hasAnchor">
 <a href="#vqs-2014" class="anchor"></a>VQS (2014)</h2>
-<p>The <em>Vie quotidienne et santé</em> (VQS) survey is a large sample survey conducted in 2014 by DREES (the statistical directory of the French Ministry for Health and Social affairs).</p>
+<p>The <em>Vie quotidienne et santé</em> (VQS) survey is a large sample
+survey conducted in 2014 by DREES (the statistical directory of the
+French Ministry for Health and Social affairs).</p>
 </div>
 </div>
   </div>

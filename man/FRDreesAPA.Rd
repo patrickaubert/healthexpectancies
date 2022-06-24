@@ -24,5 +24,6 @@ FRDreesAPA
 APA is a benefit covering long term care expenditures both at home ('à domicile') or in institutions ('en établissement').
 Shares of beneficiaries are estimated through the 2016, 2017 and 2018 'Aide sociale' survey.
 They are estimated by age brackets (eg. '[60;65)' stands for ages 60 to 64)
+A more complete dataset of APA prevalences, as well as prevalences for other social allowances in France, can be found in the 'asdep' package.
 }
 \keyword{datasets}

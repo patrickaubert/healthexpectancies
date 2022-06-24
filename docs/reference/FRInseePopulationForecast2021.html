@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A dataset with population by sex and age, from Insee's 2016 population forecast (central scenario) — FRInseePopulationForecast2016 • healthexpectancies</title>
+<title>A dataset with population by sex and age, from Insee's 2021 population forecast (central scenario) — FRInseePopulationForecast2021 • healthexpectancies</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="A dataset with population by sex and age, from Insee's 2016 population forecast (central scenario) — FRInseePopulationForecast2016" />
-<meta property="og:description" content="A dataset with population by sex and age, from Insee's 2016 population forecast (central scenario)" />
+<meta property="og:title" content="A dataset with population by sex and age, from Insee's 2021 population forecast (central scenario) — FRInseePopulationForecast2021" />
+<meta property="og:description" content="The dataset also includes observed data from 1990 to 2022. Population is measured on the 1st of January of each year." />
 
 
 
@@ -121,31 +121,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A dataset with population by sex and age, from Insee's 2016 population forecast (central scenario)</h1>
+    <h1>A dataset with population by sex and age, from Insee's 2021 population forecast (central scenario)</h1>
     
-    <div class="hidden name"><code>FRInseePopulationForecast2016.Rd</code></div>
+    <div class="hidden name"><code>FRInseePopulationForecast2021.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A dataset with population by sex and age, from Insee's 2016 population forecast (central scenario)</p>
+    <p>The dataset also includes observed data from 1990 to 2022. Population is measured on the 1st of January of each year.</p>
     </div>
 
-    <pre class="usage"><span class='va'>FRInseePopulationForecast2016</span></pre>
+    <pre class="usage"><span class='va'>FRInseePopulationForecast2021</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A data frame with 14036 observations and 4 variables:</p><dl>
+    <p>A data frame with 24300 observations and 6 variables:</p><dl>
 <dt>age0101</dt><dd><p>age at January, 1st of the year</p></dd>
 <dt>year</dt><dd><p>year</p></dd>
-<dt>sex</dt><dd><p>sex ('male' or 'female')</p></dd>
-<dt>popx</dt><dd><p>population at each year, age, sex</p></dd>
+<dt>sex</dt><dd><p>sex ('male' or 'female' or 'all')</p></dd>
+<dt>geo</dt><dd><p>geographical field ('france' only)</p></dd>
+<dt>type</dt><dd><p>'observed' or 'forecasted'</p></dd>
+<dt>popx0101</dt><dd><p>population on the 1st of January at each year, age, sex</p></dd>
 
 </dl>
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p><a href='https://www.insee.fr/fr/statistiques/2496716?sommaire=2496793'>https://www.insee.fr/fr/statistiques/2496716?sommaire=2496793</a></p>
+    <p><a href='https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm#!l=en'>https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm#!l=en</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

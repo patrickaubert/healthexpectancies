@@ -49,6 +49,22 @@
 #' @source \url{https://www.insee.fr/fr/statistiques/2496716?sommaire=2496793}
 "FRInseePopulationForecast2016"
 
+#' A dataset with population by sex and age, from Insee's 2021 population forecast (central scenario)
+#'
+#' The dataset also includes observed data from 1990 to 2022. Population is measured on the 1st of January of each year.
+#'
+#' @format A data frame with 24300 observations and 6 variables:
+#' \describe{
+#'   \item{age0101}{age at January, 1st of the year}
+#'   \item{year}{year}
+#'   \item{sex}{sex ('male' or 'female' or 'all')}
+#'   \item{geo}{geographical field ('france' only)}
+#'   \item{type}{'observed' or 'forecasted'}
+#'   \item{popx0101}{population on the 1st of January at each year, age, sex}
+#' }
+#' @source \url{https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm#!l=en}
+"FRInseePopulationForecast2021"
+
 #' A dataset with population by sex and age, from Insee's 'bilan démographique' (annual population estimates)
 #'
 #' The current version of the data table was released in 2021 and contains observations
@@ -126,6 +142,7 @@
 #' APA is a benefit covering long term care expenditures both at home ('à domicile') or in institutions ('en établissement').
 #' Shares of beneficiaries are estimated through the 2017 'Aide sociale' survey.
 #' They are estimated by age brackets (eg. '[60;65)' stands for ages 60 to 64)
+#' A more complete dataset of APA prevalences, as well as prevalences for other social allowances in France, can be found in the 'asdep' package.
 #'
 #' @format A data frame with 48 observations and 5 variables:
 #' \describe{
@@ -143,6 +160,7 @@
 #' APA is a benefit covering long term care expenditures both at home ('à domicile') or in institutions ('en établissement').
 #' Shares of beneficiaries are estimated through the 2016, 2017 and 2018 'Aide sociale' survey.
 #' They are estimated by age brackets (eg. '[60;65)' stands for ages 60 to 64)
+#' A more complete dataset of APA prevalences, as well as prevalences for other social allowances in France, can be found in the 'asdep' package.
 #'
 #' @format A data frame with 138 observations and 6 variables:
 #' \describe{

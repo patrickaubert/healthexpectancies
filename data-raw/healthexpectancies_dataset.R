@@ -244,12 +244,45 @@ qmort_t69 <- bind_rows( qmort_t69 , qmort_t69_all)
 
 FRInseeMortalityrates_t69 <- qmort_t69
 
+
+# ===================================================================================
+# Forecasted populations, from Insee's 2021 population forecast
+# ===================================================================================
+
+# Table : Pyramide des âges interactive
+# source : https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm#!l=en
+# released : ?
+# extraction: 2022/06/24
+# note: also includes observed data for 1990-2022
+
+FRInseePopulationForecast2021 <- bind_rows(
+  read_csv2("data-raw/donnees_pyramide_act_2022.csv") %>% mutate(geo="france",type="observed"),
+  read_csv2("data-raw/donnees_pyramide_proj_2022.csv") %>% mutate(geo="france",type="forecasted")  )  %>%
+  rename(year = ANNEE,
+         sex = SEXE,
+         popx0101 = POP,
+         age0101 = AGE) %>%
+  mutate(year = as.numeric(year),
+         age0101 = as.numeric(age0101),
+         sex = as.factor(sex) %>% recode("M" = "male", "F" = "female"),
+         geo = as.factor(geo) )
+
+FRInseePopulationForecast2021 <- bind_rows(
+  FRInseePopulationForecast2021,
+  FRInseePopulationForecast2021 %>%
+    select(-sex) %>%
+    group_by(year,geo,type,age0101) %>% summarise_all(sum) %>% ungroup() %>%
+    mutate(sex = "all")
+)
+
+
 # ===================================================================================
 # Population of France, Insee
 # ===================================================================================
 
 # Table : Pyramide des âges interactive - France et France métropolitaine
 # source : https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm
+# complementary source (2021 forecast) : https://www.insee.fr/fr/outil-interactif/5896897/pyramide.htm#!y=2026&c=0
 # released : ?
 
 FRInseePopulation <- bind_rows(
@@ -443,10 +476,11 @@ FRGaliEUSilc <- bind_rows(txincap, txincap_all) %>%
 
 # ====================================================================================
 usethis::use_data(FRInseeMortalityForecast2016,
-                  FRInseePopulationForecast2016,
                   FRInseeMortalityrates,
                   FRInseeMortalityrates_t69,
                   FRInseePopulation,
+                  FRInseePopulationForecast2016,
+                  FRInseePopulationForecast2021,
                   FRDreesVQSsurvey2014,
                   FRDreesAPA2017,
                   FRDreesAPA,
