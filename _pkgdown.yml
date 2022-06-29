@@ -27,6 +27,7 @@ reference:
   - FRInseePopulationForecast2016
   - FRInseePopulationForecast2021
   - FRInseeMortalityForecast2016
+  - FRInseeMortalityForecast2021
   - FRInseeMortalityrates
   - FRInseeMortalityrates_t69
   - sullivan
