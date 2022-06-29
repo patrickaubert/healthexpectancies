@@ -6,6 +6,8 @@ library(readxl)
 library(openxlsx)
 library(tidyverse)
 
+load_all()
+
 # ===================================================================================
 # Examples from the sullivan manual (2007 version)
 # ===================================================================================
@@ -275,6 +277,81 @@ FRInseePopulationForecast2021 <- bind_rows(
     mutate(sex = "all")
 )
 
+# ===================================================================================
+# Forecasted mortality rates for men and women, from Insee's 2021 population forecast
+# ===================================================================================
+
+# raw data are downloaded from: https://www.insee.fr/fr/statistiques/5894083?sommaire=5760764
+# ('central' scenario)
+# download: 2022/06/29
+
+ulrmort2021 <- "https://www.insee.fr/fr/statistiques/fichier/5894083/00_central.xlsx"
+
+mortalityMale <- openxlsx::read.xlsx(ulrmort2021,
+                            sheet = "hyp_mortaliteH",
+                            rows=c(2:123))
+names(mortalityMale)[1] <- "age3112"
+mortalityMale <- mortalityMale %>%
+  pivot_longer(-c("age3112"), names_to = "year", values_to = "qx") %>%
+  mutate(qx = qx/100000 )
+
+mortalityFemale <- openxlsx::read.xlsx(ulrmort2021,
+                                     sheet = "hyp_mortaliteF",
+                                     rows=c(2:123))
+names(mortalityFemale)[1] <- "age3112"
+mortalityFemale <- mortalityFemale %>%
+  pivot_longer(-c("age3112"), names_to = "year", values_to = "qx") %>%
+  mutate(qx = qx/100000 )
+
+FRmortalityForecast2021 <- rbind(
+  mortalityFemale %>% mutate(sex = "female"),
+  mortalityMale %>% mutate(sex = "male")
+) %>%
+  mutate(year = as.numeric(str_extract(year,"^[[:digit:]]{4}")),
+         type.obs = case_when(year<= 2017 ~ "observed",
+                          year>2017 & year <= 2020 ~ "observed (prov.)",
+                          year >= 2021 ~ "forecasted") %>% as.factor(),
+         age3112 = as.numeric(age3112),
+         sex = as.factor(sex))
+
+
+# transform dataset from age at the end of the year to age at last birthday
+
+FRmortalityForecast2021_2 <- rbind(
+  FRmortalityForecast2021 %>% mutate(qx = qx/2, age = age3112),
+  FRmortalityForecast2021 %>% mutate(qx = qx/2, age = pmax(0,age3112-1) )
+) %>%
+  select(-age3112) %>%
+  group_by(year,type.obs,sex) %>%  mutate(qx = ifelse(age==max(age),2*qx,qx)) %>%  ungroup() %>%
+  group_by(year,type.obs,sex,age) %>%
+  summarise_all(sum) %>%
+  ungroup()
+
+FRmortalityForecast2021 <- bind_rows(
+  FRmortalityForecast2021  %>% mutate(def.age = "age at end of year") %>% rename(age=age3112),
+  FRmortalityForecast2021_2 %>% mutate(def.age = "current age (approx)")
+) %>%
+  mutate(def.age = as.factor(def.age))
+
+# adding mortality rates for both sex, supposing there are 50-50 men and women ar birth
+
+FRmortalityForecast2021_all <- FRmortalityForecast2021 %>%
+  mutate(qx=1-qx) %>%
+  arrange(year,sex,type.obs,def.age,age) %>% group_by(year,sex,type.obs,def.age) %>% mutate(qx=cumprod(qx)) %>% ungroup() %>%
+  select(-sex) %>% group_by(year,type.obs,def.age,age) %>% summarise_all(mean) %>% ungroup()
+
+FRmortalityForecast2021_all <- FRmortalityForecast2021_all %>%
+  left_join(FRmortalityForecast2021_all %>% mutate(age=age+1) %>% rename(lqx=qx), by=c("year","age","type.obs","def.age")) %>%
+  mutate(qx = ifelse(age==0,1-qx,1-qx/lqx),
+         sex = "all") %>%
+  select(-lqx)
+
+FRInseeMortalityForecast2021 <- bind_rows( FRmortalityForecast2021 , FRmortalityForecast2021_all)
+
+# FRInseeMortalityForecast2021 %>% filter(year==1962) %>% ggplot(aes(y=qx,x=age,colour=sex,group=sex)) + geom_line() + facet_wrap(~def.age)
+# FRInseeMortalityForecast2021 %>% filter(year==2021) %>% ggplot(aes(y=qx,x=age,colour=sex,group=sex)) + geom_line() + facet_wrap(~def.age)
+# FRInseeMortalityForecast2021 %>% filter(year==2070) %>% ggplot(aes(y=qx,x=age,colour=sex,group=sex)) + geom_line() + facet_wrap(~def.age)
+
 
 # ===================================================================================
 # Population of France, Insee
@@ -476,6 +553,7 @@ FRGaliEUSilc <- bind_rows(txincap, txincap_all) %>%
 
 # ====================================================================================
 usethis::use_data(FRInseeMortalityForecast2016,
+                  FRInseeMortalityForecast2021,
                   FRInseeMortalityrates,
                   FRInseeMortalityrates_t69,
                   FRInseePopulation,
