@@ -73,13 +73,13 @@
 #'
 #' The dataset also includes observed data from 1990 to 2022. Population is measured on the 1st of January of each year.
 #'
-#' @format A data frame with 24300 observations and 6 variables:
+#' @format A data frame with 25334 observations and 6 variables:
 #' \describe{
 #'   \item{age0101}{age at January, 1st of the year}
 #'   \item{year}{year}
 #'   \item{sex}{sex ('male' or 'female' or 'all')}
 #'   \item{geo}{geographical field ('france' only)}
-#'   \item{type}{'observed' or 'forecasted'}
+#'   \item{type.obs}{'observed' or 'forecasted'}
 #'   \item{popx0101}{population on the 1st of January at each year, age, sex}
 #' }
 #' @source \url{https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm#!l=en}

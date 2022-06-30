@@ -5,13 +5,13 @@
 \alias{FRInseePopulationForecast2021}
 \title{A dataset with population by sex and age, from Insee's 2021 population forecast (central scenario)}
 \format{
-A data frame with 24300 observations and 6 variables:
+A data frame with 25334 observations and 6 variables:
 \describe{
 \item{age0101}{age at January, 1st of the year}
 \item{year}{year}
 \item{sex}{sex ('male' or 'female' or 'all')}
 \item{geo}{geographical field ('france' only)}
-\item{type}{'observed' or 'forecasted'}
+\item{type.obs}{'observed' or 'forecasted'}
 \item{popx0101}{population on the 1st of January at each year, age, sex}
 }
 }
