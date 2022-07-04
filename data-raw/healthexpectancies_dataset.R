@@ -138,6 +138,7 @@ FRInseePopulationForecast2016 <- rbind(
 # ===================================================================================
 
 # Table : Table de mortalité des années 2016 - 2019, données provisoires arrêtées à fin décembre 2019 - Séries depuis 1977
+# mortality rate are averages over 3 years (for instance, 2018 is the average of 2017, 2018, and 2019)
 # source : https://www.insee.fr/fr/statistiques/5390366?sommaire=5390468
 # released : June, 2d 2021
 
@@ -182,6 +183,7 @@ FRInseeMortalityrates <- rbind(
 # 2021/07/17: add value for 2018 (2017-2019 average, published in June 2021)
 # 2021/06/21: data for france were erroneously those from metropolitan france
 
+# ===================================================================================
 # == Alternative: mortality data from table 'T69' released by Insee
 
 # quotient de mortalité d'après les tableaux T69 de l'Insee (table de mortalité abrégée)
@@ -216,13 +218,53 @@ qmort_t69 <- bind_rows(
          year= as.numeric(year),
          qx = qx/100000)
 
-# correction pour tenir compte du fait qu'il s'agit de l'âge atteint en fin d'année => on considère que les décès à l'âge A au 31/12 se répartissent pour moitié entre les âges A-1 et 1 en année révolue
+# correction pour tenir compte du fait qu'il s'agit de l'âge atteint en fin d'année => on considère que les décès à l'âge A au 31/12 se répartissent entre les âges A-1 et A en année révolue
+# on calcule la part des décès en A-1 et 1 à partir de la comparaison entre les tables de quotients de mortalité T68 et T69 de l'Insee, en moyenne pour les trois dernières années disponibles
+# (cf. on cherche à estimer la portion p(x) page 13 du document méthodologique de l'Insee https://www.insee.fr/fr/metadonnees/source/fichier/Indicateurs_d%C3%A9mo_mai2018.pdf)
 
-qmort_t69_bis <- bind_rows(
-  qmort_t69 %>% mutate(qx=qx/2,age=pmax(0,age-1)),
-  qmort_t69 %>% mutate(qx=qx/2)
-) %>%
-  group_by(year,sex,age) %>% summarise_all(sum) %>% ungroup()
+corr <- qmort_t69 %>%
+  filter(year>=max(FRInseeMortalityrates$year)-1,year<=max(FRInseeMortalityrates$year)+1) %>%
+  select(-year) %>%
+  group_by(sex,age) %>% summarise_all(mean) %>% ungroup()
+
+corr_ref <- FRInseeMortalityrates %>%
+  filter(geo=="france",sex!="all",year==max(FRInseeMortalityrates$year)) %>%
+  select(sex,age,qx)
+
+corr <- corr_ref %>%
+  left_join(corr %>% rename(qx_69=qx), by=c("sex","age")) %>%
+  left_join(corr %>% rename(qx_69p=qx) %>% mutate(age=age-1), by=c("sex","age")) %>%
+  arrange(sex,age) %>%
+  group_by(sex) %>%
+  mutate(ecart=cumsum(qx)-cumsum(qx_69)) %>%
+  ungroup() %>%
+  mutate(px=ecart/qx_69p,
+         age=age+1) %>%
+  filter(!is.na(px)) %>%
+  select(sex,age,px)
+
+# on applique le correctif
+
+# ancienne méthode (hypothèse p(x)=0.5 à tous âges)
+#qmort_t69_bis <- bind_rows(
+#  qmort_t69 %>% mutate(qx=qx/2,age=pmax(0,age-1)),
+#  qmort_t69 %>% mutate(qx=qx/2) ) %>%
+#  group_by(year,sex,age) %>% summarise_all(sum) %>% ungroup()
+
+# nouvelle méthode (p(x) estimé par comparaison entre les tables T68 et T69)
+qmort_t69_bis <- qmort_t69 %>%
+  left_join(corr ,by=c("sex","age")) %>%
+  left_join(qmort_t69 %>% rename(qxf=qx) %>% mutate(age=age-1) %>% filter(age>=0), by=c("year","sex","age")) %>%
+  left_join(corr %>% rename(pxf=px)  %>% mutate(age=age-1),by=c("sex","age")) %>%
+  mutate(px = case_when(
+    !is.na(px) ~ px,
+    is.na(px) & age==0 ~ 0,
+    is.na(px) & age>0 ~0.5
+  ),
+  qxf = ifelse(is.na(qxf),qx,qxf),
+  pxf = ifelse(is.na(pxf),px,pxf)) %>%
+  mutate(qx = (1-px)*qx + pxf*qxf) %>%
+  select(year,age,sex,qx)
 
 qmort_t69 <- bind_rows(
   qmort_t69 %>% mutate(def.age = "age at end of year"),
@@ -247,6 +289,8 @@ qmort_t69 <- bind_rows( qmort_t69 , qmort_t69_all)
 
 FRInseeMortalityrates_t69 <- qmort_t69
 
+# == correction of errors :
+# 2022/07/04 : a more accurate estimate of the share of deaths before people's birthday is used (the share was supposed to be egal to 0.5 at every age in previous versions)
 
 # ===================================================================================
 # Forecasted populations, from Insee's 2021 population forecast
