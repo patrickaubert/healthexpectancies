@@ -187,6 +187,7 @@ FRInseeMortalityrates <- rbind(
 # quotient de mortalité d'après les tableaux T69 de l'Insee (table de mortalité abrégée)
 # données téléchargées le 13/04/2022 à l'adresse https://www.insee.fr/fr/statistiques/6036439?sommaire=6036447
 # (Bilan démographique 2021 - Chiffres détaillés - Paru le : 18/01/2022 )
+# nouvelle extraction des données le 04/07/2022
 
 url_t69 <- "https://www.insee.fr/fr/statistiques/fichier/6036439/fe_dod_quotients_mortalite.xlsx"
 

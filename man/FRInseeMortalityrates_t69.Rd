@@ -5,7 +5,7 @@
 \alias{FRInseeMortalityrates_t69}
 \title{An (alternative) dataset with observed mortality rates by sex and age, from Insee}
 \format{
-A data frame with 22624 observations and 5 variables:
+A data frame with 16968 observations and 5 variables:
 \describe{
 \item{age}{age}
 \item{def.age}{definition of age: at the end of the year vs. current age}

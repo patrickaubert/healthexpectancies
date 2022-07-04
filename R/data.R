@@ -129,7 +129,7 @@
 #' The current version of the data table was released in January, 2022 and contains observations
 #' from 1994 to 2021. The geographical field is France including oversea territories.
 #'
-#' @format A data frame with 22624 observations and 5 variables:
+#' @format A data frame with 16968 observations and 5 variables:
 #' \describe{
 #'   \item{age}{age}
 #'   \item{def.age}{definition of age: at the end of the year vs. current age}
