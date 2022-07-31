@@ -272,12 +272,21 @@ qmort_t69 <- bind_rows(
 ) %>%
   mutate(def.age = as.factor(def.age))
 
-# ajout des quotients de mortalité pour l'ensemble des sexes, en faisant l'hypothèse d'un partage 50/50 d'hommes et de femmes à la naissance
+# ajout des quotients de mortalité pour l'ensemble des sexes
+# (RQ méthode utilisée jusqu'au 31/07/2022 : en faisant l'hypothèse d'un partage 50/50 d'hommes et de femmes à la naissance)
+
+partnaiss <- FRInseePopulation %>% filter(age0101==0,geo=="france") %>% select(year,sex,popx) %>%
+  mutate(sex = recode(as.character(sex), "M"="male","F"="female"),
+         year=year-1) %>%
+  rename(partnaiss=popx) %>%
+  group_by(year) %>% mutate(partnaiss=partnaiss/sum(partnaiss)) %>% ungroup()
 
 qmort_t69_all <- qmort_t69 %>%
   mutate(qx=1-qx) %>%
   arrange(year,sex,def.age,age) %>% group_by(year,sex,def.age) %>% mutate(qx=cumprod(qx)) %>% ungroup() %>%
-  select(-sex) %>% group_by(year,def.age,age) %>% summarise_all(mean) %>% ungroup()
+  left_join(partnaiss, by=c("year","sex") ) %>%
+  mutate(qx = qx * partnaiss) %>%
+  select(-sex,-partnaiss) %>% group_by(year,def.age,age) %>% summarise_all(sum) %>% ungroup()
 
 qmort_t69_all <- qmort_t69_all %>%
   left_join(qmort_t69_all %>% mutate(age=age+1) %>% rename(lqx=qx), by=c("year","age","def.age")) %>%
@@ -290,6 +299,7 @@ qmort_t69 <- bind_rows( qmort_t69 , qmort_t69_all)
 FRInseeMortalityrates_t69 <- qmort_t69
 
 # == correction of errors :
+# 2022/07/31 : take into account the share of male/female at birth in calculating average life expectancy and mortality ratios
 # 2022/07/04 : a more accurate estimate of the share of deaths before people's birthday is used (the share was supposed to be egal to 0.5 at every age in previous versions)
 
 # ===================================================================================
