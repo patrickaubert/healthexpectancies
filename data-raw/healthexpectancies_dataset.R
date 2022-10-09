@@ -299,6 +299,7 @@ qmort_t69 <- bind_rows( qmort_t69 , qmort_t69_all)
 FRInseeMortalityrates_t69 <- qmort_t69
 
 # == correction of errors :
+# 2022/10/09 : add 2021 for all sexes current age
 # 2022/07/31 : take into account the share of male/female at birth in calculating average life expectancy and mortality ratios
 # 2022/07/04 : a more accurate estimate of the share of deaths before people's birthday is used (the share was supposed to be egal to 0.5 at every age in previous versions)
 
@@ -467,9 +468,11 @@ FRInseeMortalityForecast2021 <- bind_rows( FRmortalityForecast2021 , FRmortality
 # source : https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm
 # complementary source (2021 forecast) : https://www.insee.fr/fr/outil-interactif/5896897/pyramide.htm#!y=2026&c=0
 # released : ?
+# new extraction for france : 2022/10/09
 
 FRInseePopulation <- bind_rows(
-  read_csv2("data-raw/donnees_pyramide_act.csv") %>% mutate(geo="france"),
+  #read_csv2("data-raw/donnees_pyramide_act.csv") %>% mutate(geo="france"),
+  read_csv2("https://www.insee.fr/fr/outil-interactif/5014911/data/FR/donnees_pyramide_act.csv") %>% mutate(geo="france"),
   read_csv2("data-raw/donnees_pyramide_act_fm.csv") %>% mutate(geo="metropolitan france")  )  %>%
   rename(year = ANNEE,
          sex = SEXE,

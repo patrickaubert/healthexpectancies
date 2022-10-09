@@ -5,7 +5,7 @@
 \alias{FRInseePopulation}
 \title{A dataset with population by sex and age, from Insee's 'bilan démographique' (annual population estimates)}
 \format{
-A data frame with 30 400 observations and 5 variables:
+A data frame with 30 600 observations and 5 variables:
 \describe{
 \item{age0101}{age at January, 1st of the year}
 \item{year}{year}

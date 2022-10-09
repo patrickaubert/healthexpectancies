@@ -91,7 +91,7 @@
 #' from 1991 (France) or 1901 (metropolitan France) to 2021.
 #' Observations for the last three years (2019 and more) are provisional.
 #'
-#' @format A data frame with 30 400 observations and 5 variables:
+#' @format A data frame with 30 600 observations and 5 variables:
 #' \describe{
 #'   \item{age0101}{age at January, 1st of the year}
 #'   \item{year}{year}
