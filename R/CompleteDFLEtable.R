@@ -34,6 +34,26 @@ CompleteDFLEtable <- function(tab, categories = c("")) {
   # remove columns with missing values
   tab <- tab[,colSums(is.na(tab))==0]
 
+  # find variations of sex/year names (typically French names instead of English names)
+  namesex <- NA
+  if (!("sex" %in% names(tab)) & ("sexe" %in% tolower(names(tab)))) {
+    namesex <- names(tab)[tolower(names(tab))=="sexe"]
+    namesex <- namesex[1]
+    names(tab)[names(tab)==namesex] <- "sex"
+    tab <- CompleteDFLEtable(tab,categories)
+    names(tab)[names(tab)=="sex"] <- namesex
+    return(tab)
+  }
+  nameyear <- NA
+  if (!("year" %in% names(tab)) & (NROW(names(tab)[grepl("^(an|annee)$",tolower(names(tab)))]>=1))) {
+    nameyear <- names(tab)[grepl("^(an|annee)$",tolower(names(tab)))]
+    nameyear <- nameyear[1]
+    names(tab)[names(tab)==nameyear] <- "year"
+    tab <- CompleteDFLEtable(tab,categories)
+    names(tab)[names(tab)=="year"] <- nameyear
+    return(tab)
+  }
+
   # if 'categories' is provided, a 'categ' variable is first created
   categories <- categories[!(categories %in% c("sex","year"))]
   categories.true <- categories[categories != ""]
@@ -67,8 +87,7 @@ CompleteDFLEtable <- function(tab, categories = c("")) {
     } else {
       tabloc
     }
-  } # and of restore_categories
-
+  } # end of restore_categories
 
   # if 'sex' and/or 'year' and/or 'categ' are in the input dataset, calculations is made for each values of these 2 variables
   # NB: 'categ' is an undefinite category variable (to be defined by user)
