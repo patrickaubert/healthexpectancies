@@ -3,8 +3,10 @@
 
 library(devtools)
 library(readxl)
+library(httr)
 library(openxlsx)
 library(tidyverse)
+library(janitor)
 
 load_all()
 
@@ -660,6 +662,76 @@ FRGaliEUSilc <- bind_rows(txincap, txincap_all) %>%
   rename(agebracket = age, prevalence=txincap) %>%
   mutate(prevalence=prevalence/100)
 
+# ===================================================================================
+# Prevalence of elder people living in institutions, from DREES's EHPA survey
+# ===================================================================================
+
+urlehpa2019 <- "https://drees.solidarites-sante.gouv.fr/sites/default/files/2022-07/ER1237.xlsx"
+#urlehpa2015 <- "https://drees.solidarites-sante.gouv.fr/sites/default/files/2020-08/er1015.xlsx"
+urlehpa2011 <- "https://drees.solidarites-sante.gouv.fr/sites/default/files/2020-08/er899.xls"
+
+# year 2015 and 2019
+
+eff1519 <- read.xlsx(
+  xlsxFile = urlehpa2019,
+  sheet="Graph1- Pyramide âges",
+  rows = c(5:70)) %>%
+  janitor::clean_names()
+
+eff1519 <- eff1519 %>%
+  rename(age=age_en_annees) %>%
+  pivot_longer(cols = -"age",names_to="categ",values_to="nb") %>%
+  mutate(sexe=categ %>% str_extract("^[^_]+(?=_)") %>% tolower(),
+         annee=categ %>% str_extract("(?<=_)[^_]+$"),
+         age=as.numeric(age),
+         annee = as.numeric(annee),
+         nb=abs(nb)) %>%
+  select(-categ)
+
+# years 2007 and 2011
+
+httr::GET(urlehpa2011, write_disk(fileloc <- tempfile(fileext = ".xls")))
+eff0711 <- read_excel(path = fileloc, sheet="graphe 1", range = "B3:F64")
+unlink(fileloc)
+
+eff0711 <- eff0711 %>%
+  janitor::clean_names() %>%
+  rename(age=age_revolu) %>%
+  pivot_longer(cols = -"age",names_to="categ",values_to="nb") %>%
+  mutate(sexe=categ %>% str_extract("^[^_]+(?=_)"),
+         sexe=ifelse(is.na(sexe),"hommes",sexe),
+         annee=categ %>% str_extract("[[:digit:]]+"),
+         age=as.numeric(age),
+         annee = as.numeric(annee),
+         nb=abs(nb)) %>%
+  select(-categ)
+
+eff <- bind_rows(eff0711, eff1519) %>%
+  arrange(annee,sexe,age) %>%
+  left_join(
+    FRInseePopulationForecast2021 %>%
+      filter(geo=="france",type.obs=="observed",year<=2020) %>%
+      mutate(year=year-1,
+             sex = as.character(sex) %>% recode("male"="hommes","female"="femmes")) %>%
+      rename(sexe=sex,annee=year,poptot=popx0101,age=age0101) %>%
+      select(annee,sexe,age,poptot),
+    by=c("annee","sexe","age")   )
+
+FRFreesEHPA <- bind_rows(
+  eff,
+  eff %>%
+    select(-sexe) %>%
+    group_by(annee,age) %>% summarise_all(sum, na.rm=TRUE) %>% ungroup() %>%
+    mutate(sexe="ensemble")
+  ) %>%
+  mutate(prevalence=nb/poptot) %>%
+  rename(sex=sexe,year=annee) %>%
+  mutate(sex = sex %>% recode("ensemble"="all","femmes"="female","hommes"="male"))
+
+# logit <- function(x){log(x/(1-x))}
+# eff %>% mutate(annee=as.factor(annee)) %>% ggplot(aes(y=prevalence,x=age,colour=annee,group=annee)) + geom_line() + facet_grid(~sexe) + coord_trans(y = "logit")
+
+
 # ====================================================================================
 usethis::use_data(FRInseeMortalityForecast2016,
                   FRInseeMortalityForecast2021,
@@ -671,6 +743,7 @@ usethis::use_data(FRInseeMortalityForecast2016,
                   FRDreesVQSsurvey2014,
                   FRDreesAPA2017,
                   FRDreesAPA,
+                  FRFreesEHPA,
                   FRGaliEUSilc,
                   sullivan,
                   description_sullivan,

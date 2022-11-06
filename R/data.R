@@ -210,3 +210,19 @@
 #' }
 #' @source \url{https://drees.solidarites-sante.gouv.fr/publications/etudes-et-resultats/en-2020-lesperance-de-vie-sans-incapacite-65-ans-est-de-121-ans}
 "FRGaliEUSilc"
+
+#' A dataset with proportions on people living in institutions in France according to Drees's EHPA survey
+#'
+#' The EHPA survey is collected every four years. Data are available for 2007, 2011, 2015 and 2019. Numbers of people are measured on the Decembre 31st of each year.
+#'
+#' @format A data frame with 756 observations and 6 variables:
+#' \describe{
+#'   \item{year}{year of observation}
+#'   \item{sex}{sex ('female' or 'male' or 'all)}
+#'   \item{age}{age}
+#'   \item{nb}{number of elder people living in institutions}
+#'   \item{poptot}{total population by age and sexe}
+#'   \item{prevalence}{share of elder people living in institutions}
+#' }
+#' @source \url{https://drees.solidarites-sante.gouv.fr/sources-outils-et-enquetes/07-lenquete-aupres-des-etablissements-dhebergement-pour-personnes-agees}
+"FRFreesEHPA"
