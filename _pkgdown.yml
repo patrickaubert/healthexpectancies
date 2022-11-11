@@ -16,12 +16,14 @@ reference:
 - contents:
   - prevalenceApprox
   - prevalence_to_polynomial
+  - runExample
 - title: Datasets
   desc:  Datasets provide examples for calculations. Most are data provided by Insee (the French INS) or DREES (the statistical unit of the French Ministry for Health and Social affairs)
 - contents:
   - FRDreesAPA
   - FRDreesAPA2017
   - FRDreesVQSsurvey2014
+  - FRDreesEHPA
   - FRGaliEUSilc
   - FRInseePopulation
   - FRInseePopulationForecast2016

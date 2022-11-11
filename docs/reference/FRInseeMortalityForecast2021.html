@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>An (alternative) dataset with observed mortality rates by sex and age, from Insee — FRInseeMortalityrates_t69 • healthexpectancies</title>
+<title>A dataset with mortality rates from Insee's 2021 population forecast (central scenario) — FRInseeMortalityForecast2021 • healthexpectancies</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="An (alternative) dataset with observed mortality rates by sex and age, from Insee — FRInseeMortalityrates_t69" />
-<meta property="og:description" content="This dataset corresponds to data released by Insee as T69, as comparison to the FRInseeMortalityrates, which
-corresponds to T68 (see Insee's website for a presentation of the differences)." />
+<meta property="og:title" content="A dataset with mortality rates from Insee's 2021 population forecast (central scenario) — FRInseeMortalityForecast2021" />
+<meta property="og:description" content="The dataset includes observed values from 1962 to 2020, then forecasted values from 2021 to 2070." />
 
 
 
@@ -122,37 +121,38 @@ corresponds to T68 (see Insee's website for a presentation of the differences)."
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>An (alternative) dataset with observed mortality rates by sex and age, from Insee</h1>
+    <h1>A dataset with mortality rates from Insee's 2021 population forecast (central scenario)</h1>
     
-    <div class="hidden name"><code>FRInseeMortalityrates_t69.Rd</code></div>
+    <div class="hidden name"><code>FRInseeMortalityForecast2021.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This dataset corresponds to data released by Insee as T69, as comparison to the FRInseeMortalityrates, which
-corresponds to T68 (see Insee's website for a presentation of the differences).</p>
+    <p>The dataset includes observed values from 1962 to 2020, then forecasted values from 2021 to 2070.</p>
     </div>
 
-    <pre class="usage"><span class='va'>FRInseeMortalityrates_t69</span></pre>
+    <pre class="usage"><span class='va'>FRInseeMortalityForecast2021</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A data frame with 16968 observations and 5 variables:</p><dl>
+    <p>A data frame with 79134 observations and 6 variables:</p><dl>
 <dt>age</dt><dd><p>age</p></dd>
-<dt>def.age</dt><dd><p>definition of age: at the end of the year vs. current age</p></dd>
 <dt>year</dt><dd><p>year</p></dd>
-<dt>sex</dt><dd><p>sex ('male' or 'female' or 'all)</p></dd>
-<dt>qx</dt><dd><p>mortality rate at each year, age, sex</p></dd>
+<dt>sex</dt><dd><p>sex ('male' or 'female' or 'all')</p></dd>
+<dt>type.obs</dt><dd><p>type of observation ('observed' or 'observed (prov.)' or 'forecasted')</p></dd>
+<dt>def.age</dt><dd><p>definition of age ('age at end of year' or 'current age (approx)')</p></dd>
+<dt>qx</dt><dd><p>mortality rates at each year, age, sex</p></dd>
 
 </dl>
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p><a href='https://www.insee.fr/fr/statistiques/5390366?sommaire=5390468'>https://www.insee.fr/fr/statistiques/5390366?sommaire=5390468</a></p>
+    <p><a href='https://www.insee.fr/fr/statistiques/5894083?sommaire=5760764'>https://www.insee.fr/fr/statistiques/5894083?sommaire=5760764</a></p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The current version of the data table was released in January, 2022 and contains observations
-from 1994 to 2021. The geographical field is France including oversea territories.</p>
+    <p>Note: Insee's file provides number of death by age at the end of the year, not age at last birthday.
+We assume deaths are evenly distributed within the year, so we use simple average to convert from
+definition of age to the other.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

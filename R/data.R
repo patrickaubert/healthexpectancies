@@ -188,6 +188,7 @@
 #'   \item{prevalence}{share of beneficiaires within the total population in the given age bracket (number between 0 and 1)}
 #'   \item{sex}{sex ('female' or 'male')}
 #'   \item{agebracket}{age bracket (eg '[60;65)' = between 60 and 64 years old)}
+#'   \item{age}{minimal age within the age bracket}
 #'   \item{year}{year of observation (value for the monthe of December)}
 #' }
 #' @source \url{https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/les-dossiers-de-la-drees/article/incapacites-et-perte-d-autonomie-des-personnes-agees-en-france-une-evolution}
@@ -204,9 +205,8 @@
 #'   \item{incap}{type of general activity limitations ('gali_incl_moderate' or 'gali_severe')}
 #'   \item{prevalence}{share of people with general activity limitations in the given age bracket (number between 0 and 1)}
 #'   \item{sex}{sex ('female' or 'male')}
-#'   \item{age}{minimal age within the age bracket}
 #'   \item{agebracket}{age bracket (eg '[60;65)' = between 60 and 64 years old)}
-#'   \item{annee}{year of observation (value for the monthe of December)}
+#'   \item{year}{year of observation (value for the month of December)}
 #' }
 #' @source \url{https://drees.solidarites-sante.gouv.fr/publications/etudes-et-resultats/en-2020-lesperance-de-vie-sans-incapacite-65-ans-est-de-121-ans}
 "FRGaliEUSilc"
@@ -225,4 +225,4 @@
 #'   \item{prevalence}{share of elder people living in institutions}
 #' }
 #' @source \url{https://drees.solidarites-sante.gouv.fr/sources-outils-et-enquetes/07-lenquete-aupres-des-etablissements-dhebergement-pour-personnes-agees}
-"FRFreesEHPA"
+"FRDreesEHPA"

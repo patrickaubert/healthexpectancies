@@ -717,7 +717,7 @@ eff <- bind_rows(eff0711, eff1519) %>%
       select(annee,sexe,age,poptot),
     by=c("annee","sexe","age")   )
 
-FRFreesEHPA <- bind_rows(
+FRDreesEHPA <- bind_rows(
   eff,
   eff %>%
     select(-sexe) %>%
@@ -743,7 +743,7 @@ usethis::use_data(FRInseeMortalityForecast2016,
                   FRDreesVQSsurvey2014,
                   FRDreesAPA2017,
                   FRDreesAPA,
-                  FRFreesEHPA,
+                  FRDreesEHPA,
                   FRGaliEUSilc,
                   sullivan,
                   description_sullivan,

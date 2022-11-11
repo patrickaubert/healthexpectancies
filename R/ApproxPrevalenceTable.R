@@ -4,7 +4,7 @@
 #' into a table with smoothed prevalences at all ages (for all sex, year and categories).
 #'
 #' Parameters must include the vector of age cuts, which defines the age brackets. For instance, c(60,70,80)
-#' defines age brackets [60,70), [70,80) and [80,Inf].
+#' defines age brackets `[60,70)`, `[70,80)` and `[80,Inf]`.
 #'
 #' The calculation minimises the sum of squares of second-differences of prevalences
 #' by age, under the constraint that average prevalences by age brackets
