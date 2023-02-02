@@ -640,19 +640,26 @@ FRDreesVQSsurvey2021 <- prev_vqs_2021 %>%
   select(-X1) %>%
   mutate(prevalence= prevalence/100,
          sex = sex_age %>% str_extract("^[^_]+(?=_)"),
-         age = sex_age %>% str_replace("^[^_]+_","") ) %>%
+         age = sex_age %>% str_replace("^[^_]+_","") %>%
+           recode("74-79.ans"="75-79.ans")) %>%
   select(-sex_age) %>%
   #filter(!(X3 %in% c("Non","Aucune","Très bon","Bon","Assez bon"))) %>%
   mutate(X3 = X3 %>% str_replace("^N.+ pas du tout","Ne peut pas du tout")) %>%
   mutate(agebracket = case_when(
     age == "Total" ~ "[5,Inf)",
     age == "85.ans.et.plus" ~ "[85,Inf)",
-    TRUE ~ paste0("[",str_extract(age,"^[[:digit:]]+(?=\\-)"),",",str_extract(age,"(?<=\\-)[[:digit:]]+(?=\\.)"),")") ),
+    TRUE ~ paste0("[",str_extract(age,"^[[:digit:]]+(?=\\-)"),",",(as.numeric(str_extract(age,"(?<=\\-)[[:digit:]]+(?=\\.)"))+1),")") ),
     agebracket = factor(agebracket)) %>%
   select(-age) %>%
   rename(limitationtype=X2,
          limitationintensity=X3)
 
+usethis::use_data(FRDreesVQSsurvey2021, overwrite = T)
+
+# dfle2021 <- FRInseeMortalityrates_t69 %>% filter(year==2021 & def.age=="current age (approx)" & age>=5) %>% select(-def.age) %>% mutate(agebracket=cut(age,breaks=c(seq(5,85,5),Inf),include_lowest=TRUE,right=FALSE))
+# dfle2021 <- dfle2021 %>% left_join(FRDreesVQSsurvey2021, by=c("sex","agebracket")) %>% arrange(sex,limitationtype,limitationintensity,age) %>% select(-nb,-agebracket) %>% rename(pix=prevalence)
+# dfle2021 <- CompleteDFLEtable(dfle2021, categories=c("limitationtype","limitationintensity"))
+# dfle2021 %>% filter(age==60 & sex=="all" & grepl("^Difficultés",limitationtype) & limitationintensity!="Aucune") %>% ggplot(aes(y=DLEx,x=limitationtype,fill=limitationintensity)) + geom_bar(stat="identity",position="stack") + coord_flip() + labs(title="Espérance de vie avec ou sans incapacité à 60 ans")
 
 # ===================================================================================
 # Prevalence of GALI from Insee's SRCV survey (French version of EU-SILC)
