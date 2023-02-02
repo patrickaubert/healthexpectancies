@@ -192,13 +192,17 @@ FRInseeMortalityrates <- rbind(
 # données téléchargées le 13/04/2022 à l'adresse https://www.insee.fr/fr/statistiques/6036439?sommaire=6036447
 # (Bilan démographique 2021 - Chiffres détaillés - Paru le : 18/01/2022 )
 # nouvelle extraction des données le 04/07/2022
+# (Bilan démographique 2022 - Chiffres détaillés - Paru le : 17/01/2023 )
+# extraction des données le 02/02/2023
 
-url_t69 <- "https://www.insee.fr/fr/statistiques/fichier/6036439/fe_dod_quotients_mortalite.xlsx"
+#url_t69 <- "https://www.insee.fr/fr/statistiques/fichier/6036439/fe_dod_quotients_mortalite.xlsx"
+url_t69_fe <- "https://www.insee.fr/fr/statistiques/fichier/6686511/fe_dod_quotients_mortalite.xlsx"
+url_t69_fm <- "https://www.insee.fr/fr/statistiques/fichier/6686511/fm_dod_quotients_mortalite.xlsx"
 
 qmort_t69 <- bind_rows(
   read.xlsx(
     #xlsxFile = "data-raw/fe_dod_quotients_mortalite.xlsx",
-    xlsxFile = url_t69,
+    xlsxFile = url_t69_fe,
     sheet = "Qmort-F", #"qmortf",
     startRow = 5,
     colNames = TRUE, skipEmptyRows = TRUE, skipEmptyCols = TRUE) %>%
@@ -207,7 +211,7 @@ qmort_t69 <- bind_rows(
     mutate(sex = "female"),
   read.xlsx(
     #xlsxFile = "data-raw/fe_dod_quotients_mortalite.xlsx",
-    xlsxFile = url_t69,
+    xlsxFile = url_t69_fe,
     sheet = "Qmort-H", #"qmorth",
     startRow = 5,
     colNames = TRUE, skipEmptyRows = TRUE, skipEmptyCols = TRUE) %>%
@@ -283,6 +287,9 @@ partnaiss <- FRInseePopulation %>% filter(age0101==0,geo=="france") %>% select(y
   rename(partnaiss=popx) %>%
   group_by(year) %>% mutate(partnaiss=partnaiss/sum(partnaiss)) %>% ungroup()
 
+# transitoire : on réplique en 2022 la part de naissance de 2021
+partnaiss <- bind_rows(partnaiss, partnaiss %>% filter(year==2021) %>% mutate(year=2022))
+
 qmort_t69_all <- qmort_t69 %>%
   mutate(qx=1-qx) %>%
   arrange(year,sex,def.age,age) %>% group_by(year,sex,def.age) %>% mutate(qx=cumprod(qx)) %>% ungroup() %>%
@@ -298,9 +305,12 @@ qmort_t69_all <- qmort_t69_all %>%
 
 qmort_t69 <- bind_rows( qmort_t69 , qmort_t69_all)
 
+# verif <- CompleteDFLEtable(qmort_t69 %>% filter(def.age=="current age (approx)")) %>% select(sex,year,age,ex) %>% filter(age %in% c(0,60,65))
+
 FRInseeMortalityrates_t69 <- qmort_t69
 
 # == correction of errors :
+# 2023/02/02 : add year 2022
 # 2022/10/09 : add 2021 for all sexes current age
 # 2022/07/31 : take into account the share of male/female at birth in calculating average life expectancy and mortality ratios
 # 2022/07/04 : a more accurate estimate of the share of deaths before people's birthday is used (the share was supposed to be egal to 0.5 at every age in previous versions)
