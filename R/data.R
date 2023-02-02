@@ -157,6 +157,23 @@
 #' @source \url{https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/les-dossiers-de-la-drees/article/incapacites-et-perte-d-autonomie-des-personnes-agees-en-france-une-evolution}
 "FRDreesVQSsurvey2014"
 
+#' A dataset with disability prevalences in France (2021)
+#'
+#' Prevalences are estimated through the 2021 'Vie quotidienne et santé' (VQS) survey.
+#' They are estimated by age brackets (eg. '[60;65)' stands for ages 60 to 64)
+#'
+#' @format A data frame with 4626 observations and 6 variables:
+#' \describe{
+#'   \item{limitationtype}{type of limitation [in French] (eg. 'Difficultés pour marcher', etc.)}
+#'   \item{limitationintensity}{strength of limitation [in French] (eg. 'Ne peut pas du tout', etc.)}
+#'   \item{sex}{sex ('female' or 'male' or 'all')}
+#'   \item{agebracket}{age bracket (eg '[60;65)' = between 60 and 64 years old)}
+#'   \item{prevalence}{prevalence of limitation in the given age bracket (number between 0 and 1)}
+#'   \item{nb}{number of persons with limitation in the given age bracket (number between 0 and 1)}
+#' }
+#' @source \url{https://data.drees.solidarites-sante.gouv.fr/explore/dataset/enquete-vie-quotidienne-et-sante-2021-donnees-detaillees/information/}
+"FRDreesVQSsurvey2021"
+
 #' A dataset with share of APA beneficiaries in France (December 2017)
 #'
 #' APA is a benefit covering long term care expenditures both at home ('à domicile') or in institutions ('en établissement').

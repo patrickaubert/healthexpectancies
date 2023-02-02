@@ -602,6 +602,59 @@ FRDreesAPA <- rbind(
 
 
 # ===================================================================================
+# Disability prevalences, from DREES' 2021 VQS survey
+# ===================================================================================
+
+# source : https://data.drees.solidarites-sante.gouv.fr/explore/dataset/enquete-vie-quotidienne-et-sante-2021-donnees-detaillees/information/
+# Excel file : 'Enquête Vie quotidienne et santé 2021 - Données nationales.xlsx'
+# Data published and extracte 2023/02/01
+
+prev_vqs_2021 <- read.xlsx(xlsxFile="https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/enquete-vie-quotidienne-et-sante-2021-donnees-detaillees/attachments/enquete_vie_quotidienne_et_sante_2021_donnees_nationales_xlsx/",
+                           sheet="Données nationales_parts",
+                           rows=c(4:129))
+
+eff_vqs_2021 <- read.xlsx(xlsxFile="https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/enquete-vie-quotidienne-et-sante-2021-donnees-detaillees/attachments/enquete_vie_quotidienne_et_sante_2021_donnees_nationales_xlsx/",
+                           sheet="Données nationales_effectifs",
+                           rows=c(4:129))
+
+# names of columns
+nb_age <- (ncol(prev_vqs_2021)-3)/3
+
+names(prev_vqs_2021)[4:ncol(prev_vqs_2021)] <- paste0(
+  c(rep("male",nb_age),rep("female",nb_age),rep("all",nb_age)),
+  "_",names(prev_vqs_2021)[4:ncol(prev_vqs_2021)])
+
+names(eff_vqs_2021)[4:ncol(eff_vqs_2021)]  <- names(prev_vqs_2021)[4:ncol(prev_vqs_2021)]
+
+FRDreesVQSsurvey2021 <- prev_vqs_2021 %>%
+  fill(all_of(c("X1","X2","X3")), .direction="down") %>%
+  pivot_longer(cols = -c("X1","X2","X3"),names_to="sex_age",values_to="prevalence")  %>%
+  filter(!is.na(prevalence)) %>%
+  full_join(
+    eff_vqs_2021 %>%
+      fill(all_of(c("X1","X2","X3")), .direction="down") %>%
+      pivot_longer(cols = -c("X1","X2","X3"),names_to="sex_age",values_to="nb")  %>%
+      filter(!is.na(nb)),
+    by=c("X1","X2","X3","sex_age")
+  ) %>%
+  select(-X1) %>%
+  mutate(prevalence= prevalence/100,
+         sex = sex_age %>% str_extract("^[^_]+(?=_)"),
+         age = sex_age %>% str_replace("^[^_]+_","") ) %>%
+  select(-sex_age) %>%
+  #filter(!(X3 %in% c("Non","Aucune","Très bon","Bon","Assez bon"))) %>%
+  mutate(X3 = X3 %>% str_replace("^N.+ pas du tout","Ne peut pas du tout")) %>%
+  mutate(agebracket = case_when(
+    age == "Total" ~ "[5,Inf)",
+    age == "85.ans.et.plus" ~ "[85,Inf)",
+    TRUE ~ paste0("[",str_extract(age,"^[[:digit:]]+(?=\\-)"),",",str_extract(age,"(?<=\\-)[[:digit:]]+(?=\\.)"),")") ),
+    agebracket = factor(agebracket)) %>%
+  select(-age) %>%
+  rename(limitationtype=X2,
+         limitationintensity=X3)
+
+
+# ===================================================================================
 # Prevalence of GALI from Insee's SRCV survey (French version of EU-SILC)
 # ===================================================================================
 
@@ -741,6 +794,7 @@ usethis::use_data(FRInseeMortalityForecast2016,
                   FRInseePopulationForecast2016,
                   FRInseePopulationForecast2021,
                   FRDreesVQSsurvey2014,
+                  FRDreesVQSsurvey2021,
                   FRDreesAPA2017,
                   FRDreesAPA,
                   FRDreesEHPA,
