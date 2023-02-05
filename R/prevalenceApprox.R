@@ -147,8 +147,8 @@ prevalenceApprox <- function (prevalence, agecuts, agemin, agemax, weight = rep(
 
   } else {
 
-  if (NROW(weight) != (agemax-agemin+1)) { stop("Error: Size of input vectors weight not compatible with agemin and agemax") }
-  if (NROW(agecuts) != NROW(prevalence)) { stop("Error: Different size of input vectors agecuts and prevalence") }
+  if (NROW(weight) != (agemax-agemin+1)) { stop(paste0("Error: Size of input vectors weight (",NROW(weight)," rows) is not compatible with agemin and agemax (",agemin," and ",agemax,").")) }
+  if (NROW(agecuts) != NROW(prevalence)) { stop("Error: Different size of input vectors agecuts (",NROW(agecuts)," rows) and prevalence (",NROW(prevalence)," rows).") }
 
   # create matrixes
 
