@@ -9,7 +9,8 @@ prevalenceApprox(
   agecuts,
   agemin,
   agemax,
-  weight = rep(1, (agemax - agemin + 1))
+  weight = rep(1, (agemax - agemin + 1)),
+  categories = c("")
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ prevalenceApprox(
 \item{agemax}{maximum age in the output vector}
 
 \item{weight}{a vector of weights for each age}
+
+\item{categories}{a vector of names of variables of the 'prevalence' dataframe, representing categories (optional)}
 }
 \value{
 a vector with prevalences according to polynomial approximation
@@ -31,14 +34,21 @@ Given a vector of prevalences by age brackets and the vector of age cuts (which 
 the function returns a vector of prevalences at all ages.
 The calculation minimises the sum of squares of second-differences of prevalences
 by age, under the constraint that average prevalences by age brackets
-(weight according to the 'weight' vector, usually the vector of population size at each age)
+(weight according to the 'weights' vector, usually the vector of population size at each age)
 are equal to the 'prevalence' input vector.
 }
 \details{
+'prevalence' and 'weight' can also be given as dataframes containing sex, year and/or categories variables. In this case,
+the output is a dataframe and prevalences are smoothed for all sex, years and categories.
+
+If 'categories' is provided (a vector of variable names in 'prevalence' and 'weights'), smoothing is performed for
+each separate values of category variables.
+
 Note : Second-differences rather than first-differences are used
 in the minimisation function, since prevalences according to age are usually parabolic.
 }
 \examples{
-prevalenceApprox(prevalence = (FRDreesAPA2017 \%>\% filter(sex=="female",typepresta=="APA Ã  domicile"))$prevalence, agecuts=c(seq(60,95,5)), agemin=60, agemax=100, weight=(FRInseePopulation \%>\% filter(sex=="female",year==2018,age0101>=60) \%>\% arrange(age0101))$popx)
-prevalenceApprox(prevalence = (FRDreesAPA \%>\% filter(year==2018,sex=="male",typepresta=="APA Ã  domicile"))$prevalence, agecuts=c(seq(60,90,5)), agemin=60, agemax=100, weight=(FRInseePopulation \%>\% filter(sex=="male",year==2019,age0101>=60) \%>\% arrange(age0101))$popx)
+prevalenceApprox(prevalence = (FRDreesAPA2017 \%>\% filter(sex=="female",typepresta=="APA Ã  domicile"))$prevalence, agecuts=c(seq(60,95,5)), agemin=60, agemax=99, weight=(FRInseePopulation \%>\% filter(sex=="F",year==2018,age0101>=60,geo=="france") \%>\% arrange(age0101))$popx)
+prevalenceApprox(prevalence = (FRDreesAPA \%>\% filter(year==2018,sex=="male",typepresta=="APA Ã  domicile"))$prevalence, agecuts=c(seq(60,90,5)), agemin=60, agemax=99, weight=(FRInseePopulation \%>\% filter(sex=="M",year==2019,age0101>=60,geo=="france") \%>\% arrange(age0101))$popx)
+prevalenceApprox(prevalence = FRDreesAPA2017, agecuts=c(seq(60,95,5)), agemin=60, agemax=99, weight=(FRInseePopulation \%>\% filter(year==2018,age0101>=60,geo=="france") \%>\% mutate(sex=recode(sex,"F"="female","M"="male")) \%>\% rename(weight=popx) \%>\% arrange(sex,age0101)), categories = c("typepresta"))
 }
