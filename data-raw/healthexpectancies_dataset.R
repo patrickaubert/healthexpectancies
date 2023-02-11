@@ -617,7 +617,8 @@ FRDreesAPA <- rbind(
 
 # source : https://data.drees.solidarites-sante.gouv.fr/explore/dataset/enquete-vie-quotidienne-et-sante-2021-donnees-detaillees/information/
 # Excel file : 'Enquête Vie quotidienne et santé 2021 - Données nationales.xlsx'
-# Data published and extracte 2023/02/01
+# Data published and extracted 2023/02/01
+# New extraction 2023/02/11, following new release by DREES on 2023/02/10
 
 prev_vqs_2021 <- read.xlsx(xlsxFile="https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/enquete-vie-quotidienne-et-sante-2021-donnees-detaillees/attachments/enquete_vie_quotidienne_et_sante_2021_donnees_nationales_xlsx/",
                            sheet="Données nationales_parts",
