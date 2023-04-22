@@ -480,7 +480,10 @@ FRInseeMortalityForecast2021 <- bind_rows( FRmortalityForecast2021 , FRmortality
 # source : https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm
 # complementary source (2021 forecast) : https://www.insee.fr/fr/outil-interactif/5896897/pyramide.htm#!y=2026&c=0
 # released : ?
-# new extraction for france : 2022/10/09
+# new extraction for france : 2023/04/22
+
+# other source : https://www.insee.fr/fr/statistiques/6688661?sommaire=6686521
+# (updated information on metropolitan France)
 
 FRInseePopulation <- bind_rows(
   #read_csv2("data-raw/donnees_pyramide_act.csv") %>% mutate(geo="france"),
@@ -494,6 +497,29 @@ FRInseePopulation <- bind_rows(
          age0101 = as.numeric(age0101),
          sex = as.factor(sex),
          geo = as.factor(geo))
+
+# updated information on metropolitan France
+
+pyra_metro <- function(year) {
+  pyra <- read.xlsx(
+    xlsxFile = paste0("https://www.insee.fr/fr/statistiques/fichier/6688661/Pyra",as.character(year),".xlsx"),
+    sheet = paste0(as.character(year)," - Métro"),
+    rows = c(6:111), cols = c(2:4)   )
+  names(pyra) <- c("age0101","M","F")
+  pyra <- pyra %>%
+    pivot_longer(cols=c("M","F"), names_to="sex",values_to="popx") %>%
+    mutate(year = as.numeric(year),
+           geo = "metropolitan france",
+           sex = as.factor(sex))
+  return(pyra)
+}
+
+FRInseePopulation <- bind_rows(
+  FRInseePopulation %>% filter(geo=="france"),
+  FRInseePopulation %>% filter(geo=="metropolitan france" & year<2020),
+  lapply( c(2020:2023), pyra_metro) ) %>%
+  arrange(year,geo,sex,age0101)
+
 
 # == An earlier version used the another file released by Insee
 
@@ -679,9 +705,39 @@ usethis::use_data(FRDreesVQSsurvey2021, overwrite = T)
 # Data are taken from DREES's yearly publication about Disability-free life expectancies
 # Additional tables with prevalences of GALI by age brackets are disseminated with the publication
 
+# previous versions of the data
+
+# "https://drees.solidarites-sante.gouv.fr/sites/default/files/2021-10/ER1213.xls"
+
 
 # == prévalences des incapacités (au sens du GALI)
 
+# Last extraction : 2023/04/22 ; data released : 2023/02/23 (on DREES website)
+# url : https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/lesperance-de-vie-sans-incapacite-65-ans-est
+
+txincap <- read.xlsx(
+  xlsxFile = "https://fr.ftp.opendatasoft.com/sgsocialgouv/er/ER1258.xlsx",
+  sheet = "DC-22",
+  rows=c(4:548), cols = c(2:7))
+
+txincap <- txincap %>%
+  rename(age=Âge, year=Année, sex=Sexe) %>%
+  pivot_longer(cols=-c("age","sex","year"),names_to="incap",values_to="txincap") %>%
+  mutate(
+    sex = recode(sex, "homme" = "male", "femme"="female"),
+    incap = recode(incap,
+                   "Incapacités.fortes.et.modérées"="gali_incl_moderate",
+                   "Incapacités.fortes"="gali_severe",
+                   "Incapacités.modérées"="gali_moderate_only"),
+    age = case_when(
+      age == 0 ~ "[0,15)",
+      age == 85 ~ "[85,Inf]",
+      TRUE ~  paste0("[",age,",",age+5,")")
+    )
+  )
+
+# code for previous versions
+if (FALSE) {
 library(httr)
 
 httr::GET("https://drees.solidarites-sante.gouv.fr/sites/default/files/2021-10/ER1213.xls",
@@ -709,6 +765,7 @@ txincap <- txincap %>%
                      paste0("[",agelow,",",(as.numeric(agehigh)+1),")"),
                      paste0("[",agelow,",Inf]"))) %>%
   select(-agelow,-agehigh)
+}
 
 poploc <- FRInseePopulation %>%
   rename(age = age0101) %>%

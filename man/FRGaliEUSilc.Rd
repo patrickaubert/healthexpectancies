@@ -5,17 +5,17 @@
 \alias{FRGaliEUSilc}
 \title{A dataset with prevalence of general activity limitations (GALI) in France}
 \format{
-A data frame with 1248 observations and 5 variables:
+A data frame with 2 304 observations and 5 variables:
 \describe{
 \item{incap}{type of general activity limitations ('gali_incl_moderate' or 'gali_severe')}
 \item{prevalence}{share of people with general activity limitations in the given age bracket (number between 0 and 1)}
-\item{sex}{sex ('female' or 'male')}
+\item{sex}{sex ('female' or 'male' or 'all)}
 \item{agebracket}{age bracket (eg '[60;65)' = between 60 and 64 years old)}
 \item{year}{year of observation (value for the month of December)}
 }
 }
 \source{
-\url{https://drees.solidarites-sante.gouv.fr/publications/etudes-et-resultats/en-2020-lesperance-de-vie-sans-incapacite-65-ans-est-de-121-ans}
+\url{https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/lesperance-de-vie-sans-incapacite-65-ans-est}
 }
 \usage{
 FRGaliEUSilc
