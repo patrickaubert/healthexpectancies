@@ -480,7 +480,7 @@ FRInseeMortalityForecast2021 <- bind_rows( FRmortalityForecast2021 , FRmortality
 # source : https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm
 # complementary source (2021 forecast) : https://www.insee.fr/fr/outil-interactif/5896897/pyramide.htm#!y=2026&c=0
 # released : ?
-# new extraction for france : 2023/04/22
+# new extraction for france : 2021/01/12
 
 # other source : https://www.insee.fr/fr/statistiques/6688661?sommaire=6686521
 # (updated information on metropolitan France)
@@ -708,17 +708,20 @@ usethis::use_data(FRDreesVQSsurvey2021, overwrite = T)
 # previous versions of the data
 
 # "https://drees.solidarites-sante.gouv.fr/sites/default/files/2021-10/ER1213.xls"
+# url : https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/lesperance-de-vie-sans-incapacite-65-ans-est
 
+# https://drees.solidarites-sante.gouv.fr/sites/default/files/2023-12/ER1290.xlsx
 
 # == prévalences des incapacités (au sens du GALI)
 
 # Last extraction : 2023/04/22 ; data released : 2023/02/23 (on DREES website)
-# url : https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/lesperance-de-vie-sans-incapacite-65-ans-est
+# url : https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/lesperance-de-vie-sans-incapacite-65-ans-1
+
 
 txincap <- read.xlsx(
-  xlsxFile = "https://fr.ftp.opendatasoft.com/sgsocialgouv/er/ER1258.xlsx",
+  xlsxFile = "https://drees.solidarites-sante.gouv.fr/sites/default/files/2023-12/ER1290.xlsx",
   sheet = "DC-22",
-  rows=c(4:548), cols = c(2:7))
+  rows=c(4:580), cols = c(2:7))
 
 txincap <- txincap %>%
   rename(age=Âge, year=Année, sex=Sexe) %>%
@@ -728,11 +731,19 @@ txincap <- txincap %>%
     incap = recode(incap,
                    "Incapacités.fortes.et.modérées"="gali_incl_moderate",
                    "Incapacités.fortes"="gali_severe",
-                   "Incapacités.modérées"="gali_moderate_only"),
+                   "Incapacités.modérées"="gali_moderate_only",
+                   "prev"="gali_incl_moderate",
+                   "prevs"="gali_severe",
+                   "prevm"="gali_moderate_only"
+                   ),
+    #age = case_when(
+    #  age == 0 ~ "[0,15)",
+    #  age == 85 ~ "[85,Inf]",
+    #  TRUE ~  paste0("[",age,",",age+5,")")
+    #)
     age = case_when(
-      age == 0 ~ "[0,15)",
-      age == 85 ~ "[85,Inf]",
-      TRUE ~  paste0("[",age,",",age+5,")")
+      age == "85 ans ou plus" ~ "[85,Inf]",
+      TRUE ~  paste0("[",str_extract(age,"^[[:digit:]]+"),",",as.numeric(str_extract(age,"(?<=\\-)[[:digit:]]+"))+1,")")
     )
   )
 

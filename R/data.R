@@ -217,7 +217,7 @@
 #' Prevalences are measured in the SRCV survey ie. the French version of EU-SILC.
 #' They are measured by sex and age bracket, for severe general activity limitations and for limitations including moderate ones.
 #'
-#' @format A data frame with 2 304 observations and 5 variables:
+#' @format A data frame with 2 448 observations and 5 variables:
 #' \describe{
 #'   \item{incap}{type of general activity limitations ('gali_incl_moderate' or 'gali_severe')}
 #'   \item{prevalence}{share of people with general activity limitations in the given age bracket (number between 0 and 1)}
@@ -225,7 +225,7 @@
 #'   \item{agebracket}{age bracket (eg '[60;65)' = between 60 and 64 years old)}
 #'   \item{year}{year of observation (value for the month of December)}
 #' }
-#' @source \url{https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/lesperance-de-vie-sans-incapacite-65-ans-est}
+#' @source \url{https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/lesperance-de-vie-sans-incapacite-65-ans-1}
 "FRGaliEUSilc"
 
 #' A dataset with proportions on people living in institutions in France according to Drees's EHPA survey
