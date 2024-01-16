@@ -480,7 +480,7 @@ FRInseeMortalityForecast2021 <- bind_rows( FRmortalityForecast2021 , FRmortality
 # source : https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm
 # complementary source (2021 forecast) : https://www.insee.fr/fr/outil-interactif/5896897/pyramide.htm#!y=2026&c=0
 # released : ?
-# new extraction for france : 2021/01/12
+# new extraction for france : 2024/01/16
 
 # other source : https://www.insee.fr/fr/statistiques/6688661?sommaire=6686521
 # (updated information on metropolitan France)
@@ -488,7 +488,9 @@ FRInseeMortalityForecast2021 <- bind_rows( FRmortalityForecast2021 , FRmortality
 FRInseePopulation <- bind_rows(
   #read_csv2("data-raw/donnees_pyramide_act.csv") %>% mutate(geo="france"),
   read_csv2("https://www.insee.fr/fr/outil-interactif/5014911/data/FR/donnees_pyramide_act.csv") %>% mutate(geo="france"),
-  read_csv2("data-raw/donnees_pyramide_act_fm.csv") %>% mutate(geo="metropolitan france")  )  %>%
+  #read_csv2("data-raw/donnees_pyramide_act_fm.csv") %>% mutate(geo="metropolitan france")
+  read_csv2("https://www.insee.fr/fr/outil-interactif/5014911/data/FRMetro/donnees_pyramide_act.csv") %>% mutate(geo="metropolitan france")
+  )  %>%
   rename(year = ANNEE,
          sex = SEXE,
          popx = POP,
@@ -496,9 +498,11 @@ FRInseePopulation <- bind_rows(
   mutate(year = as.numeric(year),
          age0101 = as.numeric(age0101),
          sex = as.factor(sex),
-         geo = as.factor(geo))
+         geo = as.factor(geo)) %>%
+  arrange(year,geo,sex,age0101)
 
 # updated information on metropolitan France
+# -> not used anymore, since data for Metropolitan France is now available on the same form
 
 pyra_metro <- function(year) {
   pyra <- read.xlsx(
@@ -514,11 +518,11 @@ pyra_metro <- function(year) {
   return(pyra)
 }
 
-FRInseePopulation <- bind_rows(
-  FRInseePopulation %>% filter(geo=="france"),
-  FRInseePopulation %>% filter(geo=="metropolitan france" & year<2020),
-  lapply( c(2020:2023), pyra_metro) ) %>%
-  arrange(year,geo,sex,age0101)
+#FRInseePopulation <- bind_rows(
+#  FRInseePopulation %>% filter(geo=="france"),
+#  FRInseePopulation %>% filter(geo=="metropolitan france" & year<2020),
+#  lapply( c(2020:2023), pyra_metro) ) %>%
+#  arrange(year,geo,sex,age0101)
 
 
 # == An earlier version used the another file released by Insee
@@ -699,7 +703,6 @@ usethis::use_data(FRDreesVQSsurvey2021, overwrite = T)
 # dfle2021 %>% filter(age==60 & sex=="all" & grepl("^Difficultés",limitationtype) & limitationintensity!="Aucune") %>% ggplot(aes(y=DLEx,x=limitationtype,fill=limitationintensity)) + geom_bar(stat="identity",position="stack") + coord_flip() + labs(title="Espérance de vie avec ou sans incapacité à 60 ans")
 
 # ===================================================================================
-# Prevalence of GALI from Insee's SRCV survey (French version of EU-SILC)
 # ===================================================================================
 
 # Data are taken from DREES's yearly publication about Disability-free life expectancies
