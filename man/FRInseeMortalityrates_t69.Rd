@@ -5,17 +5,19 @@
 \alias{FRInseeMortalityrates_t69}
 \title{An (alternative) dataset with observed mortality rates by sex and age, from Insee}
 \format{
-A data frame with 17574 observations and 5 variables:
+A data frame with 65448 observations and 7 variables:
 \describe{
 \item{age}{age}
 \item{def.age}{definition of age: at the end of the year vs. current age}
 \item{year}{year}
-\item{sex}{sex ('male' or 'female' or 'all)}
+\item{sex}{sex ('male' or 'female' or 'all')}
+\item{geo}{geographical field ('france' or 'metropolitan france')}
+\item{status}{'p' for 'provisional', '' otherwise}
 \item{qx}{mortality rate at each year, age, sex}
 }
 }
 \source{
-\url{https://www.insee.fr/fr/statistiques/6686511?sommaire=6686521}
+\url{https://www.insee.fr/fr/statistiques/7746168?sommaire=7746197}
 }
 \usage{
 FRInseeMortalityrates_t69
@@ -25,7 +27,7 @@ This dataset corresponds to data released by Insee as T69, as comparison to the 
 corresponds to T68 (see Insee's website for a presentation of the differences).
 }
 \details{
-The current version of the data table was released in January, 2022 and contains observations
-from 1994 to 2022. The geographical field is France including oversea territories.
+The current version of the data table was released in January, 2024 and contains observations
+from 1946 (metropolitan france) or 1994 (france) to 2023. The geographical field is France including oversea territories.
 }
 \keyword{datasets}
