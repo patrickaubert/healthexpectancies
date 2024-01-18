@@ -104,13 +104,13 @@
 
 #' A dataset with observed mortality rates by sex and age, from Insee
 #'
-#' The current version of the data table was released in June, 2021 and contains observations
-#' from 1976 (Metropolitan France) or 1998 (France including oversea territories) to 2018
+#' The current version of the data table was released in June, 2023 and contains observations
+#' from 1976 (Metropolitan France) or 1998 (France including oversea territories) to 2021
 #' Observations correspond to an average over 3 years: for instance, values for 2017
 #' are actually an average between 2016 and 2018.
 #' Data are from 'tableau 68' (TM68) released by Insee.
 #'
-#' @format A data frame with 18170 observations and 5 variables:
+#' @format A data frame with 19430 observations and 5 variables:
 #' \describe{
 #'   \item{age}{age}
 #'   \item{year}{year}
@@ -118,7 +118,7 @@
 #'   \item{sex}{sex ('male' or 'female' or 'all)}
 #'   \item{qx}{mortality rate at each year, age, sex}
 #' }
-#' @source \url{https://www.insee.fr/fr/statistiques/5390366?sommaire=5390468}
+#' @source \url{https://www.insee.fr/fr/statistiques/7624538?sommaire=7624746}
 "FRInseeMortalityrates"
 
 #' An (alternative) dataset with observed mortality rates by sex and age, from Insee

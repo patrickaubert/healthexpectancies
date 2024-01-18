@@ -147,7 +147,8 @@ FRInseePopulationForecast2016 <- rbind(
 # released : June 14, 2023 -> NOT YET INCLUDED, TO BE DONE
 
 mr_fr <- function(path) {
-  onglets <- excel_sheets(path)
+  GET(path, write_disk(tempfich <- tempfile(fileext = ".xlsx")))
+  onglets <- excel_sheets(tempfich)
   lionglets <- list()
 
   for (an in 1:NROW(onglets)) {
@@ -159,7 +160,7 @@ mr_fr <- function(path) {
     colkeep <- c(1,3,6,9)
     colnames <- c("age","male","female","all")
     tab <- read_excel(
-      path,
+      tempfich,
       sheet = year,
       range = cases
     )
@@ -175,15 +176,21 @@ mr_fr <- function(path) {
              year = as.numeric(year)-1)
     lionglets[[an]] <- tab
   }
+  unlink(tempfich)
   return( do.call("rbind", lionglets) )
 }
 
 FRInseeMortalityrates <- rbind(
-  mr_fr("data-raw/fe_t68.xlsx") %>% mutate(geo = "france"),
-  mr_fr("data-raw/fm_t68.xlsx") %>% mutate(geo = "metropolitan france")
+  #mr_fr("data-raw/fe_t68.xlsx") %>% mutate(geo = "france"),
+  #mr_fr("data-raw/fm_t68.xlsx") %>% mutate(geo = "metropolitan france")
+  mr_fr("https://www.insee.fr/fr/statistiques/fichier/7624538/fe_t68.xlsx") %>% mutate(geo = "france"),
+  mr_fr("https://www.insee.fr/fr/statistiques/fichier/7624538/fm_t68.xlsx") %>% mutate(geo = "metropolitan france")
 )
 
+# descr::crosstab(FRInseeMortalityrates$year,paste(FRInseeMortalityrates$geo,FRInseeMortalityrates$sex))
+
 # == correction of errors :
+# 2024/01/18: add values up to 2020 (2019-2021 average, published in June 2023)
 # 2021/07/17: add value for 2018 (2017-2019 average, published in June 2021)
 # 2021/06/21: data for france were erroneously those from metropolitan france
 
