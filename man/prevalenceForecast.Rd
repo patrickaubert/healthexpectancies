@@ -30,5 +30,6 @@ Projection hypotheses can be one of the following:
 \item 'cstDLE' : in-disability life expectancies constant in all year
 \item 'cstPreval' : prevalences by age (and sex) constant in all year
 \item 'cstPctDFLE' : share of disability-free life expectancy in total life-expectancy constant
+\item 'cstPctDLE' : share of in-disability life expectancy in total life-expectancy constant
 }
 }

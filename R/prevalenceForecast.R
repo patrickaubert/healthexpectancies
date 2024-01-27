@@ -9,6 +9,7 @@
 #' * 'cstDLE' : in-disability life expectancies constant in all year
 #' * 'cstPreval' : prevalences by age (and sex) constant in all year
 #' * 'cstPctDFLE' : share of disability-free life expectancy in total life-expectancy constant
+#' * 'cstPctDLE' : share of in-disability life expectancy in total life-expectancy constant
 #'
 #' @param tabref  a data frame for the reference year, containing variables: year, age, qx (mortality rate) and pix (prevalences) (+ optional: sex)
 #' @param tabproj a data frame for projection years, containing variables: year, age, and qx (mortality rate) (+optional: sex)
@@ -25,7 +26,8 @@ prevalenceForecast <- function(tabref, tabproj, hypo, includevars = c() ) {
                     "cstDFLE" = "DFLEx",
                     "cstDLE" = "DLEx",
                     "cstPctDFLE" = "pctDFLEx",
-                    "cstPrev" = "pix")
+                    "cstPctDLE" = "pctDLEx",
+                    "cstPreval" = "pix")
 
   # DFLE, DLE and pctDFLE for reference year
   tabDFLEref <- CompleteDFLEtable(tabref)
