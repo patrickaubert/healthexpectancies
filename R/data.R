@@ -87,11 +87,11 @@
 
 #' A dataset with population by sex and age, from Insee's 'bilan démographique' (annual population estimates)
 #'
-#' The current version of the data table was released in 2023 and contains observations
-#' from 1991 (France) or 1901 (metropolitan France) to 2023.
-#' Observations for the last three years (2021 and more) are provisional.
+#' The current version of the data table was released in 2026 and contains observations
+#' from 1991 (France) or 1901 (metropolitan France) to 2026.
+#' Observations for the last three years (2023 and more) are provisional.
 #'
-#' @format A data frame with 31 200 observations and 5 variables:
+#' @format A data frame with 32 400 observations and 5 variables:
 #' \describe{
 #'   \item{age0101}{age at January, 1st of the year}
 #'   \item{year}{year}
@@ -104,13 +104,13 @@
 
 #' A dataset with observed mortality rates by sex and age, from Insee
 #'
-#' The current version of the data table was released in June, 2023 and contains observations
-#' from 1976 (Metropolitan France) or 1998 (France including oversea territories) to 2021
+#' The current version of the data table was released in January, 2026 and contains observations
+#' from 1978 (Metropolitan France) or 1998 (France including oversea territories) to 2024
 #' Observations correspond to an average over 3 years: for instance, values for 2017
 #' are actually an average between 2016 and 2018.
 #' Data are from 'tableau 68' (TM68) released by Insee.
 #'
-#' @format A data frame with 19430 observations and 5 variables:
+#' @format A data frame with 21962 observations and 5 variables:
 #' \describe{
 #'   \item{age}{age}
 #'   \item{year}{year}
@@ -126,10 +126,10 @@
 #' This dataset corresponds to data released by Insee as T69, as comparison to the FRInseeMortalityrates, which
 #' corresponds to T68 (see Insee's website for a presentation of the differences).
 #'
-#' The current version of the data table was released in January, 2024 and contains observations
-#' from 1946 (metropolitan france) or 1994 (france) to 2023. The geographical field is France including oversea territories.
+#' The current version of the data table was released in January, 2026 and contains observations
+#' from 1946 (metropolitan france) or 1994 (france) to 2025. The geographical field is France including oversea territories.
 #'
-#' @format A data frame with 65448 observations and 7 variables:
+#' @format A data frame with 67872 observations and 7 variables:
 #' \describe{
 #'   \item{age}{age}
 #'   \item{def.age}{definition of age: at the end of the year vs. current age}
@@ -139,7 +139,7 @@
 #'   \item{status}{'p' for 'provisional', '' otherwise}
 #'   \item{qx}{mortality rate at each year, age, sex}
 #' }
-#' @source \url{https://www.insee.fr/fr/statistiques/7746168?sommaire=7746197}
+#' @source \url{https://www.insee.fr/fr/statistiques/fichier/8721189/}
 "FRInseeMortalityrates_t69"
 
 

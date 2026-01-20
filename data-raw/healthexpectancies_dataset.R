@@ -145,6 +145,8 @@ FRInseePopulationForecast2016 <- rbind(
 # released : June, 2d 2021
 # source update : https://www.insee.fr/fr/statistiques/7624538?sommaire=7624746
 # released : June 14, 2023 -> NOT YET INCLUDED, TO BE DONE
+# source update : https://www.insee.fr/fr/statistiques/8721189?sommaire=8721209
+# released : January 13, 2026
 
 mr_fr <- function(path) {
   GET(path, write_disk(tempfich <- tempfile(fileext = ".xlsx")))
@@ -153,12 +155,21 @@ mr_fr <- function(path) {
 
   for (an in 1:NROW(onglets)) {
     year <- onglets[an]
-    cases <- case_when(year>=2012 ~ "A4:J109",
-                       year>=2011 ~ "A12:J119",
-                       year>=1990 ~ "A12:J114",
-                       year>=1977 ~ "A12:G114")
+    cases <- case_when(
+      # ~~~ Previous versions
+      #year>=2012 ~ "A4:J109",
+      #year>=2011 ~ "A12:J119",
+      #year>=1990 ~ "A12:J114",
+      #year>=1977 ~ "A12:G114"
+      # ~~~ January 2026 update
+      year>=2010 ~ "A5:J110",
+      year>=1977 ~ "A5:J105"
+                       )
     colkeep <- c(1,3,6,9)
-    colnames <- c("age","male","female","all")
+    # ~~~ Previous versions
+    #colnames <- c("age","male","female","all")
+    # ~~~ January 2026 update
+    colnames <- c("age","all","female","male")
     tab <- read_excel(
       tempfich,
       sheet = year,
@@ -167,6 +178,7 @@ mr_fr <- function(path) {
     colkeep <- colkeep[colkeep<=ncol(tab)]
     tab <- tab[,colkeep]
     names(tab) <- colnames[1:ncol(tab)]
+    if (NROW(unique(tab$all))==1 & unique(tab$all)[1]=="nd"){  tab <- tab %>% select(-all)}
     tab <- tab %>%
       filter(!is.na(age)) %>%
       pivot_longer(cols=-c("age"),names_to="sex",values_to="qx") %>%
@@ -181,15 +193,20 @@ mr_fr <- function(path) {
 }
 
 FRInseeMortalityrates <- rbind(
+  # ~~~ previous versions
   #mr_fr("data-raw/fe_t68.xlsx") %>% mutate(geo = "france"),
   #mr_fr("data-raw/fm_t68.xlsx") %>% mutate(geo = "metropolitan france")
-  mr_fr("https://www.insee.fr/fr/statistiques/fichier/7624538/fe_t68.xlsx") %>% mutate(geo = "france"),
-  mr_fr("https://www.insee.fr/fr/statistiques/fichier/7624538/fm_t68.xlsx") %>% mutate(geo = "metropolitan france")
+  #mr_fr("https://www.insee.fr/fr/statistiques/fichier/7624538/fe_t68.xlsx") %>% mutate(geo = "france"),
+  #mr_fr("https://www.insee.fr/fr/statistiques/fichier/7624538/fm_t68.xlsx") %>% mutate(geo = "metropolitan france")
+  # ~~~ January 2026 update
+  mr_fr("https://www.insee.fr/fr/statistiques/fichier/8721189/6_FR_Table_mortalite_triennale.xlsx") %>% mutate(geo = "france"),
+  mr_fr("https://www.insee.fr/fr/statistiques/fichier/8721189/7_FM_Table_mortalite_triennale.xlsx") %>% mutate(geo = "metropolitan france")
 )
 
 # descr::crosstab(FRInseeMortalityrates$year,paste(FRInseeMortalityrates$geo,FRInseeMortalityrates$sex))
 
 # == correction of errors :
+# 2026/01/19: add values up to 2024 (2013-2025 average, published in January 2026)
 # 2024/01/18: add values up to 2020 (2019-2021 average, published in June 2023)
 # 2021/07/17: add value for 2018 (2017-2019 average, published in June 2021)
 # 2021/06/21: data for france were erroneously those from metropolitan france
@@ -211,15 +228,19 @@ FRInseeMortalityrates <- rbind(
 
 # (Bilan démographique 2023 - Chiffres détaillés - Paru le : 16/01/2024 )
 # extraction des données le 18/01/2024
-url_t69_fe <- "https://www.insee.fr/fr/statistiques/fichier/7746168/fe_dod_quotients_mortalite.xlsx"
-url_t69_fm <- "https://www.insee.fr/fr/statistiques/fichier/7746168/fm_dod_quotients_mortalite.xlsx"
+#url_t69_fe <- "https://www.insee.fr/fr/statistiques/fichier/7746168/fe_dod_quotients_mortalite.xlsx"
+#url_t69_fm <- "https://www.insee.fr/fr/statistiques/fichier/7746168/fm_dod_quotients_mortalite.xlsx"
+
+# (Bilan démographique 2026 - Chiffres détaillés - Paru le : 13/01/2026 )
+# extraction des données le 19/01/2026
+url_t69 <- "https://www.insee.fr/fr/statistiques/fichier/8721189/3_Quotients_mortalite.xlsx"
 
 qmort_t69 <- bind_rows(
   read.xlsx(
     #xlsxFile = "data-raw/fe_dod_quotients_mortalite.xlsx",
-    xlsxFile = url_t69_fe,
-    sheet = "Qmort-F", #"qmortf",
-    startRow = 5,
+    xlsxFile = url_t69, # url_t69_fe,
+    sheet = "FR-Femmes", # "Qmort-F", #"qmortf",
+    startRow = 4, # 5,
     colNames = TRUE, skipEmptyRows = TRUE, skipEmptyCols = TRUE) %>%
     rename(Année=X1) %>%
     filter(grepl("^[[:digit:]]{4}",Année)) %>%
@@ -227,9 +248,9 @@ qmort_t69 <- bind_rows(
     mutate(sex = "female", geo="france"),
   read.xlsx(
     #xlsxFile = "data-raw/fe_dod_quotients_mortalite.xlsx",
-    xlsxFile = url_t69_fe,
-    sheet = "Qmort-H", #"qmorth",
-    startRow = 5,
+    xlsxFile = url_t69, # url_t69_fe,
+    sheet = "FR-Hommes", # "Qmort-H", #"qmorth",
+    startRow = 4, # 5,
     colNames = TRUE, skipEmptyRows = TRUE, skipEmptyCols = TRUE) %>%
     rename(Année=X1) %>%
     filter(grepl("^[[:digit:]]{4}",Année)) %>%
@@ -237,9 +258,9 @@ qmort_t69 <- bind_rows(
     mutate(sex = "male", geo="france"),
   read.xlsx(
     #xlsxFile = "data-raw/fe_dod_quotients_mortalite.xlsx",
-    xlsxFile = url_t69_fm,
-    sheet = "Qmort-F", #"qmortf",
-    startRow = 5,
+    xlsxFile = url_t69, # url_t69_fm,
+    sheet = "FM-Femmes", # "Qmort-F", #"qmortf",
+    startRow = 4, # 5,
     colNames = TRUE, skipEmptyRows = TRUE, skipEmptyCols = TRUE) %>%
     rename(Année=X1) %>%
     filter(grepl("^[[:digit:]]{4}",Année)) %>%
@@ -247,9 +268,9 @@ qmort_t69 <- bind_rows(
     mutate(sex = "female", geo = "metropolitan france"),
   read.xlsx(
     #xlsxFile = "data-raw/fe_dod_quotients_mortalite.xlsx",
-    xlsxFile = url_t69_fm,
-    sheet = "Qmort-H", #"qmorth",
-    startRow = 5,
+    xlsxFile = url_t69, # url_t69_fm,
+    sheet = "FM-Hommes", # "Qmort-H", #"qmorth",
+    startRow = 4, # 5,
     colNames = TRUE, skipEmptyRows = TRUE, skipEmptyCols = TRUE) %>%
     rename(Année=X1) %>%
     filter(grepl("^[[:digit:]]{4}",Année)) %>%
@@ -264,6 +285,8 @@ qmort_t69 <- bind_rows(
          qx = qx/100000)
 
 # descr::crosstab(qmort_t69$year,qmort_t69$geo)
+# verif <- qmort_t69 %>% filter(!is.na(qx)) %>% count(year,sex,geo,status)
+
 
 # correction pour tenir compte du fait qu'il s'agit de l'âge atteint en fin d'année => on considère que les décès à l'âge A au 31/12 se répartissent entre les âges A-1 et A en année révolue
 # on calcule la part des décès en A-1 et 1 à partir de la comparaison entre les tables de quotients de mortalité T68 et T69 de l'Insee, en moyenne pour les trois dernières années disponibles
@@ -271,7 +294,7 @@ qmort_t69 <- bind_rows(
 
 corr <- qmort_t69 %>%
   filter(year>=max(FRInseeMortalityrates$year)-1,year<=max(FRInseeMortalityrates$year)+1) %>%
-  select(-year) %>%
+  select(-year,-status) %>%
   group_by(geo,sex,age) %>% summarise_all(mean) %>% ungroup()
 
 corr_ref <- FRInseeMortalityrates %>%
@@ -303,7 +326,7 @@ corr <- corr_ref %>%
 # nouvelle méthode (p(x) estimé par comparaison entre les tables T68 et T69)
 qmort_t69_bis <- qmort_t69 %>%
   left_join(corr ,by=c("geo","sex","age")) %>%
-  left_join(qmort_t69 %>% rename(qxf=qx) %>% mutate(age=age-1) %>% filter(age>=0), by=c("year","geo","sex","age")) %>%
+  left_join(qmort_t69 %>% select(-status) %>% rename(qxf=qx) %>% mutate(age=age-1) %>% filter(age>=0), by=c("year","geo","sex","age")) %>%
   left_join(corr %>% rename(pxf=px)  %>% mutate(age=age-1),by=c("geo","sex","age")) %>%
   mutate(px = case_when(
     !is.na(px) ~ px,
@@ -313,7 +336,9 @@ qmort_t69_bis <- qmort_t69 %>%
   qxf = ifelse(is.na(qxf),qx,qxf),
   pxf = ifelse(is.na(pxf),px,pxf)) %>%
   mutate(qx = (1-px)*qx + pxf*qxf) %>%
-  select(year,age,sex,geo,qx)
+  select(year,age,sex,geo,qx,status)
+
+# verif <- qmort_t69_bis %>% filter(!is.na(qx)) %>% count(year,sex,geo,status)
 
 qmort_t69 <- bind_rows(
   qmort_t69 %>% mutate(def.age = "age at end of year"),
@@ -324,6 +349,8 @@ qmort_t69 <- bind_rows(
 # ajout des quotients de mortalité pour l'ensemble des sexes
 # (RQ méthode utilisée jusqu'au 31/07/2022 : en faisant l'hypothèse d'un partage 50/50 d'hommes et de femmes à la naissance)
 
+# ---> Ici : mettre à jour d'abord la table "FRInseePopulation" (sinon la correction ne fonctionne pas pour les années les plus récentes)
+
 partnaiss <- FRInseePopulation %>% filter(age0101==0) %>% select(year,geo,sex,popx) %>%
   mutate(sex = recode(as.character(sex), "M"="male","F"="female"),
          year=year-1) %>%
@@ -333,8 +360,10 @@ partnaiss <- FRInseePopulation %>% filter(age0101==0) %>% select(year,geo,sex,po
 # partnaiss %>% filter(sex=="female") %>% ggplot(aes(y=partnaiss,x=year,colour=geo,group=geo)) + geom_line()
 
 # transitoire : on réplique en 2023 la part de naissance de 2022 (= dernier année disponible)
+if (max(partnaiss$year) < max(qmort_t69$year)){
 maxyear <- max(partnaiss$year)
 partnaiss <- bind_rows(partnaiss, partnaiss %>% filter(year==maxyear) %>% mutate(year=maxyear+1))
+}
 
 qmort_t69_all <- qmort_t69 %>%
   mutate(qx=1-qx) %>%
@@ -351,6 +380,9 @@ qmort_t69_all <- qmort_t69_all %>%
 
 qmort_t69 <- bind_rows( qmort_t69 , qmort_t69_all)
 
+# verif <- qmort_t69 %>% filter(!is.na(qx)) %>% count(year,status,sex,geo,def.age)
+
+
 # descr::crosstab(qmort_t69$year,paste(qmort_t69$sex,qmort_t69$geo,qmort_t69$def.age))
 # verif <- CompleteDFLEtable(qmort_t69 %>% filter(def.age=="current age (approx)",geo=="france")) %>% select(sex,year,age,ex) %>% filter(age %in% c(0,60,65))
 # verif <- CompleteDFLEtable(qmort_t69 , categories=c("geo","def.age")) %>% select(sex,geo,def.age,year,age,ex) %>% filter(age %in% c(0,60,65))
@@ -358,6 +390,7 @@ qmort_t69 <- bind_rows( qmort_t69 , qmort_t69_all)
 FRInseeMortalityrates_t69 <- qmort_t69
 
 # == correction of errors :
+# 2026/01/19 ! add year 2025
 # 2024.01/18 : add year 2023 + add metropolitan france
 # 2023/02/02 : add year 2022
 # 2022/10/09 : add 2021 for all sexes current age
@@ -530,13 +563,18 @@ FRInseeMortalityForecast2021 <- bind_rows( FRmortalityForecast2021 , FRmortality
 # complementary source (2021 forecast) : https://www.insee.fr/fr/outil-interactif/5896897/pyramide.htm#!y=2026&c=0
 # released : ?
 # new extraction for france : 2024/01/16
+# new extraction for france : 2026/01/20
 
 # other source : https://www.insee.fr/fr/statistiques/6688661?sommaire=6686521
 # (updated information on metropolitan France)
 
 FRInseePopulation <- bind_rows(
+
+  # ~~~ France including oversee territories
   #read_csv2("data-raw/donnees_pyramide_act.csv") %>% mutate(geo="france"),
   read_csv2("https://www.insee.fr/fr/outil-interactif/5014911/data/FR/donnees_pyramide_act.csv") %>% mutate(geo="france"),
+
+  # ~~~ Metropolitan France
   #read_csv2("data-raw/donnees_pyramide_act_fm.csv") %>% mutate(geo="metropolitan france")
   read_csv2("https://www.insee.fr/fr/outil-interactif/5014911/data/FRMetro/donnees_pyramide_act.csv") %>% mutate(geo="metropolitan france")
   )  %>%
