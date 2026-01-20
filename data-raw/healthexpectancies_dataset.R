@@ -807,11 +807,18 @@ usethis::use_data(FRDreesVQSsurvey2021, overwrite = T)
 # Last extraction : 2023/04/22 ; data released : 2023/02/23 (on DREES website)
 # url : https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/lesperance-de-vie-sans-incapacite-65-ans-1
 
+# Last extraction : 2026/01/20 ; data released : 2024/12/31 (on DREES website)
+# url : https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/241231_ER_esperance-de-vie-sans-incapacite-65
+
+# changement de format -> onglet TC-V
+
 
 txincap <- read.xlsx(
-  xlsxFile = "https://drees.solidarites-sante.gouv.fr/sites/default/files/2023-12/ER1290.xlsx",
-  sheet = "DC-22",
-  rows=c(4:580), cols = c(2:7))
+  #xlsxFile = "https://drees.solidarites-sante.gouv.fr/sites/default/files/2023-12/ER1290.xlsx",
+  xlsxFile = "https://drees.solidarites-sante.gouv.fr/sites/default/files/2024-12/ER1323.xlsx",
+  #sheet = "DC-22",
+  sheet = "TC-V",
+  rows=c(4:612), cols = c(2:7))
 
 txincap <- txincap %>%
   rename(age=Âge, year=Année, sex=Sexe) %>%
@@ -891,13 +898,36 @@ FRGaliEUSilc <- bind_rows(txincap, txincap_all) %>%
   rename(agebracket = age, prevalence=txincap) %>%
   mutate(prevalence=prevalence/100)
 
+# verif <- FRGaliEUSilc %>% group_by(year,agebracket,sex,incap) %>% filter(n()>1)
+# --> should be O obs
+
 # ===================================================================================
 # Prevalence of elder people living in institutions, from DREES's EHPA survey
 # ===================================================================================
 
+urlehpa2023 <- "https://drees.solidarites-sante.gouv.fr/sites/default/files/2025-11/ER1351-MEL.xlsx"
 urlehpa2019 <- "https://drees.solidarites-sante.gouv.fr/sites/default/files/2022-07/ER1237.xlsx"
 #urlehpa2015 <- "https://drees.solidarites-sante.gouv.fr/sites/default/files/2020-08/er1015.xlsx"
 urlehpa2011 <- "https://drees.solidarites-sante.gouv.fr/sites/default/files/2020-08/er899.xls"
+
+# year 2019 and 2023
+
+eff1923 <- read.xlsx(
+  xlsxFile = urlehpa2023,
+  sheet="Graphique 1",
+  rows = c(6:76)) %>%
+  janitor::clean_names()
+
+eff1923 <- eff1923 %>%
+  rename(age=age_en_annees) %>%
+  select(-starts_with("x")) %>%
+  pivot_longer(cols = -"age",names_to="categ",values_to="nb") %>%
+  mutate(sexe=categ %>% str_extract("^[^_]+(?=_)") %>% tolower(),
+         annee=categ %>% str_extract("(?<=_)[^_]+$"),
+         age=as.numeric(age),
+         annee = as.numeric(annee),
+         nb=abs(nb)) %>%
+  select(-categ)
 
 # year 2015 and 2019
 
@@ -935,16 +965,29 @@ eff0711 <- eff0711 %>%
          nb=abs(nb)) %>%
   select(-categ)
 
-eff <- bind_rows(eff0711, eff1519) %>%
+eff <- bind_rows(eff0711, eff1519, eff1923) %>%
   arrange(annee,sexe,age) %>%
+  distinct() %>% # pour éliminer doublon année 2019
+  # ~~~~  table FRInseePopulation -> uniquement les âges jusqu'à 98 ans (la valeur 99 correspond aux 99 et +)
+  left_join(
+    FRInseePopulation %>%
+      filter(geo=="france" & age0101 < 99) %>%
+      mutate(year=year-1,
+             sex = as.character(sex) %>% recode("M"="hommes","F"="femmes")) %>%
+      rename(sexe=sex,annee=year,poptot=popx,age=age0101) %>%
+      select(annee,sexe,age,poptot),
+    by=c("annee","sexe","age")   ) %>%
+  # ~~~~  table des projections de population = y compris âges plus élevés (la valeur 105 correspond aux 105 et +)
   left_join(
     FRInseePopulationForecast2021 %>%
-      filter(geo=="france",type.obs=="observed",year<=2020) %>%
+      filter(geo=="france",type.obs=="observed" | year>2022, age0101 < 105) %>%
       mutate(year=year-1,
              sex = as.character(sex) %>% recode("male"="hommes","female"="femmes")) %>%
-      rename(sexe=sex,annee=year,poptot=popx0101,age=age0101) %>%
-      select(annee,sexe,age,poptot),
+      rename(sexe=sex,annee=year,poptot_proj=popx0101,age=age0101) %>%
+      select(annee,sexe,age,poptot_proj),
     by=c("annee","sexe","age")   )
+
+# verif <- eff %>% group_by(annee,sexe,age) %>% filter(n()>1)
 
 FRDreesEHPA <- bind_rows(
   eff,
@@ -953,12 +996,20 @@ FRDreesEHPA <- bind_rows(
     group_by(annee,age) %>% summarise_all(sum, na.rm=TRUE) %>% ungroup() %>%
     mutate(sexe="ensemble")
   ) %>%
-  mutate(prevalence=nb/poptot) %>%
+  mutate(prevalence=case_when(
+    !is.na(poptot) & poptot>0 ~ nb/poptot,
+    !is.na(poptot_proj) & poptot_proj>0 ~ nb/poptot_proj,
+    TRUE ~ NA
+  ) ,
+  poptot = case_when(!is.na(poptot) & poptot>0 ~ poptot,
+                     !is.na(poptot_proj) & poptot_proj>0 ~poptot_proj,
+                     TRUE ~ poptot))  %>%
+  select(-poptot_proj) %>%
   rename(sex=sexe,year=annee) %>%
   mutate(sex = sex %>% recode("ensemble"="all","femmes"="female","hommes"="male"))
 
 # logit <- function(x){log(x/(1-x))}
-# eff %>% mutate(annee=as.factor(annee)) %>% ggplot(aes(y=prevalence,x=age,colour=annee,group=annee)) + geom_line() + facet_grid(~sexe) + coord_trans(y = "logit")
+# FRDreesEHPA %>% mutate(year=as.factor(year)) %>% ggplot(aes(y=prevalence,x=age,colour=year,group=year)) + geom_line() + facet_grid(~sex) + coord_trans(y = "logit")
 
 
 # ====================================================================================

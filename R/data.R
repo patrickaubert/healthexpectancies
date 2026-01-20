@@ -219,7 +219,7 @@
 #' Prevalences are measured in the SRCV survey ie. the French version of EU-SILC.
 #' They are measured by sex and age bracket, for severe general activity limitations and for limitations including moderate ones.
 #'
-#' @format A data frame with 2 448 observations and 5 variables:
+#' @format A data frame with 2 592 observations and 5 variables:
 #' \describe{
 #'   \item{incap}{type of general activity limitations ('gali_incl_moderate' or 'gali_severe')}
 #'   \item{prevalence}{share of people with general activity limitations in the given age bracket (number between 0 and 1)}
@@ -227,14 +227,14 @@
 #'   \item{agebracket}{age bracket (eg '[60;65)' = between 60 and 64 years old)}
 #'   \item{year}{year of observation (value for the month of December)}
 #' }
-#' @source \url{https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/lesperance-de-vie-sans-incapacite-65-ans-1}
+#' @source \url{https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/241231_ER_esperance-de-vie-sans-incapacite-65}
 "FRGaliEUSilc"
 
 #' A dataset with proportions on people living in institutions in France according to Drees's EHPA survey
 #'
-#' The EHPA survey is collected every four years. Data are available for 2007, 2011, 2015 and 2019. Numbers of people are measured on the Decembre 31st of each year.
+#' The EHPA survey is collected every four years. Data are available for 2007, 2011, 2015, 2019, and 2023. Numbers of people are measured on the Decembre 31st of each year.
 #'
-#' @format A data frame with 756 observations and 6 variables:
+#' @format A data frame with 981 observations and 6 variables:
 #' \describe{
 #'   \item{year}{year of observation}
 #'   \item{sex}{sex ('female' or 'male' or 'all)}
@@ -243,5 +243,5 @@
 #'   \item{poptot}{total population by age and sexe}
 #'   \item{prevalence}{share of elder people living in institutions}
 #' }
-#' @source \url{https://drees.solidarites-sante.gouv.fr/sources-outils-et-enquetes/07-lenquete-aupres-des-etablissements-dhebergement-pour-personnes-agees}
+#' @source \url{https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/251104_ER_etablissements-hebergement-personnes-agees}
 "FRDreesEHPA"
