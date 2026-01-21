@@ -38,13 +38,13 @@
 
 #' A dataset with mortality rates from Insee's 2021 population forecast (central scenario)
 #'
-#' The dataset includes observed values from 1962 to 2020, then forecasted values from 2021 to 2070.
+#' The dataset includes observed values from 1962 to 2020, then forecasted values from 2021 to 2120.
 #'
 #' Note: Insee's file provides number of death by age at the end of the year, not age at last birthday.
 #' We assume deaths are evenly distributed within the year, so we use simple average to convert from
 #' definition of age to the other.
 #'
-#' @format A data frame with 79134 observations and 6 variables:
+#' @format A data frame with 115434 observations and 6 variables:
 #' \describe{
 #'   \item{age}{age}
 #'   \item{year}{year}
@@ -53,7 +53,7 @@
 #'   \item{def.age}{definition of age ('age at end of year' or 'current age (approx)')}
 #'   \item{qx}{mortality rates at each year, age, sex}
 #' }
-#' @source \url{https://www.insee.fr/fr/statistiques/5894083?sommaire=5760764}
+#' @source \url{https://www.insee.fr/fr/statistiques/5894093?sommaire=5760764}
 "FRInseeMortalityForecast2021"
 
 #' A dataset with population by sex and age, from Insee's 2016 population forecast (central scenario)
@@ -73,7 +73,7 @@
 #'
 #' The dataset also includes observed data from 1990 to 2022. Population is measured on the 1st of January of each year.
 #'
-#' @format A data frame with 25334 observations and 6 variables:
+#' @format A data frame with 50325 observations and 6 variables:
 #' \describe{
 #'   \item{age0101}{age at January, 1st of the year}
 #'   \item{year}{year}
@@ -82,7 +82,7 @@
 #'   \item{type.obs}{'observed' or 'forecasted'}
 #'   \item{popx0101}{population on the 1st of January at each year, age, sex}
 #' }
-#' @source \url{https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm#!l=en}
+#' @source \url{https://www.insee.fr/fr/statistiques/5894093?sommaire=5760764}
 "FRInseePopulationForecast2021"
 
 #' A dataset with population by sex and age, from Insee's 'bilan démographique' (annual population estimates)

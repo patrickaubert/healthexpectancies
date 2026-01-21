@@ -405,15 +405,22 @@ FRInseeMortalityrates_t69 <- qmort_t69
 # source 1 : https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm#!l=en (for ages up to 99)
 # source 2 : https://www.insee.fr/fr/statistiques/5894083?sommaire=5760764
 # released : ?
-# extraction source 1 : 2022/06/24
-# extraction source 2 : 2022/06/30
+
 # note: also includes observed data for 1990-2022
 
-# data from interactive pyramids (source 1)
+# ~~~ data from interactive pyramids (source 1)
+
+# extraction source 1 : 2022/06/24
+# extraction update : 2026/01/21
 
 FRInseePopulationForecast2021 <- bind_rows(
-  read_csv2("data-raw/donnees_pyramide_act_2022.csv") %>% mutate(geo="france",type.obs="observed"),
-  read_csv2("data-raw/donnees_pyramide_proj_2022.csv") %>% mutate(geo="france",type.obs="forecasted")  )  %>%
+  # ~~~ 2022 extraction
+  # read_csv2("data-raw/donnees_pyramide_act_2022.csv") %>% mutate(geo="france",type.obs="observed"),
+  # read_csv2("data-raw/donnees_pyramide_proj_2022.csv") %>% mutate(geo="france",type.obs="forecasted") ,
+  # ~~~ 2026 January updated extraction
+  read_csv2("https://www.insee.fr/fr/outil-interactif/5014911/data/FR/donnees_pyramide_act.csv") %>% mutate(geo="france",type.obs="observed"),
+  read_csv2("https://www.insee.fr/fr/outil-interactif/5014911/data/FR/donnees_pyramide_proj.csv") %>% mutate(geo="france",type.obs="forecasted")
+  )  %>%
   rename(year = ANNEE,
          sex = SEXE,
          popx0101 = POP,
@@ -423,16 +430,22 @@ FRInseePopulationForecast2021 <- bind_rows(
          sex = as.factor(sex) %>% recode("M" = "male", "F" = "female"),
          geo = as.factor(geo) )
 
-# data from 2021 population forecast (source 2)
+# verif <- FRInseePopulationForecast2021 %>% count(year,type.obs)
+
+# ~~~ data from 2021 population forecast (source 2)
 # NB: data from the interactive pyramids aggregates all ages above 99
 
-urlproj2021 <- "https://www.insee.fr/fr/statistiques/fichier/5894083/00_central.xlsx"
+# extraction source 2 : 2022/06/30
+# extraction update : 2026/01/21
 
-projMale <- openxlsx::read.xlsx(urlproj2021, sheet = "populationH", rows=c(2,102:108))
+# urlproj2021 <- "https://www.insee.fr/fr/statistiques/fichier/5894083/00_central.xlsx"
+urlproj2021 <- "https://www.insee.fr/fr/statistiques/fichier/5894093/00_central.xlsx"
+
+projMale <- openxlsx::read.xlsx(urlproj2021, sheet = "populationH", rows=c(2:108)) # rows=c(2,102:108))
 names(projMale)[1] <- "age0101"
 projMale <- projMale %>% pivot_longer(-c("age0101"), names_to = "year", values_to = "popx0101")
 
-projFemale <- openxlsx::read.xlsx(urlproj2021,sheet = "populationF", rows=c(2,102:108))
+projFemale <- openxlsx::read.xlsx(urlproj2021,sheet = "populationF", rows=c(2:108)) # rows=c(2,102:108))
 names(projFemale)[1] <- "age0101"
 projFemale <- projFemale %>% pivot_longer(-c("age0101"), names_to = "year", values_to = "popx0101")
 
@@ -440,7 +453,8 @@ FRInseePopulationForecast2021_2 <- rbind(
   projFemale %>% mutate(sex = "female"),
   projMale %>% mutate(sex = "male")
 ) %>%
-  filter(year %in% unique(FRInseePopulationForecast2021$year), popx0101>0) %>%
+  #filter(year %in% unique(FRInseePopulationForecast2021$year), popx0101>0) %>%
+  filter( popx0101>0) %>%
   mutate(type.obs = case_when(year<= 2021 ~ "observed",year >= 2022 ~ "forecasted") %>% as.factor(),
          age0101 = as.numeric(str_extract(age0101,"^[[:digit:]]+")),
          sex = as.factor(sex),
@@ -449,6 +463,7 @@ FRInseePopulationForecast2021_2 <- rbind(
 
 verif <- FRInseePopulationForecast2021 %>% filter(age0101>=99) %>% select(year,sex,age0101,popx0101) %>%
   left_join(FRInseePopulationForecast2021_2 %>%
+              filter(age0101>=99) %>%
               select(year,sex,popx0101) %>%
               rename(pop2=popx0101) %>%
               group_by(year,sex) %>% summarise_all(sum) %>% ungroup(),
@@ -464,8 +479,8 @@ FRInseePopulationForecast2021_2 <- FRInseePopulationForecast2021_2 %>%
 # final table
 
 FRInseePopulationForecast2021 <- bind_rows(
-  FRInseePopulationForecast2021 %>%
-    filter(age0101<99,!(year==2022 & type.obs=="forecasted")),
+#  FRInseePopulationForecast2021 %>%
+#    filter(age0101<99,!(year==2022 & type.obs=="forecasted")),
   FRInseePopulationForecast2021_2
 ) %>%
   arrange(year,sex,age0101)
@@ -486,7 +501,13 @@ FRInseePopulationForecast2021 <- bind_rows(
 # ('central' scenario)
 # download: 2022/06/29
 
-ulrmort2021 <- "https://www.insee.fr/fr/statistiques/fichier/5894083/00_central.xlsx"
+# updates : forecasts up to 2120 instead of 2070
+# url : https://www.insee.fr/fr/statistiques/5894093?sommaire=5760764
+# released : 09/11/2023
+# extracted : 21/01/2026
+
+# ulrmort2021 <- "https://www.insee.fr/fr/statistiques/fichier/5894083/00_central.xlsx"
+ulrmort2021 <- "https://www.insee.fr/fr/statistiques/fichier/5894093/00_central.xlsx"
 
 mortalityMale <- openxlsx::read.xlsx(ulrmort2021,
                             sheet = "hyp_mortaliteH",
@@ -534,7 +555,7 @@ FRmortalityForecast2021 <- bind_rows(
 ) %>%
   mutate(def.age = as.factor(def.age))
 
-# adding mortality rates for both sex, supposing there are 50-50 men and women ar birth
+# adding mortality rates for both sex, supposing there are 50-50 men and women at birth
 
 FRmortalityForecast2021_all <- FRmortalityForecast2021 %>%
   mutate(qx=1-qx) %>%
@@ -552,6 +573,7 @@ FRInseeMortalityForecast2021 <- bind_rows( FRmortalityForecast2021 , FRmortality
 # FRInseeMortalityForecast2021 %>% filter(year==1962) %>% ggplot(aes(y=qx,x=age,colour=sex,group=sex)) + geom_line() + facet_wrap(~def.age)
 # FRInseeMortalityForecast2021 %>% filter(year==2021) %>% ggplot(aes(y=qx,x=age,colour=sex,group=sex)) + geom_line() + facet_wrap(~def.age)
 # FRInseeMortalityForecast2021 %>% filter(year==2070) %>% ggplot(aes(y=qx,x=age,colour=sex,group=sex)) + geom_line() + facet_wrap(~def.age)
+# FRInseeMortalityForecast2021 %>% filter(year==2120) %>% ggplot(aes(y=qx,x=age,colour=sex,group=sex)) + geom_line() + facet_wrap(~def.age)
 
 
 # ===================================================================================
