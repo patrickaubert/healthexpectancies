@@ -5,7 +5,7 @@
 \alias{FRGaliEUSilc}
 \title{A dataset with prevalence of general activity limitations (GALI) in France}
 \format{
-A data frame with 2 448 observations and 5 variables:
+A data frame with 2 736 observations and 5 variables:
 \describe{
 \item{incap}{type of general activity limitations ('gali_incl_moderate' or 'gali_severe')}
 \item{prevalence}{share of people with general activity limitations in the given age bracket (number between 0 and 1)}
@@ -15,7 +15,7 @@ A data frame with 2 448 observations and 5 variables:
 }
 }
 \source{
-\url{https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/lesperance-de-vie-sans-incapacite-65-ans-1}
+\url{https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/260122-ER-esperance-de-vie-sans-incapacite}
 }
 \usage{
 FRGaliEUSilc

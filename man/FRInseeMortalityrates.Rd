@@ -5,7 +5,7 @@
 \alias{FRInseeMortalityrates}
 \title{A dataset with observed mortality rates by sex and age, from Insee}
 \format{
-A data frame with 19430 observations and 5 variables:
+A data frame with 21962 observations and 5 variables:
 \describe{
 \item{age}{age}
 \item{year}{year}
@@ -21,8 +21,8 @@ A data frame with 19430 observations and 5 variables:
 FRInseeMortalityrates
 }
 \description{
-The current version of the data table was released in June, 2023 and contains observations
-from 1976 (Metropolitan France) or 1998 (France including oversea territories) to 2021
+The current version of the data table was released in January, 2026 and contains observations
+from 1978 (Metropolitan France) or 1998 (France including oversea territories) to 2024
 Observations correspond to an average over 3 years: for instance, values for 2017
 are actually an average between 2016 and 2018.
 Data are from 'tableau 68' (TM68) released by Insee.

@@ -5,7 +5,7 @@
 \alias{FRInseePopulation}
 \title{A dataset with population by sex and age, from Insee's 'bilan démographique' (annual population estimates)}
 \format{
-A data frame with 31 200 observations and 5 variables:
+A data frame with 32 400 observations and 5 variables:
 \describe{
 \item{age0101}{age at January, 1st of the year}
 \item{year}{year}
@@ -21,8 +21,8 @@ A data frame with 31 200 observations and 5 variables:
 FRInseePopulation
 }
 \description{
-The current version of the data table was released in 2023 and contains observations
-from 1991 (France) or 1901 (metropolitan France) to 2023.
-Observations for the last three years (2021 and more) are provisional.
+The current version of the data table was released in 2026 and contains observations
+from 1991 (France) or 1901 (metropolitan France) to 2026.
+Observations for the last three years (2023 and more) are provisional.
 }
 \keyword{datasets}

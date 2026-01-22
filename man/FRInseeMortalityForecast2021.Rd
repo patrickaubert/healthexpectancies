@@ -5,7 +5,7 @@
 \alias{FRInseeMortalityForecast2021}
 \title{A dataset with mortality rates from Insee's 2021 population forecast (central scenario)}
 \format{
-A data frame with 79134 observations and 6 variables:
+A data frame with 115434 observations and 6 variables:
 \describe{
 \item{age}{age}
 \item{year}{year}
@@ -16,13 +16,13 @@ A data frame with 79134 observations and 6 variables:
 }
 }
 \source{
-\url{https://www.insee.fr/fr/statistiques/5894083?sommaire=5760764}
+\url{https://www.insee.fr/fr/statistiques/5894093?sommaire=5760764}
 }
 \usage{
 FRInseeMortalityForecast2021
 }
 \description{
-The dataset includes observed values from 1962 to 2020, then forecasted values from 2021 to 2070.
+The dataset includes observed values from 1962 to 2020, then forecasted values from 2021 to 2120.
 }
 \details{
 Note: Insee's file provides number of death by age at the end of the year, not age at last birthday.

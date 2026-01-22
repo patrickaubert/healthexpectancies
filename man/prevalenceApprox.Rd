@@ -48,7 +48,7 @@ Note : Second-differences rather than first-differences are used
 in the minimisation function, since prevalences according to age are usually parabolic.
 }
 \examples{
-prevalenceApprox(prevalence = (FRDreesAPA2017 \%>\% filter(sex=="female",typepresta=="APA Ã  domicile"))$prevalence, agecuts=c(seq(60,95,5)), agemin=60, agemax=99, weight=(FRInseePopulation \%>\% filter(sex=="F",year==2018,age0101>=60,geo=="france") \%>\% arrange(age0101))$popx)
-prevalenceApprox(prevalence = (FRDreesAPA \%>\% filter(year==2018,sex=="male",typepresta=="APA Ã  domicile"))$prevalence, agecuts=c(seq(60,90,5)), agemin=60, agemax=99, weight=(FRInseePopulation \%>\% filter(sex=="M",year==2019,age0101>=60,geo=="france") \%>\% arrange(age0101))$popx)
+prevalenceApprox(prevalence = (FRDreesAPA2017 \%>\% filter(sex=="female",typepresta=="APA à domicile"))$prevalence, agecuts=c(seq(60,95,5)), agemin=60, agemax=99, weight=(FRInseePopulation \%>\% filter(sex=="F",year==2018,age0101>=60,geo=="france") \%>\% arrange(age0101))$popx)
+prevalenceApprox(prevalence = (FRDreesAPA \%>\% filter(year==2018,sex=="male",typepresta=="APA à domicile"))$prevalence, agecuts=c(seq(60,90,5)), agemin=60, agemax=99, weight=(FRInseePopulation \%>\% filter(sex=="M",year==2019,age0101>=60,geo=="france") \%>\% arrange(age0101))$popx)
 prevalenceApprox(prevalence = FRDreesAPA2017, agecuts=c(seq(60,95,5)), agemin=60, agemax=99, weight=(FRInseePopulation \%>\% filter(year==2018,age0101>=60,geo=="france") \%>\% mutate(sex=recode(sex,"F"="female","M"="male")) \%>\% rename(weight=popx) \%>\% arrange(sex,age0101)), categories = c("typepresta"))
 }

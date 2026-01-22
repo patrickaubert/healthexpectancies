@@ -5,7 +5,7 @@
 \alias{FRInseePopulationForecast2021}
 \title{A dataset with population by sex and age, from Insee's 2021 population forecast (central scenario)}
 \format{
-A data frame with 25334 observations and 6 variables:
+A data frame with 50325 observations and 6 variables:
 \describe{
 \item{age0101}{age at January, 1st of the year}
 \item{year}{year}
@@ -16,7 +16,7 @@ A data frame with 25334 observations and 6 variables:
 }
 }
 \source{
-\url{https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm#!l=en}
+\url{https://www.insee.fr/fr/statistiques/5894093?sommaire=5760764}
 }
 \usage{
 FRInseePopulationForecast2021

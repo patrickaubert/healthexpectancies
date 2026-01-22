@@ -832,15 +832,21 @@ usethis::use_data(FRDreesVQSsurvey2021, overwrite = T)
 # Last extraction : 2026/01/20 ; data released : 2024/12/31 (on DREES website)
 # url : https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/241231_ER_esperance-de-vie-sans-incapacite-65
 
+# Last extraction : 2026/01/22 ; data released : 2026/01/22 (on DREES website)
+# url : https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/260122-ER-esperance-de-vie-sans-incapacite
+
+
 # changement de format -> onglet TC-V
 
 
 txincap <- read.xlsx(
   #xlsxFile = "https://drees.solidarites-sante.gouv.fr/sites/default/files/2023-12/ER1290.xlsx",
-  xlsxFile = "https://drees.solidarites-sante.gouv.fr/sites/default/files/2024-12/ER1323.xlsx",
+  #xlsxFile = "https://drees.solidarites-sante.gouv.fr/sites/default/files/2024-12/ER1323.xlsx",
+  xlsxFile = "https://drees.solidarites-sante.gouv.fr/sites/default/files/2026-01/ER1363_MEL.xlsx",
+
   #sheet = "DC-22",
   sheet = "TC-V",
-  rows=c(4:612), cols = c(2:7))
+  rows=c(4:644), cols = c(2:7))
 
 txincap <- txincap %>%
   rename(age=Âge, year=Année, sex=Sexe) %>%
@@ -853,6 +859,7 @@ txincap <- txincap %>%
                    "Incapacités.modérées"="gali_moderate_only",
                    "prev"="gali_incl_moderate",
                    "prevs"="gali_severe",
+                   "prevf"="gali_severe",
                    "prevm"="gali_moderate_only"
                    ),
     #age = case_when(
@@ -907,7 +914,7 @@ txincap_all <- poploc %>%
   mutate(age = cut(age, c(0,seq(15,85,5),Inf), include.lowest = TRUE, right=FALSE)) %>%
   filter(year %in% unique(txincap$year)) %>%
   select(age,sex,year,popx) %>%
-  left_join(txincap, by=c("year","age","sex")) %>%
+  left_join(txincap, by=c("year","age","sex"), relationship = "many-to-many") %>%
   mutate(nbincap=popx*txincap/100) %>%
   select(-sex,-txincap) %>%
   group_by(year,age,incap) %>% summarise_all(sum) %>% ungroup() %>%

@@ -5,7 +5,7 @@
 \alias{FRDreesEHPA}
 \title{A dataset with proportions on people living in institutions in France according to Drees's EHPA survey}
 \format{
-A data frame with 756 observations and 6 variables:
+A data frame with 981 observations and 6 variables:
 \describe{
 \item{year}{year of observation}
 \item{sex}{sex ('female' or 'male' or 'all)}
@@ -16,12 +16,12 @@ A data frame with 756 observations and 6 variables:
 }
 }
 \source{
-\url{https://drees.solidarites-sante.gouv.fr/sources-outils-et-enquetes/07-lenquete-aupres-des-etablissements-dhebergement-pour-personnes-agees}
+\url{https://drees.solidarites-sante.gouv.fr/publications-communique-de-presse/etudes-et-resultats/251104_ER_etablissements-hebergement-personnes-agees}
 }
 \usage{
 FRDreesEHPA
 }
 \description{
-The EHPA survey is collected every four years. Data are available for 2007, 2011, 2015 and 2019. Numbers of people are measured on the Decembre 31st of each year.
+The EHPA survey is collected every four years. Data are available for 2007, 2011, 2015, 2019, and 2023. Numbers of people are measured on the Decembre 31st of each year.
 }
 \keyword{datasets}
