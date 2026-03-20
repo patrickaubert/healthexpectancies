@@ -197,20 +197,20 @@
 #' A dataset with share of APA beneficiaries in France
 #'
 #' APA is a benefit covering long term care expenditures both at home ('à domicile') or in institutions ('en établissement').
-#' Shares of beneficiaries are estimated through the 2016, 2017 and 2018 'Aide sociale' survey.
+#' Shares of beneficiaries are estimated through the 2016 to 2024 'Aide sociale' survey.
 #' They are estimated by age brackets (eg. '[60;65)' stands for ages 60 to 64)
 #' A more complete dataset of APA prevalences, as well as prevalences for other social allowances in France, can be found in the 'asdep' package.
 #'
-#' @format A data frame with 138 observations and 6 variables:
+#' @format A data frame with 591 observations and 6 variables:
 #' \describe{
 #'   \item{typepresta}{type of benefits (eg. 'à domicile' or 'en établissement')}
 #'   \item{prevalence}{share of beneficiaires within the total population in the given age bracket (number between 0 and 1)}
 #'   \item{sex}{sex ('female' or 'male')}
 #'   \item{agebracket}{age bracket (eg '[60;65)' = between 60 and 64 years old)}
 #'   \item{age}{minimal age within the age bracket}
-#'   \item{year}{year of observation (value for the monthe of December)}
+#'   \item{year}{year of observation (value for the month of December)}
 #' }
-#' @source \url{https://drees.solidarites-sante.gouv.fr/etudes-et-statistiques/publications/les-dossiers-de-la-drees/article/incapacites-et-perte-d-autonomie-des-personnes-agees-en-france-une-evolution}
+#' @source \url{https://data.drees.solidarites-sante.gouv.fr/explore/dataset/les-caracteristiques-des-beneficiaires-de-l-aide-sociale-departementale-aux-pers/information/}
 "FRDreesAPA"
 
 

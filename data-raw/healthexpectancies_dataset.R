@@ -735,10 +735,57 @@ FRDreesAPA2016 <- read_excel(
   pivot_longer(cols = -c(sex,age,agebracket), names_to="typepresta",values_to="prevalence") %>%
   mutate(typepresta = recode(typepresta, "TOTAL" = "APA domicile+établissement"))
 
-FRDreesAPA <- rbind(
+# more recent years
+
+# Fonction pour télécharger et lire un fichier Excel depuis une URL
+read_excel_from_url <- function(annee) {
+  url <- paste0(
+    case_when(annee >= 2020 ~  "https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/les-caracteristiques-des-beneficiaires-de-l-aide-sociale-departementale-aux-pers/attachments/pa_beneficiaires_par_gir_sexe_et_age_apa_ash_aides_menageres_donnees_",
+              annee <  2020 ~  "https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/les-caracteristiques-des-beneficiaires-de-l-aide-sociale-departementale-aux-pers/attachments/apa_donnees_detaillees_par_gir_age_et_sexe_en_" ),
+    annee,
+    "_xlsx"
+  )
+  tmp <- tempfile(fileext = ".xlsx")
+  GET(url, write_disk(tmp, overwrite = TRUE))
+  onglets <- getSheetNames(tmp)
+  onglet <- case_when(
+    "nat-part APA dans pop" %in% onglets ~ "nat-part APA dans pop"
+  )
+  rangeloc <- case_when(
+    annee >= 2019 ~  "B3:F27",
+    annee <  2019 ~ "B4:F28"
+  )
+  read_excel(tmp, sheet = onglet, range = rangeloc) %>%
+    janitor::clean_names() %>%
+    filter(!is.na(total)) %>%
+    rename("sex" = "x1", "age_char" = "x2") %>%
+    mutate(sex = recode(sex, "Hommes"="male", "Femmes"="female", "Total"="all")) %>%
+    fill("sex", .direction="down") %>%
+    mutate(age = as.numeric(str_extract(age_char,"(?<=(^|^de ))[[:digit:]]{2}")),
+           age_fin = as.numeric(str_extract(age_char,"(?<=à )[[:digit:]]{2}")),
+           agebracket = ifelse(is.na(age_fin), paste0("[",age,",Inf]"), paste0("[",age,",",age_fin+1,")")) %>% factor()
+           ) %>%
+    select(-age_char,-age_fin) %>%
+    pivot_longer(cols = -c(sex, age, agebracket), names_to = "typepresta", values_to = "prevalence") %>%
+    mutate(typepresta = recode(typepresta, "total" = "APA domicile+établissement"))
+}
+
+
+
+
+# final table
+
+FRDreesAPA <- bind_rows(
   FRDreesAPA2016 %>% mutate(year = 2016),
   FRDreesAPA2017 %>% mutate(year = 2017),
-  FRDreesAPA2018 %>% mutate(year = 2018)
+  # depuis 2020
+  do.call(
+    "bind_rows",
+    lapply(
+      c(2018:2024),
+      function(annee){ read_excel_from_url(annee) %>% mutate(year = as.numeric(annee))      }
+    )
+  )
 )
 
 #library(ggplot2)
