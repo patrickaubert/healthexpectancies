@@ -56,6 +56,27 @@
 #' @source \url{https://www.insee.fr/fr/statistiques/5894093?sommaire=5760764}
 "FRInseeMortalityForecast2021"
 
+#' A dataset with mortality rates from Insee's 2026 population forecast (central scenario)
+#'
+#' The dataset includes observed values from 1962 to 2022, then forecasted values from 2023 to 2070.
+#'
+#' Note: Insee's file provides number of death by age at the end of the year, not age at last birthday.
+#' We assume deaths are evenly distributed within the year, so we use simple average to convert from
+#' definition of age to the other.
+#'
+#' @format A data frame with 1503764 observations and 7 variables:
+#' \describe{
+#'   \item{age}{age}
+#'   \item{year}{year}
+#'   \item{geo}{geographical field (France or metropolitan France according to year of observation)}
+#'   \item{sex}{sex ('male' or 'female' or 'all')}
+#'   \item{type.obs}{type of observation ('observed' or 'observed (prov.)' or 'forecasted')}
+#'   \item{def.age}{definition of age ('age at end of year' or 'current age (approx)')}
+#'   \item{qx}{mortality rates at each year, age, sex}
+#' }
+#' @source \url{https://www.insee.fr/fr/statistiques/8990852?sommaire=8991068}
+"FRInseeMortalityForecast2026"
+
 #' A dataset with population by sex and age, from Insee's 2016 population forecast (central scenario)
 #'
 #'

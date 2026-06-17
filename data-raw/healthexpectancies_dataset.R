@@ -494,6 +494,86 @@ FRInseePopulationForecast2021 <- bind_rows(
 )
 
 # ===================================================================================
+# Forecasted populations, from Insee's 2026 population forecast
+# ===================================================================================
+
+# Table : Pyramide des âges interactive
+# source 1 : https://www.insee.fr/fr/outil-interactif/5014911/pyramide.htm#!l=en (for ages up to 99)
+# source 2 : https://www.insee.fr/fr/statistiques/8990852?sommaire=8991068
+# released : ?
+
+# note: also includes observed data for 1990-2022
+
+# ~~~ data from interactive pyramids (source 1)
+
+# (see below)
+
+
+# ~~~ data from 2021 population forecast (source 2)
+# NB: data from the interactive pyramids aggregates all ages above 99
+
+# extraction source 2 : 2026/06/17
+
+urlproj2026 <- "https://www.insee.fr/fr/statistiques/fichier/8990852/00_central.xlsx"
+
+projMale <- openxlsx::read.xlsx(urlproj2026, sheet = "populationH", rows=c(2:108)) # rows=c(2,102:108))
+names(projMale)[1] <- "age0101"
+projMale <- projMale %>% pivot_longer(-c("age0101"), names_to = "year", values_to = "popx0101")
+
+projFemale <- openxlsx::read.xlsx(urlproj2026,sheet = "populationF", rows=c(2:108)) # rows=c(2,102:108))
+names(projFemale)[1] <- "age0101"
+projFemale <- projFemale %>% pivot_longer(-c("age0101"), names_to = "year", values_to = "popx0101")
+
+FRInseePopulationForecast2026_2 <- rbind(
+  projFemale %>% mutate(sex = "female"),
+  projMale %>% mutate(sex = "male")
+) %>%
+  #filter(year %in% unique(FRInseePopulationForecast2021$year), popx0101>0) %>%
+  filter( popx0101>0) %>%
+  mutate(type.obs = case_when(year<= 2022 ~ "observed",year >= 2023 ~ "forecasted") %>% as.factor(),
+         geo = case_when(year <= 1994 ~  "Metropolitan France",
+                         year <= 2013 ~ "France excluding Mayotte",
+                         TRUE ~  "France"),
+         age0101 = as.numeric(str_extract(age0101,"^[[:digit:]]+")),
+         sex = as.factor(sex),
+         year=as.numeric(year),
+         geo="france")
+
+verif <- FRInseePopulationForecast2026 %>% filter(age0101>=99) %>% select(year,sex,age0101,popx0101) %>%
+  left_join(FRInseePopulationForecast2026_2 %>%
+              filter(age0101>=99) %>%
+              select(year,geo, sex,popx0101) %>%
+              rename(pop2=popx0101) %>%
+              group_by(year,sex) %>% summarise_all(sum) %>% ungroup(),
+            by = c("year","geo","sex")) %>%
+  mutate(ecart=popx0101-pop2, correc=popx0101/pop2)
+
+FRInseePopulationForecast2021_2 <- FRInseePopulationForecast2021_2 %>%
+  left_join(verif %>% select(year,sex,correc), by=c("year","sex") ) %>%
+  mutate(popx0101 = round(popx0101*correc)) %>%
+  select(-correc)
+
+
+# final table
+
+FRInseePopulationForecast2021 <- bind_rows(
+  #  FRInseePopulationForecast2021 %>%
+  #    filter(age0101<99,!(year==2022 & type.obs=="forecasted")),
+  FRInseePopulationForecast2021_2
+) %>%
+  arrange(year,sex,age0101)
+
+FRInseePopulationForecast2021 <- bind_rows(
+  FRInseePopulationForecast2021,
+  FRInseePopulationForecast2021 %>%
+    select(-sex) %>%
+    group_by(year,geo,type.obs,age0101) %>% summarise_all(sum) %>% ungroup() %>%
+    mutate(sex = "all")
+)
+
+
+
+# ===================================================================================
 # Forecasted mortality rates for men and women, from Insee's 2021 population forecast
 # ===================================================================================
 
@@ -574,6 +654,87 @@ FRInseeMortalityForecast2021 <- bind_rows( FRmortalityForecast2021 , FRmortality
 # FRInseeMortalityForecast2021 %>% filter(year==2021) %>% ggplot(aes(y=qx,x=age,colour=sex,group=sex)) + geom_line() + facet_wrap(~def.age)
 # FRInseeMortalityForecast2021 %>% filter(year==2070) %>% ggplot(aes(y=qx,x=age,colour=sex,group=sex)) + geom_line() + facet_wrap(~def.age)
 # FRInseeMortalityForecast2021 %>% filter(year==2120) %>% ggplot(aes(y=qx,x=age,colour=sex,group=sex)) + geom_line() + facet_wrap(~def.age)
+
+
+# ===================================================================================
+# Forecasted mortality rates for men and women, from Insee's 2026 population forecast
+# ===================================================================================
+
+# raw data are downloaded from:https://www.insee.fr/fr/statistiques/8991068
+# ('central' scenario)
+# download: 2026/06/17
+
+# updates : forecasts up to 2120 instead of 2070
+# url : https://www.insee.fr/fr/statistiques/5894093?sommaire=5760764
+# released : 09/11/2023
+# extracted : 21/01/2026
+
+ulrmort2026 <- "https://www.insee.fr/fr/statistiques/fichier/8990852/00_central.xlsx"
+
+mortalityMale <- openxlsx::read.xlsx(ulrmort2026,
+                                     sheet = "hyp_mortaliteH",
+                                     rows=c(2:124))
+names(mortalityMale)[1] <- "age3112"
+mortalityMale <- mortalityMale[2:nrow(mortalityMale), ] %>%
+  pivot_longer(-c("age3112"), names_to = "year", values_to = "qx") %>%
+  mutate(qx = qx/100000 )
+
+mortalityFemale <- openxlsx::read.xlsx(ulrmort2026,
+                                       sheet = "hyp_mortaliteF",
+                                       rows=c(2:124))
+names(mortalityFemale)[1] <- "age3112"
+mortalityFemale <- mortalityFemale[2:nrow(mortalityMale), ]  %>%
+  pivot_longer(-c("age3112"), names_to = "year", values_to = "qx") %>%
+  mutate(qx = qx/100000 )
+
+FRmortalityForecast2026 <- rbind(
+  mortalityFemale %>% mutate(sex = "female"),
+  mortalityMale %>% mutate(sex = "male")
+) %>%
+  mutate(year = as.numeric(str_extract(year,"^[[:digit:]]{4}")),
+         geo = case_when(year <= 1994 ~  "Metropolitan France",
+                         year <= 2013 ~ "France excluding Mayotte",
+                         TRUE ~  "France"),
+         type.obs = case_when(year<= 2012 ~ "observed",
+                              #year>2017 & year <= 2020 ~ "observed (prov.)",
+                              year >= 2023 ~ "forecasted") %>% as.factor(),
+         age3112 = as.numeric(age3112),
+         sex = as.factor(sex))
+
+
+# transform dataset from age at the end of the year to age at last birthday
+
+FRmortalityForecast2026_2 <- rbind(
+  FRmortalityForecast2026 %>% mutate(qx = qx/2, age = age3112),
+  FRmortalityForecast2026 %>% mutate(qx = qx/2, age = pmax(0,age3112-1) )
+) %>%
+  select(-age3112) %>%
+  group_by(year,type.obs,sex) %>%  mutate(qx = ifelse(age==max(age),2*qx,qx)) %>%  ungroup() %>%
+  group_by(year,type.obs,sex,geo,age) %>%
+  summarise_all(sum) %>%
+  ungroup()
+
+FRmortalityForecast2026 <- bind_rows(
+  FRmortalityForecast2026  %>% mutate(def.age = "age at end of year") %>% rename(age=age3112),
+  FRmortalityForecast2026_2 %>% mutate(def.age = "current age (approx)")
+) %>%
+  mutate(def.age = as.factor(def.age))
+
+# adding mortality rates for both sex, supposing there are 50-50 men and women at birth
+
+FRmortalityForecast2026_all <- FRmortalityForecast2026 %>%
+  mutate(qx=1-qx) %>%
+  arrange(year,sex,type.obs,def.age,age) %>% group_by(year,geo,sex,type.obs,def.age) %>% mutate(qx=cumprod(qx)) %>% ungroup() %>%
+  select(-sex) %>% group_by(year,geo,type.obs,def.age,age) %>% summarise_all(mean) %>% ungroup()
+
+FRmortalityForecast2026_all <- FRmortalityForecast2026_all %>%
+  left_join(FRmortalityForecast2026_all %>% mutate(age=age+1) %>% rename(lqx=qx), by=c("year","geo","age","type.obs","def.age")) %>%
+  mutate(qx = ifelse(age==0,1-qx,1-qx/lqx),
+         sex = "all") %>%
+  select(-lqx)
+
+FRInseeMortalityForecast2026 <- bind_rows( FRmortalityForecast2026 , FRmortalityForecast2026_all)
+
 
 
 # ===================================================================================
@@ -1091,11 +1252,13 @@ FRDreesEHPA <- bind_rows(
 # ====================================================================================
 usethis::use_data(FRInseeMortalityForecast2016,
                   FRInseeMortalityForecast2021,
+                  FRInseeMortalityForecast2026,
                   FRInseeMortalityrates,
                   FRInseeMortalityrates_t69,
                   FRInseePopulation,
                   FRInseePopulationForecast2016,
                   FRInseePopulationForecast2021,
+                  FRInseePopulationForecast2026,
                   FRDreesVQSsurvey2014,
                   FRDreesVQSsurvey2021,
                   FRDreesAPA2017,
