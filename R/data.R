@@ -106,6 +106,22 @@
 #' @source \url{https://www.insee.fr/fr/statistiques/5894093?sommaire=5760764}
 "FRInseePopulationForecast2021"
 
+#' A dataset with population by sex and age, from Insee's 2026 population forecast (central scenario)
+#'
+#' The dataset also includes observed data from 1990 to 2022. Population is measured on the 1st of January of each year.
+#'
+#' @format A data frame with 34107 observations and 6 variables:
+#' \describe{
+#'   \item{age0101}{age at January, 1st of the year}
+#'   \item{year}{year}
+#'   \item{sex}{sex ('male' or 'female' or 'all')}
+#'   \item{geo}{geographical field ('Metropolitan France','France excluding Mayotte','France')}
+#'   \item{type.obs}{'observed' or 'forecasted'}
+#'   \item{popx0101}{population on the 1st of January at each year, age, sex}
+#' }
+#' @source \url{https://www.insee.fr/fr/statistiques/8990852?sommaire=8991068}
+"FRInseePopulationForecast2026"
+
 #' A dataset with population by sex and age, from Insee's 'bilan démographique' (annual population estimates)
 #'
 #' The current version of the data table was released in 2026 and contains observations
