@@ -630,32 +630,63 @@ FRInseeMortalityForecast2021 <- bind_rows( FRmortalityForecast2021 , FRmortality
 # Forecasted mortality rates for men and women, from Insee's 2026 population forecast
 # ===================================================================================
 
-# raw data are downloaded from:https://www.insee.fr/fr/statistiques/8991068
+# raw data are downloaded from: https://www.insee.fr/fr/statistiques/8991068
 # ('central' scenario)
-# download: 2026/06/17
+# download: 2026/08/17
 
-# updates : forecasts up to 2120 instead of 2070
-# url : https://www.insee.fr/fr/statistiques/5894093?sommaire=5760764
-# released : 09/11/2023
-# extracted : 21/01/2026
-
+# "central" scenario
 ulrmort2026 <- "https://www.insee.fr/fr/statistiques/fichier/8990852/00_central.xlsx"
+# complement: mortality forecasted up to 2125
+urlmort2026_compl <- "https://www.insee.fr/fr/statistiques/fichier/8990899/hyp_mortalite.xlsx"
 
-mortalityMale <- openxlsx::read.xlsx(ulrmort2026,
-                                     sheet = "hyp_mortaliteH",
-                                     rows=c(2:124))
-names(mortalityMale)[1] <- "age3112"
-mortalityMale <- mortalityMale[2:nrow(mortalityMale), ] %>%
-  pivot_longer(-c("age3112"), names_to = "year", values_to = "qx") %>%
-  mutate(qx = qx/100000 )
+fReadMortalityForecast2026 <- function(urlMortality = ulrmort2026,
+                                       sheetMortality = "hyp_mortaliteH",
+                                       rowsMortality =c(2:124)){
 
-mortalityFemale <- openxlsx::read.xlsx(ulrmort2026,
-                                       sheet = "hyp_mortaliteF",
-                                       rows=c(2:124))
-names(mortalityFemale)[1] <- "age3112"
-mortalityFemale <- mortalityFemale[2:nrow(mortalityMale), ]  %>%
-  pivot_longer(-c("age3112"), names_to = "year", values_to = "qx") %>%
-  mutate(qx = qx/100000 )
+  mortalityData <- openxlsx::read.xlsx(urlMortality,
+                                       sheet = sheetMortality,
+                                       rows=rowsMortality)
+
+  names(mortalityData)[1] <- "age3112"
+
+  mortalityData <- mortalityData |> # [2:nrow(mortalityData), ] %>%
+    pivot_longer(-c("age3112"), names_to = "year", values_to = "qx") %>%
+    mutate(qx = qx/100000 ) |>
+    # RQ : qx not available above 100 or above 104 in observations
+    filter(!is.na(qx))
+}
+
+
+mortalityMale <- bind_rows(
+  # observed + forecasted 2023-2070
+  fReadMortalityForecast2026(ulrmort2026,
+                             sheet = "hyp_mortaliteH",
+                             rows=c(2,4:124)),
+  # forecasted 2023-2070
+  fReadMortalityForecast2026(urlmort2026_compl,
+                             sheet = "centralH",
+                             rows=c(2:123))
+  ) |>
+  distinct() |>
+  arrange(age3112, year)
+
+# nrow(mortalityMale) - nrow(mortalityMale |> distinct(age3112,year))
+
+
+mortalityFemale <- bind_rows(
+  # observed + forecasted 2023-2070
+  fReadMortalityForecast2026(ulrmort2026,
+                             sheet = "hyp_mortaliteF",
+                             rows=c(2,4:124)),
+  # forecasted 2023-2070
+  fReadMortalityForecast2026(urlmort2026_compl,
+                             sheet = "centralF",
+                             rows=c(2:123))
+) |>
+  distinct() |>
+  arrange(age3112, year)
+
+# nrow(mortalityFemale) - nrow(mortalityFemale |> distinct(age3112,year))
 
 FRmortalityForecast2026 <- rbind(
   mortalityFemale %>% mutate(sex = "female"),
@@ -705,7 +736,7 @@ FRmortalityForecast2026_all <- FRmortalityForecast2026_all %>%
 
 FRInseeMortalityForecast2026 <- bind_rows( FRmortalityForecast2026 , FRmortalityForecast2026_all)
 
-
+#  verif <- FRmortalityForecast2026 |> filter(is.na(age) | is.na(year) | is.na(qx) | is.na(sex))
 
 # ===================================================================================
 # Population of France, Insee

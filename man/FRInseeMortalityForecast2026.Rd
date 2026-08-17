@@ -5,7 +5,7 @@
 \alias{FRInseeMortalityForecast2026}
 \title{A dataset with mortality rates from Insee's 2026 population forecast (central scenario)}
 \format{
-A data frame with 1503764 observations and 7 variables:
+A data frame with 112584 observations and 7 variables:
 \describe{
 \item{age}{age}
 \item{year}{year}
@@ -23,7 +23,7 @@ A data frame with 1503764 observations and 7 variables:
 FRInseeMortalityForecast2026
 }
 \description{
-The dataset includes observed values from 1962 to 2022, then forecasted values from 2023 to 2070.
+The dataset includes observed values from 1962 to 2022, then forecasted values from 2023 to 2125.
 }
 \details{
 Note: Insee's file provides number of death by age at the end of the year, not age at last birthday.
