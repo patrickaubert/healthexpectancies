@@ -29,6 +29,12 @@ are in the input dataset, calculations are performed for each separate values of
 If 'categories' is provided (a vector of variable names in 'tab'), a 'categ' variable is created in a
 first step from all the variables in 'categories'.
 
+Missing values: a column that is entirely 'NA' is treated as if the variable had not been provided (so that, for instance,
+an empty 'mx' column does not prevent 'mx' from being calculated from 'qx'). Columns that are only partly 'NA' are kept:
+calculations are made separately for each group (sex, categories, year), and variables that depend on a missing value
+('qx', 'mx' or 'pix') are 'NA' for the groups concerned only. A single warning lists these groups.
+Missing values are not allowed in 'age', 'year', 'sex', 'categ' or in the variables listed in 'categories'.
+
 Calculations follow example 1 in the sullivan manual (June 2007 version).
 See https://reves.site.ined.fr/en/resources/computation_online/sullivan/ for more explanations.
 }

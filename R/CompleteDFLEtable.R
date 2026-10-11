@@ -13,6 +13,12 @@
 #' If 'categories' is provided (a vector of variable names in 'tab'), a 'categ' variable is created in a
 #' first step from all the variables in 'categories'.
 #'
+#' Missing values: a column that is entirely 'NA' is treated as if the variable had not been provided (so that, for instance,
+#' an empty 'mx' column does not prevent 'mx' from being calculated from 'qx'). Columns that are only partly 'NA' are kept:
+#' calculations are made separately for each group (sex, categories, year), and variables that depend on a missing value
+#' ('qx', 'mx' or 'pix') are 'NA' for the groups concerned only. A single warning lists these groups.
+#' Missing values are not allowed in 'age', 'year', 'sex', 'categ' or in the variables listed in 'categories'.
+#'
 #' Calculations follow example 1 in the sullivan manual (June 2007 version).
 #' See https://reves.site.ined.fr/en/resources/computation_online/sullivan/ for more explanations.
 #'
@@ -31,8 +37,48 @@ CompleteDFLEtable <- function(tab, categories = c("")) {
   # impose data.Frame format
   tab <- as.data.frame(tab)
 
-  # remove columns with missing values
-  tab <- tab[,colSums(is.na(tab))==0]
+  # a column entirely made of NA is treated as a variable that has not been provided
+  allna <- (nrow(tab) > 0) & (colSums(is.na(tab)) == nrow(tab))
+  tab <- tab[ , !allna, drop = FALSE]
+
+  # variables defining the groups (and the order of ages) must not contain missing values
+  nm <- names(tab)
+  groupvars <- nm[tolower(nm) %in% c("sex","sexe","year","an","annee","categ","age")]
+  if (!("age" %in% nm) & ("x" %in% nm)) { groupvars <- c(groupvars,"x") }
+  groupvars <- union(groupvars, intersect(categories[categories != ""], nm))
+  badvars <- groupvars[colSums(is.na(tab[ , groupvars, drop = FALSE])) > 0]
+  if (NROW(badvars) > 0) {
+    stop(paste0("Missing values (NA) are not allowed in variable(s): ",
+                paste0("'",badvars,"'",collapse=", "),"."), call. = FALSE)
+  }
+
+  # partial missing values in qx, mx or pix : calculations go on, but a warning lists the groups concerned
+  groupvars <- setdiff(groupvars, c("age","x"))
+  msgna <- c()
+  for (v in intersect(c("qx","mx","pix"), names(tab))) {
+    rowsna <- is.na(tab[[v]])
+    if (any(rowsna)) {
+      if (NROW(groupvars) > 0) {
+        grp <- unique(tab[rowsna, groupvars, drop = FALSE])
+        lab <- apply(grp, 1, function(r) paste0(groupvars,"=",trimws(r),collapse=", "))
+        lab <- paste0(utils::head(lab,5), collapse = "; ")
+        if (NROW(grp) > 5) { lab <- paste0(lab,"; ...") }
+        msgna <- c(msgna, paste0("'",v,"' (",NROW(grp)," group(s): ",lab,")"))
+      } else {
+        msgna <- c(msgna, paste0("'",v,"' (",sum(rowsna)," value(s))"))
+      }
+    }
+  }
+  if (NROW(msgna) > 0) {
+    warning(paste0("Missing values in ",paste(msgna,collapse=" and "),
+                   ". Variables that depend on them are NA for the groups concerned."), call. = FALSE)
+  }
+
+  complete_dfle_table(tab, categories)
+}
+
+# internal function : performs the calculation (recursively on sex, categ and year)
+complete_dfle_table <- function(tab, categories = c("")) {
 
   # find variations of sex/year names (typically French names instead of English names)
   namesex <- NA
@@ -40,7 +86,7 @@ CompleteDFLEtable <- function(tab, categories = c("")) {
     namesex <- names(tab)[tolower(names(tab))=="sexe"]
     namesex <- namesex[1]
     names(tab)[names(tab)==namesex] <- "sex"
-    tab <- CompleteDFLEtable(tab,categories)
+    tab <- complete_dfle_table(tab,categories)
     names(tab)[names(tab)=="sex"] <- namesex
     return(tab)
   }
@@ -49,7 +95,7 @@ CompleteDFLEtable <- function(tab, categories = c("")) {
     nameyear <- names(tab)[grepl("^(an|annee)$",tolower(names(tab)))]
     nameyear <- nameyear[1]
     names(tab)[names(tab)==nameyear] <- "year"
-    tab <- CompleteDFLEtable(tab,categories)
+    tab <- complete_dfle_table(tab,categories)
     names(tab)[names(tab)=="year"] <- nameyear
     return(tab)
   }
@@ -96,7 +142,7 @@ CompleteDFLEtable <- function(tab, categories = c("")) {
     #tab <- tab %>% mutate(sex = as.factor(sex))
     tab$sex <- as.factor(tab$sex)
     if (NROW(classsex)>1)  {
-      bysex <- function(s){ CompleteDFLEtable(tab[tab$sex == s,]) }
+      bysex <- function(s){ complete_dfle_table(tab[tab$sex == s,]) }
       return( do.call(rbind,lapply(classsex,bysex)) %>% restore_categories() )
     }
   }
@@ -105,7 +151,7 @@ CompleteDFLEtable <- function(tab, categories = c("")) {
     #tab <- tab %>% mutate(categ = as.factor(categ))
     tab$categ <- as.factor(tab$categ)
     if (NROW(classcateg)>1)  {
-      bycateg <- function(cat){ CompleteDFLEtable(tab[tab$categ == cat,]) }
+      bycateg <- function(cat){ complete_dfle_table(tab[tab$categ == cat,]) }
       return( do.call(rbind,lapply(classcateg,bycateg)) %>% restore_categories() )
     }
   }
@@ -114,7 +160,7 @@ CompleteDFLEtable <- function(tab, categories = c("")) {
     #tab <- tab %>% mutate(year = as.numeric(year))
     tab$year <- as.numeric(tab$year)
     if (NROW(classyear)>1)  {
-      byyear <- function(y){ CompleteDFLEtable(tab[tab$year == y,]) }
+      byyear <- function(y){ complete_dfle_table(tab[tab$year == y,]) }
       return( do.call(rbind,lapply(classyear,byyear)) )
     }
   }
