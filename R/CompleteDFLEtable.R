@@ -204,7 +204,12 @@ complete_dfle_table <- function(tab, categories = c("")) {
 
   # adding person years lived at age x, from number of survivors to age x
   if (("lx" %in% names(tab)) & !("Lx" %in% names(tab))) {
-    w1 <- c( 0.2, rep(0.5, nrow(tab)-1) )
+
+    # share of the year lived by people alive at age x : 0.5 (deaths spread evenly over the year), except at age 0
+    # where deaths occur earlier in the year (0.2, as in the sullivan manual example)
+    w1 <- rep(0.5, nrow(tab))
+    if ("age" %in% names(tab)) { if (tab$age[1] == 0) { w1[1] <- 0.2 } }
+
     tab$Lx <- ( w1 * tab$lx +
               (1 - w1) * c( utils::tail(tab$lx,-1), 0) ) * tab$agewidth
     tab$Lx[nrow(tab)] <- tab$lx[nrow(tab)] / tab$mx[nrow(tab)]
