@@ -7,6 +7,9 @@
 #' @export runExample
 #'
 #' @examples
+#' \dontrun{
+#' runExample()
+#' }
 runExample <- function(example = "projprevalence") {
 
   appDir <- system.file("shiny-examples", example, package = "healthexpectancies")

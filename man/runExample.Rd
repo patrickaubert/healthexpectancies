@@ -15,3 +15,8 @@ launches the app
 \description{
 Runs examples of uses of the package
 }
+\examples{
+\dontrun{
+runExample()
+}
+}

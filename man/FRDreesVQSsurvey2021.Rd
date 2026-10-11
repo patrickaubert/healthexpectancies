@@ -7,8 +7,8 @@
 \format{
 A data frame with 4626 observations and 6 variables:
 \describe{
-\item{limitationtype}{type of limitation \link{in French} (eg. 'Difficultés pour marcher', etc.)}
-\item{limitationintensity}{strength of limitation \link{in French} (eg. 'Ne peut pas du tout', etc.)}
+\item{limitationtype}{type of limitation (in French) (eg. 'Difficultés pour marcher', etc.)}
+\item{limitationintensity}{strength of limitation (in French) (eg. 'Ne peut pas du tout', etc.)}
 \item{sex}{sex ('female' or 'male' or 'all')}
 \item{agebracket}{age bracket (eg '[60;65)' = between 60 and 64 years old)}
 \item{prevalence}{prevalence of limitation in the given age bracket (number between 0 and 1)}

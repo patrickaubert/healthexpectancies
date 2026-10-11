@@ -15,16 +15,19 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests: 
     knitr,
-    rmarkdown
+    plotly,
+    rmarkdown,
+    shiny,
+    shinydashboard,
+    tidyverse
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5)
 Imports: 
-    utils,
     dplyr,
     magrittr,
-    purrr,
-    shiny,
-    shinydashboard,
-    plotly,
-    matlib
+    matlib,
+    stats,
+    stringr,
+    tidyr,
+    utils
