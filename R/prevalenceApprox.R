@@ -1,11 +1,20 @@
 #' Estimates prevalences by age from values by age brackets
 #'
 #' Given a vector of prevalences by age brackets and the vector of age cuts (which defines the age brackets),
-#' the function returns a vector of prevalences at all ages.
-#' The calculation minimises the sum of squares of second-differences of prevalences
-#' by age, under the constraint that average prevalences by age brackets
-#' (weight according to the 'weights' vector, usually the vector of population size at each age)
-#' are equal to the 'prevalence' input vector.
+#' the function returns a vector of prevalences at all ages, such that the average prevalence in each age bracket
+#' (weighted according to the 'weight' vector, usually the vector of population size at each age)
+#' is equal to the 'prevalence' input vector.
+#'
+#' Two methods are available. With `method = "logit"` (default), the prevalences minimise the sum of squares of
+#' second-differences of their logit (the logit scale guarantees prevalences strictly between 0 and 1 and
+#' accommodates the exponential rise of prevalences with age). Prevalences must then be expressed as proportions
+#' between 0 and 1. A prevalence of exactly 0 or 1 in a bracket cannot be matched on the logit scale: it is replaced
+#' by 1e-6 or 1 - 1e-6, with a warning.
+#'
+#' With `method = "legacy"`, the prevalences minimise the sum of squares of second-differences of the
+#' prevalences themselves, as in earlier versions of the package. This method implicitly assumes that
+#' prevalences are null just before the minimum age: it strongly underestimates prevalences at the first ages
+#' (typically by more than 50 percent at the minimum age) and is kept only to reproduce earlier results.
 #'
 #' 'prevalence' and 'weight' can also be given as dataframes containing sex, year and/or categories variables. In this case,
 #' the output is a dataframe and prevalences are smoothed for all sex, years and categories.
@@ -13,15 +22,13 @@
 #' If 'categories' is provided (a vector of variable names in 'prevalence' and 'weights'), smoothing is performed for
 #' each separate values of category variables.
 #'
-#' Note : Second-differences rather than first-differences are used
-#' in the minimisation function, since prevalences according to age are usually parabolic.
-#'
 #' @param prevalence a vector with observed prevalences by age bracket
 #' @param agecuts a vector with age defining the age brackets (minimum age in each age bracket)
 #' @param agemin minimum age in the output vector
 #' @param agemax maximum age in the output vector
 #' @param weight a vector of weights for each age
 #' @param categories a vector of names of variables of the 'prevalence' dataframe, representing categories (optional)
+#' @param method "logit" (default) or "legacy" (see Details)
 #'
 #' @return a vector with prevalences according to polynomial approximation
 #'
@@ -30,7 +37,9 @@
 #' @examples prevalenceApprox(prevalence = (FRDreesAPA2017 %>% filter(sex=="female",typepresta=="APA à domicile"))$prevalence, agecuts=c(seq(60,95,5)), agemin=60, agemax=99, weight=(FRInseePopulation %>% filter(sex=="F",year==2018,age0101>=60,geo=="france") %>% arrange(age0101))$popx)
 #' @examples prevalenceApprox(prevalence = (FRDreesAPA %>% filter(year==2018,sex=="male",typepresta=="APA à domicile"))$prevalence, agecuts=c(seq(60,90,5)), agemin=60, agemax=99, weight=(FRInseePopulation %>% filter(sex=="M",year==2019,age0101>=60,geo=="france") %>% arrange(age0101))$popx)
 #' @examples prevalenceApprox(prevalence = FRDreesAPA2017, agecuts=c(seq(60,95,5)), agemin=60, agemax=99, weight=(FRInseePopulation %>% filter(year==2018,age0101>=60,geo=="france") %>% mutate(sex=recode(sex,"F"="female","M"="male")) %>% rename(weight=popx) %>% arrange(sex,age0101)), categories = c("typepresta"))
-prevalenceApprox <- function (prevalence, agecuts, agemin, agemax, weight = rep(1,(agemax-agemin+1)), categories = c("") ) {
+prevalenceApprox <- function (prevalence, agecuts, agemin, agemax, weight = rep(1,(agemax-agemin+1)), categories = c(""), method = c("logit","legacy") ) {
+
+  method <- match.arg(method)
 
   #prevalence <- (FRDreesAPA2017 %>% filter(sex=="female",typepresta=="APA à domicile"))$prevalence
   #agecuts <- c(seq(60,95,5))
@@ -116,7 +125,8 @@ prevalenceApprox <- function (prevalence, agecuts, agemin, agemax, weight = rep(
             agecuts = agecuts,
             agemin = agemin,
             agemax = agemax,
-            weight = (weight %>% filter(sex==sepval$sex[i] & year==sepval$year[i]) )$weight
+            weight = (weight %>% filter(sex==sepval$sex[i] & year==sepval$year[i]) )$weight,
+            method = method
           ),
           stringsAsFactors = FALSE
         )
@@ -150,6 +160,8 @@ prevalenceApprox <- function (prevalence, agecuts, agemin, agemax, weight = rep(
   if (NROW(weight) != (agemax-agemin+1)) { stop(paste0("Error: Size of input vectors weight (",NROW(weight)," rows) is not compatible with agemin and agemax (",agemin," and ",agemax,").")) }
   if (NROW(agecuts) != NROW(prevalence)) { stop("Error: Different size of input vectors agecuts (",NROW(agecuts)," rows) and prevalence (",NROW(prevalence)," rows).") }
 
+  if (method == "logit") { return(prevalence_ungroup_logit(prevalence, agecuts, agemin, agemax, weight)) }
+
   # create matrixes
 
   weightstab <- data.frame(
@@ -174,10 +186,10 @@ prevalenceApprox <- function (prevalence, agecuts, agemin, agemax, weight = rep(
   # exact solution of minimisation problem under linear constraint
 
   # *** Minimise the sum of first differences
-  #deltaprev <- wprevagr1 %*%  matlib::inv(t(wprevagr1) %*% wprevagr1) %*% prevalence
+  #deltaprev <- wprevagr1 %*%  solve(t(wprevagr1) %*% wprevagr1) %*% prevalence
   #prevapprox1 <- cumsum(deltaprev)
   # *** Minimise the sum of second differences
-  delta2prev <- wprevagr %*%  matlib::inv(t(wprevagr) %*% wprevagr) %*% prevalence
+  delta2prev <- wprevagr %*%  solve(t(wprevagr) %*% wprevagr) %*% prevalence
   deltaprev <- cumsum(delta2prev)
   prevapprox <- cumsum(deltaprev)
 

@@ -11,6 +11,7 @@ Description: The package provides useful functions to calculate Disability-free 
 License: EUPL
 Encoding: UTF-8
 LazyData: true
+Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests: 
@@ -20,13 +21,13 @@ Suggests:
     shiny,
     shinydashboard,
     tidyverse
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5)
 Imports: 
     dplyr,
     magrittr,
-    matlib,
     stats,
     stringr,
     tidyr,

@@ -6,11 +6,14 @@
 #' Parameters must include the vector of age cuts, which defines the age brackets. For instance, c(60,70,80)
 #' defines age brackets `[60,70)`, `[70,80)` and `[80,Inf]`.
 #'
-#' The calculation minimises the sum of squares of second-differences of prevalences
+#' By default, the calculation minimises the sum of squares of second-differences of the logit of prevalences
 #' by age, under the constraint that average prevalences by age brackets
 #' (weighted according to the 'weight' vector, usually the vector of population size at each age)
-#' are equal to the 'prevalence' input vector. Alternatively, if 'option' is set to 'polynomial',
-#' polynomial approximation is calculated. The degree of the polynomial function can be constrained
+#' are equal to the 'prevalence' input vector (see \code{\link{prevalenceApprox}}); prevalences must then be
+#' proportions between 0 and 1. If 'option' is set to 'legacy', the former method (second-differences of prevalences
+#' rather than of their logit, which underestimates prevalences at the first ages) is used.
+#' Alternatively, if 'option' is set to 'polynomial', polynomial approximation is calculated.
+#' The degree of the polynomial function can be constrained
 #' by setting option to 'polynomialD' (with D = degree, between 1 and 4) ; default value is 4.
 #'
 #' In the output table, 'prevalence.raw' corresponds to input values of prevalences (constant by age bracket)
@@ -22,7 +25,7 @@
 #' @param agemax maximum age in the output table
 #' @param weights.tab a dataframe with weights (ie population) by age and some of the categorisation variables of the 'tab' dataframe
 #' @param categories a vector of names of variables of the 'tab' dataframe, representing categories
-#' @param option maximum age in the output table
+#' @param option smoothing method : "" (default, logit scale), "legacy", "polynomial" or "polynomialD" (see Details)
 #'
 #' @return a table containing the same categorisation variables than the input table, plus prevalences by age
 #'
@@ -105,7 +108,7 @@ ApproxPrevalenceTable <- function(tab,
 
     approxloc <- function(...) {
       if (option %in% c("polynomial")) { prevalence_to_polynomial(degree = degree, ...)
-      } else { prevalenceApprox(...)    }
+      } else { prevalenceApprox(..., method = ifelse(option == "legacy", "legacy", "logit")) }
     }
 
     agebracket <- cut(c(agemin:agemax), breaks = c(agecuts,Inf), include.lowest = TRUE, right = FALSE)
@@ -123,7 +126,7 @@ ApproxPrevalenceTable <- function(tab,
     ) %>% left_join(
       data.frame(prevalence.raw = prevalence.raw,
                  agebracket = unique(agebracket),
-                 stringsAsFactors = False),
+                 stringsAsFactors = FALSE),
       by = "agebracket"
     )
   }
