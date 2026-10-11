@@ -74,32 +74,6 @@ CompleteDFLEtable <- function(tab, categories = c("")) {
                    ". Variables that depend on them are NA for the groups concerned."), call. = FALSE)
   }
 
-  complete_dfle_table(tab, categories)
-}
-
-# internal function : performs the calculation (recursively on sex, categ and year)
-complete_dfle_table <- function(tab, categories = c("")) {
-
-  # find variations of sex/year names (typically French names instead of English names)
-  namesex <- NA
-  if (!("sex" %in% names(tab)) & ("sexe" %in% tolower(names(tab)))) {
-    namesex <- names(tab)[tolower(names(tab))=="sexe"]
-    namesex <- namesex[1]
-    names(tab)[names(tab)==namesex] <- "sex"
-    tab <- complete_dfle_table(tab,categories)
-    names(tab)[names(tab)=="sex"] <- namesex
-    return(tab)
-  }
-  nameyear <- NA
-  if (!("year" %in% names(tab)) & (NROW(names(tab)[grepl("^(an|annee)$",tolower(names(tab)))]>=1))) {
-    nameyear <- names(tab)[grepl("^(an|annee)$",tolower(names(tab)))]
-    nameyear <- nameyear[1]
-    names(tab)[names(tab)==nameyear] <- "year"
-    tab <- complete_dfle_table(tab,categories)
-    names(tab)[names(tab)=="year"] <- nameyear
-    return(tab)
-  }
-
   # if 'categories' is provided, a 'categ' variable is first created
   categories <- categories[!(categories %in% c("sex","year"))]
   categories.true <- categories[categories != ""]
@@ -123,17 +97,40 @@ complete_dfle_table <- function(tab, categories = c("")) {
     tab <- tab %>% unite(categ,all_of(categories),sep="")
   }
 
-  # if 'categories' is provided, a function to restore the initial names and values of them
-  restore_categories <- function(tabloc) {
-    if (NROW(categories.true)>=1)  {
-      for (j in c(1:NROW(categories))) {
-        tabloc[,categories[j]] <- str_extract(tabloc$categ,paste0("(?<=#",j,")[^#]*(?=#)"))
-      }
-      tabloc <- tabloc[ , names(tabloc)[!(names(tabloc) == "categ")]]
-    } else {
-      tabloc
+  tab <- complete_dfle_table(tab)
+
+  # restore the initial names and values of the variables in 'categories'
+  if (NROW(categories.true)>=1)  {
+    for (j in c(1:NROW(categories))) {
+      tab[,categories[j]] <- str_extract(tab$categ,paste0("(?<=#",j,")[^#]*(?=#)"))
     }
-  } # end of restore_categories
+    tab <- tab[ , names(tab)[!(names(tab) == "categ")]]
+  }
+  tab
+}
+
+# internal function : performs the calculation (recursively on sex, categ and year)
+complete_dfle_table <- function(tab) {
+
+  # find variations of sex/year names (typically French names instead of English names)
+  namesex <- NA
+  if (!("sex" %in% names(tab)) & ("sexe" %in% tolower(names(tab)))) {
+    namesex <- names(tab)[tolower(names(tab))==("sexe")]
+    namesex <- namesex[1]
+    names(tab)[names(tab)==namesex] <- "sex"
+    tab <- complete_dfle_table(tab)
+    names(tab)[names(tab)=="sex"] <- namesex
+    return(tab)
+  }
+  nameyear <- NA
+  if (!("year" %in% names(tab)) & (NROW(names(tab)[grepl("^(an|annee)$",tolower(names(tab)))]>=1))) {
+    nameyear <- names(tab)[grepl("^(an|annee)$",tolower(names(tab)))]
+    nameyear <- nameyear[1]
+    names(tab)[names(tab)==nameyear] <- "year"
+    tab <- complete_dfle_table(tab)
+    names(tab)[names(tab)=="year"] <- nameyear
+    return(tab)
+  }
 
   # if 'sex' and/or 'year' and/or 'categ' are in the input dataset, calculations is made for each values of these 2 variables
   # NB: 'categ' is an undefinite category variable (to be defined by user)
@@ -143,7 +140,7 @@ complete_dfle_table <- function(tab, categories = c("")) {
     tab$sex <- as.factor(tab$sex)
     if (NROW(classsex)>1)  {
       bysex <- function(s){ complete_dfle_table(tab[tab$sex == s,]) }
-      return( do.call(rbind,lapply(classsex,bysex)) %>% restore_categories() )
+      return( do.call(rbind,lapply(classsex,bysex)) )
     }
   }
   if ("categ" %in% names(tab)) {
@@ -152,7 +149,7 @@ complete_dfle_table <- function(tab, categories = c("")) {
     tab$categ <- as.factor(tab$categ)
     if (NROW(classcateg)>1)  {
       bycateg <- function(cat){ complete_dfle_table(tab[tab$categ == cat,]) }
-      return( do.call(rbind,lapply(classcateg,bycateg)) %>% restore_categories() )
+      return( do.call(rbind,lapply(classcateg,bycateg)) )
     }
   }
   if ("year" %in% names(tab)) {
