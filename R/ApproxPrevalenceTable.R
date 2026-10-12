@@ -41,17 +41,32 @@ ApproxPrevalenceTable <- function(tab,
   tab <- as.data.frame(tab)
   if (!is.null(weights.tab)) { weights.tab <- as.data.frame(weights.tab) }
 
+  # == checks on arguments
+
+  if (is.unsorted(agecuts, strictly = TRUE)) { stop("'agecuts' must be strictly increasing.", call. = FALSE) }
+  if (agemin < agecuts[1]) { stop("'agemin' must not be lower than the first value of 'agecuts'.", call. = FALSE) }
+
   # == extract names of variables in input tables
 
-    # -- in 'tab'
+  # -- in 'tab'
+
+  notfound <- setdiff(categories, c(names(tab), "categ"))
+  if (NROW(notfound) > 0) {
+    warning(paste0("Variable(s) listed in 'categories' but not found in 'tab' (ignored): ",
+                   paste0("'",notfound,"'",collapse=", "),"."), call. = FALSE)
+  }
 
   categories <- intersect( names(tab), unique( c( categories, "year","sex","categ") ) )
 
-  name.prev <- names(tab)[!(names(tab) %in% categories) & !(grepl("^(A|a|â)ge",names(tab)))]
+  name.agetab <- names(tab)[grepl("^(A|a|â)ge",names(tab))]
+  name.prev <- names(tab)[!(names(tab) %in% categories) & !(names(tab) %in% name.agetab)]
+  if (NROW(name.prev)==0) { stop("No prevalence variable found in 'tab'.", call. = FALSE) }
   if (NROW(name.prev)>1) { stop("More than one prevalence variable in 'tab'")
   } else { message(paste0("'",name.prev,"' is used as prevalence variable."))}
+  # age variable used to identify age brackets : 'age' if present, otherwise the first variable whose name starts with 'age'
+  name.agetab <- name.agetab[order(name.agetab != "age")][1]
 
-    # -- in 'weights.tab'
+  # -- in 'weights.tab'
 
   categories.w <- categories[categories %in% names(weights.tab) ]
 
@@ -60,9 +75,14 @@ ApproxPrevalenceTable <- function(tab,
   name.w <- names(weights.tab)[!(names(weights.tab) %in% c(categories.w,name.agew))]
   if (NROW(name.w)>1) { stop("More than one weight variable in 'weights.tab'")}
 
+  # == readable label of each category (used in error messages)
+
+  if (NROW(categories)==0) { labelcateg <- rep("all data", nrow(tab))
+  } else { labelcateg <- do.call(paste, c(lapply(categories, function(v) tab[[v]]), sep = " / ")) }
+
   # == if relevent, aggregates categories (including sex and year) into a unique categ variable
 
-    # -- in 'tab'
+  # -- in 'tab'
 
   if (NROW(categories)==0) { tab$categloc <- rep("#",nrow(tab))
   } else {
@@ -73,14 +93,14 @@ ApproxPrevalenceTable <- function(tab,
     }
 
     tab <- tab %>% unite(categloc,all_of(categories),sep="", remove = FALSE)
-    }
+  }
 
   if (NROW(categories.w)==0) { tab$categ.w <- rep("#",nrow(tab))
   } else {
     tab <- tab %>% unite(categ.w,all_of(categories.w),sep="", remove = FALSE)
   }
 
-    # -- in 'weights.tab'
+  # -- in 'weights.tab'
 
   if (NROW(categories.w)==0) { weights.tab$categ.w <- rep("#",nrow(weights.tab))
   } else {
@@ -90,6 +110,7 @@ ApproxPrevalenceTable <- function(tab,
   # == list of all categories
 
   cases <- tab[ , c("categloc","categ.w")] %>% distinct()
+  cases$label <- labelcateg[match(cases$categloc, tab$categloc)]
 
   # == call approximation function for every category, sex and year
 
@@ -103,8 +124,32 @@ ApproxPrevalenceTable <- function(tab,
 
   approxloc <- function(i) {
 
+    lab <- cases$label[i]
+
+    # -- weights : sorted by age, and restricted to ages between 'agemin' and 'agemax'
     if (is.null(weights.tab)) { weights.loc <- rep(1,(agemax-agemin+1))
-    } else { weights.loc <- weights.tab[weights.tab$categ.w == cases$categ.w[i],c(name.w)]   }
+    } else {
+      wloc <- weights.tab[weights.tab$categ.w == cases$categ.w[i], , drop = FALSE]
+      if (nrow(wloc) == 0) {
+        stop(paste0("No weights found in 'weights.tab' for the category: ",lab,"."), call. = FALSE)
+      }
+      if (NROW(name.agew) >= 1) {
+        name.agew1 <- name.agew[order(name.agew != "age")][1]
+        wage <- age_lower_bound(wloc[[name.agew1]])
+        keep <- !is.na(wage) & wage >= agemin & wage <= agemax
+        wloc <- wloc[keep, , drop = FALSE]; wage <- wage[keep]
+        wloc <- wloc[order(wage), , drop = FALSE]; wage <- sort(wage)
+        if (!identical(as.numeric(wage), as.numeric(agemin:agemax))) {
+          stop(paste0("Weights for the category '",lab,"' must be provided exactly once for each age from ",
+                      agemin," to ",agemax," (check 'weights.tab')."), call. = FALSE)
+        }
+      }
+      weights.loc <- wloc[[name.w]]
+      if (length(weights.loc) != (agemax-agemin+1)) {
+        stop(paste0("Weights for the category '",lab,"': ",length(weights.loc)," values found, ",
+                    (agemax-agemin+1)," expected (ages ",agemin," to ",agemax,")."), call. = FALSE)
+      }
+    }
 
     approxloc <- function(...) {
       if (option %in% c("polynomial")) { prevalence_to_polynomial(degree = degree, ...)
@@ -112,7 +157,26 @@ ApproxPrevalenceTable <- function(tab,
     }
 
     agebracket <- cut(c(agemin:agemax), breaks = c(agecuts,Inf), include.lowest = TRUE, right = FALSE)
-    prevalence.raw <- tab[tab$categloc == cases$categloc[i],c(name.prev)]
+    # -- prevalences : sorted by age bracket, and checked against 'agecuts'
+    tabloc <- tab[tab$categloc == cases$categloc[i], , drop = FALSE]
+    if (!is.na(name.agetab)) {
+      lower <- age_lower_bound(tabloc[[name.agetab]])
+      if (anyNA(lower) | anyDuplicated(lower) > 0 | !setequal(lower, agecuts)) {
+        stop(paste0("For the category '",lab,"', the age brackets in 'tab' (starting at ",
+                    paste(sort(unique(lower)), collapse = ", "),") do not match 'agecuts' (",
+                    paste(agecuts, collapse = ", "),"). Is a bracket missing or duplicated, ",
+                    "or does 'tab' contain several versions of the same series ",
+                    "(another variable that should be part of 'categories', or a filter to apply) ?"), call. = FALSE)
+      }
+      tabloc <- tabloc[order(lower), , drop = FALSE]
+    } else if (nrow(tabloc) != NROW(agecuts)) {
+      stop(paste0("For the category '",lab,"', 'tab' has ",nrow(tabloc)," rows but 'agecuts' defines ",
+                  NROW(agecuts)," age brackets."), call. = FALSE)
+    }
+    prevalence.raw <- tabloc[[name.prev]]
+    if (anyNA(prevalence.raw)) {
+      stop(paste0("Missing values in the prevalences of the category '",lab,"'."), call. = FALSE)
+    }
 
     data.frame(
       categloc = rep(cases$categloc[i],(agemax-agemin+1)),
@@ -142,4 +206,3 @@ ApproxPrevalenceTable <- function(tab,
   return(tabout[,c(categories,"age","agebracket","prevalence.raw","prevalence.approx")])
 
 }
-
