@@ -284,6 +284,9 @@ complete_dfle_table <- function(tab) {
   # --- alternative : adding with disability life expectancy (DLEx), from proportion of life spent with disability (pctDLEx) and life-expectancy at each age x
   if (!("DLEx" %in% names(tab)) & ("ex" %in% names(tab)) & ("pctDLEx" %in% names(tab))) {
     tab$DLEx <- tab$pctDLEx/100 * tab$ex
+    # the blocks "DFLEx <-> DLEx" and "DFLEx <-> pctDFLEx" have already been passed: DFLEx and pctDFLEx are completed here
+    if (!("DFLEx" %in% names(tab))) { tab$DFLEx <- tab$ex - tab$DLEx }
+    if (!("pctDFLEx" %in% names(tab))) { tab$pctDFLEx <- 100 * tab$DFLEx / tab$ex }
   }
 
   # =================== lx, Lx, DFLEx -> pix (& DFLx, DFTx, DLx) ====================
@@ -300,7 +303,11 @@ complete_dfle_table <- function(tab) {
 
   # adding mean conjonctural age of life with disability (MeanDAx) from person-years lived at age x (DLx)
   if (("DLx" %in% names(tab)) & !("MeanDAx" %in% names(tab))) {
-    MeanDAx <- function(n) { sum( tab$DLx[n:nrow(tab)] * tab$age[n:nrow(tab)]) / sum(tab$DLx[n:nrow(tab)])}
+    # (with negative person-years, i.e. prevalences below 0, these ages have no meaning and are set to NA)
+    MeanDAx <- function(n) {
+      if (any(tab$DLx[n:nrow(tab)] < -1e-6, na.rm = TRUE)) { return(NA_real_) }
+      sum( tab$DLx[n:nrow(tab)] * tab$age[n:nrow(tab)]) / sum(tab$DLx[n:nrow(tab)])
+      }
     tab$MeanDAx <- sapply( c(1:nrow(tab)) , MeanDAx)
   }
 
@@ -308,6 +315,7 @@ complete_dfle_table <- function(tab) {
   if (("DLx" %in% names(tab)) & !("MedianDAx" %in% names(tab))) {
     MedianDAx <- function(n) {
       tab2 <- tab[c(n:nrow(tab)),]
+      if (any(tab2$DLx < -1e-6, na.rm = TRUE)) { return(NA_real_) }
       tab2$cumDLx <- cumsum(tab2$DLx)
       return(min(tab2[tab2$cumDLx >= sum(tab2$DLx)/2,"age"]))
     }
@@ -318,6 +326,7 @@ complete_dfle_table <- function(tab) {
   if (("DLx" %in% names(tab)) & !("ModalDAx" %in% names(tab))) {
     ModalDAx <- function(n) {
       tab2 <- tab[c(n:nrow(tab)),]
+      if (any(tab2$DLx < -1e-6, na.rm = TRUE)) { return(NA_real_) }
       return(min(tab2[tab2$DLx == max(tab2$DLx),"age"]))
     }
     tab$ModalDAx <- sapply( c(1:nrow(tab)) , ModalDAx)

@@ -133,3 +133,33 @@ test_that("les noms 'sexe' et 'annee' sont acceptés et conservés dans le résu
   expect_false(any(c("sex","year") %in% names(res)))
   expect_equal(sort(res$ex), sort(CompleteDFLEtable(tab)$ex))
 })
+
+# ---------------------------------------------------------------------------
+# 6. Inversion de Sullivan : prévalences déduites d'une espérance de vie cible
+# ---------------------------------------------------------------------------
+
+test_that("les prévalences déduites de pctDLEx et de pctDFLEx (= 100 - pctDLEx) sont identiques", {
+  base <- mortality_table(sexes = "female", years = 2020)
+  qx_only <- base[ , c("year", "age", "qx")]
+  target <- 100 * (0.1 + 0.002 * (base$age - 60))                          # part de l'EVI dans l'espérance de vie (%)
+  a <- CompleteDFLEtable(cbind(qx_only, pctDLEx  = target))
+  b <- CompleteDFLEtable(cbind(qx_only, pctDFLEx = 100 - target))
+  expect_equal(a$pix, b$pix, tolerance = 1e-9)
+  expect_equal(a$DFLEx, b$DFLEx)
+  expect_equal(a$pctDFLEx, 100 - target)
+})
+
+test_that("un tableau cohérent redonne les prévalences de départ (aller-retour)", {
+  base <- mortality_table(sexes = "female", years = 2020)
+  fwd  <- CompleteDFLEtable(base)
+  back <- CompleteDFLEtable(cbind(base[ , c("year", "age", "qx")], DLEx = fwd$DLEx))
+  expect_equal(back$pix, base$pix, tolerance = 1e-9)
+})
+
+test_that("les âges moyen, médian et modal sont NA, sans avertissement, si des prévalences sont négatives", {
+  base <- mortality_table(sexes = "female", years = 2020)
+  base$pix[base$age >= 110] <- -0.5
+  expect_no_warning(res <- CompleteDFLEtable(base))
+  expect_true(all(is.na(res$MedianDAx[res$age <= 110])))
+  expect_true(all(is.na(res$MeanDAx[res$age <= 110])))
+})
