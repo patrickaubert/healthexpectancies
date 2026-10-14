@@ -8,6 +8,6 @@
 #' @importFrom dplyr filter select mutate distinct group_by ungroup left_join bind_rows recode do all_of
 #' @importFrom tidyr unite
 #' @importFrom stringr str_extract
-#' @importFrom stats lm
+#' @importFrom stats lm coef fitted residuals predict
 #' @importFrom utils head tail
 NULL

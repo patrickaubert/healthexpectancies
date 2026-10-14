@@ -12,6 +12,10 @@ reference:
   - CompleteDFLEtable
   - prevalenceForecast
   - ApproxPrevalenceTable
+  - fitPrevalenceModel
+  - projectPrevalence
+  - predict.prevalence_model
+  - coef.prevalence_model
 - title: Auxiliary functions
 - contents:
   - prevalenceApprox
@@ -21,15 +25,19 @@ reference:
   desc:  Datasets provide examples for calculations. Most are data provided by Insee (the French INS) or DREES (the statistical unit of the French Ministry for Health and Social affairs)
 - contents:
   - FRDreesAPA
+  - FRAPAprevalence
   - FRDreesAPA2017
   - FRDreesVQSsurvey2014
+  - FRDreesVQSsurvey2021
   - FRDreesEHPA
   - FRGaliEUSilc
   - FRInseePopulation
   - FRInseePopulationForecast2016
   - FRInseePopulationForecast2021
+  - FRInseePopulationForecast2026
   - FRInseeMortalityForecast2016
   - FRInseeMortalityForecast2021
+  - FRInseeMortalityForecast2026
   - FRInseeMortalityrates
   - FRInseeMortalityrates_t69
   - sullivan

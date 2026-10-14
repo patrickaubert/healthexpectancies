@@ -15,3 +15,33 @@ sullivan_input <- function() {
 
 # récupère les résultats d'un calcul en ignorant les avertissements
 quiet <- function(expr) suppressWarnings(expr)
+
+# ---- données simulées pour fitPrevalenceModel() -------------------------------------------------------------------
+
+# tendance : logit(p) = alpha_a + beta_a * (t - 2019), sans bruit
+simulate_trend <- function(ages = 60:100, years = 2010:2019) {
+  alpha <- -6 + 0.12 * (ages - 60)
+  beta  <- -(0.01 + 0.0005 * (ages - 60))
+  d <- expand.grid(age = ages, year = years)
+  d$pix <- plogis(alpha[match(d$age, ages)] + beta[match(d$age, ages)] * (d$year - 2019))
+  list(data = d, alpha = alpha, beta = beta, ages = ages)
+}
+
+# table de mortalité simulée : qx baisse plus vite aux âges élevés ; qx = 1 au dernier âge
+simulate_qx <- function(ages = 60:100, years = 2010:2040) {
+  d <- expand.grid(age = ages, year = years)
+  d$qx <- exp(-5.5 + 0.08 * (d$age - 60) - (0.01 + 0.0003 * (d$age - 60)) * (d$year - 2019))
+  d$qx[d$age == max(ages)] <- 1
+  d
+}
+
+# lien avec la mortalité : logit(p) = alpha_a + beta * ln q(a + k, t), k entier ou demi-entier, sans bruit
+simulate_mortality <- function(k = 3, beta = 1.5, ages = 60:100, years = 2010:2019) {
+  q <- simulate_qx(ages, sort(unique(c(2010:2040, years))))              # mortalité simulée de 2010 à 2040 (au moins)
+  lnq <- function(a, y) log(q$qx[q$age == min(a, max(ages)) & q$year == y])        # âge plafonné au dernier âge
+  x <- function(a, y) { f <- floor(a + k); w <- a + k - f; (1 - w) * lnq(f, y) + ifelse(w > 0, w * lnq(f + 1, y), 0) }
+  alpha <- 3 + 0.01 * (ages - 60)
+  d <- q[q$year %in% years, ]
+  d$pix <- plogis(alpha[match(d$age, ages)] + beta * mapply(x, d$age, d$year))
+  list(data = d, alpha = alpha, beta = beta, k = k, qx_all = q)
+}
