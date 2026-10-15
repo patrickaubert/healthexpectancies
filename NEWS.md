@@ -4,8 +4,11 @@
 
 * `fitPrevalenceModel()` estimates a model of the evolution of prevalences of disability by age on past observations,
   and `predict()` projects prevalences from it. Two methods: extrapolation of the trend of prevalences at each age
-  (`method = "trend"`) and link with the evolution of mortality rates, with an age shift between disability and death
-  that can be selected on a grid (`method = "mortality"`). The years used for the estimation are set with `fit_years` and
+  (`method = "trend"`), link with the evolution of mortality rates, with an age shift between disability and death
+  that can be selected on a grid (`method = "mortality"`), and hypotheses on life expectancies (`method = "target"`):
+  constant, linear trend or change of x percent at a given horizon of life expectancy with disability, disability-free
+  life expectancy, their share in total life expectancy or their ratio, at each age (inversion of the Sullivan method)
+  or uniformly at all ages from the value at the minimum age. The years used for the estimation are set with `fit_years` and
   `exclude_years`. The results of the estimation are available with `coef()`, `fitted()`, `residuals()`, `summary()` and
   `as.data.frame(what = ...)`.
 * `projectPrevalence()` estimates, projects and calculates life expectancies in one step.

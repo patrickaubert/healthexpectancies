@@ -45,3 +45,19 @@ simulate_mortality <- function(k = 3, beta = 1.5, ages = 60:100, years = 2010:20
   d$pix <- plogis(alpha[match(d$age, ages)] + beta * mapply(x, d$age, d$year))
   list(data = d, alpha = alpha, beta = beta, k = k, qx_all = q)
 }
+
+# ---- données simulées pour method = "target" -----------------------------------------------------------------------
+
+# prévalences telles que l'espérance de vie avec incapacité (EVI) à chaque âge évolue linéairement dans le temps
+# (obtenues par inversion de la méthode de Sullivan, avec la mortalité simulée de 2010 à 2040)
+simulate_target <- function(ages = 60:100, slope0 = -0.004) {
+  q <- simulate_qx(ages, 2010:2040)
+  base <- CompleteDFLEtable(data.frame(q[q$year == 2019, c("year", "age", "qx")], pix = plogis(-5 + 0.12 * (ages - 60))))
+  base <- base[order(base$age), ]
+  d <- q
+  d$DLEx <- base$DLEx[match(d$age, base$age)] + (slope0 * (1 + 0.02 * (d$age - 60))) * (d$year - 2019)
+  r <- CompleteDFLEtable(d[ , c("year", "age", "qx", "DLEx")])
+  r <- r[order(r$year, r$age), c("year", "age", "qx", "pix", "DLEx", "ex")]
+  rownames(r) <- NULL
+  r
+}

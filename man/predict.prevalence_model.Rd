@@ -4,7 +4,14 @@
 \alias{predict.prevalence_model}
 \title{Projects prevalences of disability with an estimated model}
 \usage{
-\method{predict}{prevalence_model}(object, newdata, interval = FALSE, level = 0.95, ...)
+\method{predict}{prevalence_model}(
+  object,
+  newdata,
+  interval = FALSE,
+  level = 0.95,
+  on_unfeasible = c("warn", "clip", "error"),
+  ...
+)
 }
 \arguments{
 \item{object}{a model estimated with \code{\link{fitPrevalenceModel}}}
@@ -14,6 +21,11 @@
 \item{interval}{if TRUE, adds the lower and upper bounds of a prediction interval ('pix_lwr' and 'pix_upr')}
 
 \item{level}{confidence level of the prediction interval}
+
+\item{on_unfeasible}{method "target" only: what to do if the hypothesis cannot be satisfied with the projected mortality, i.e. if it requires
+prevalences outside the interval 0 to 1 (all ages) or if no uniform evolution can reach the target (minimum age). "warn" (default) returns the values as
+they are with a warning (prevalences outside the interval 0 to 1, or NA for a uniform evolution without solution); "clip" bounds prevalences to the
+interval 0 to 1 (or to the closest feasible solution), with a warning; "error" stops.}
 
 \item{...}{not used}
 }
@@ -41,7 +53,7 @@ ages <- 60:100; years <- 2010:2019
 obs <- expand.grid(age = ages, year = years)
 obs$pix <- plogis(-6 + 0.12 * (obs$age - 60) - (0.01 + 0.0005 * (obs$age - 60)) * (obs$year - 2019))
 m <- fitPrevalenceModel(obs, method = "trend")
-proj <- predict(m, newdata = expand.grid(age = ages, year = c(2030, 2040)), interval = TRUE)
+proj <- predict(m, newdata = expand.grid(age = ages, year = c(2025, 2030)), interval = TRUE)
 head(proj)
 }
 \seealso{

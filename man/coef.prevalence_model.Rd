@@ -50,6 +50,8 @@ Methods to retrieve and display the results of a model estimated with \code{\lin
 \item \code{coef()} returns the coefficients in a data frame (long format), one row per series, age and term: "intercept"
 (value of the transformed prevalence at the last year of the estimation) and "slope" (annual change) for method "trend";
 "alpha" (age effects) and "beta" (slope on the mortality rates, with age = NA if it is common to all ages) for method "mortality".
+For method "target", "reference" (value of the indicator at the reference year) for rules "constant" and "horizon", and "intercept" and "slope"
+(value and annual change of the indicator) for rule "trend"; with scope "min_age", only the minimum age (or 'anchor_age') is concerned.
 Columns: variables defining series, 'age', 'term', 'estimate', 'std.error', 'n'.
 \item \code{fitted()} and \code{residuals()} return fitted prevalences and residuals (on the scale of the estimation) as vectors,
 in the order of the rows of \code{as.data.frame(x, what = "fitted")}.

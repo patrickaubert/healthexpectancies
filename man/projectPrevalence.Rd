@@ -4,7 +4,13 @@
 \alias{projectPrevalence}
 \title{Projects prevalences of disability and calculates life expectancies}
 \usage{
-projectPrevalence(tab, newdata, method = c("trend", "mortality"), ...)
+projectPrevalence(
+  tab,
+  newdata,
+  method = c("trend", "mortality", "target"),
+  on_unfeasible = c("warn", "clip", "error"),
+  ...
+)
 }
 \arguments{
 \item{tab}{observed prevalences by age and year (see \code{\link{fitPrevalenceModel}})}
@@ -12,7 +18,9 @@ projectPrevalence(tab, newdata, method = c("trend", "mortality"), ...)
 \item{newdata}{projection years: data frame with variables 'year', 'age' and 'qx' (mortality rate). Mortality rates must cover
 all the ages up to the last age of the life table (where qx = 1), as required by \code{\link{CompleteDFLEtable}}.}
 
-\item{method}{"trend" or "mortality" (see \code{\link{fitPrevalenceModel}})}
+\item{method}{"trend", "mortality" or "target" (see \code{\link{fitPrevalenceModel}})}
+
+\item{on_unfeasible}{method "target" only: what to do if the hypothesis cannot be satisfied (see \code{\link{predict.prevalence_model}})}
 
 \item{...}{other arguments of \code{\link{fitPrevalenceModel}} (fit_years, exclude_years, categories, scale, etc.)}
 }
@@ -45,6 +53,26 @@ mort$qx[mort$age == 104] <- 1
 res <- projectPrevalence(pix, newdata = mort, method = "trend", fit_years = 2010:2019)
 res[res$age == 60, c("year", "age", "pix", "ex", "DLEx", "pctDLEx")]
 attr(res, "model")                  # the estimated model
+
+# hypotheses on life expectancies need mortality rates in the estimation table too
+mort_obs <- FRInseeMortalityrates
+mort_obs <- mort_obs[mort_obs$sex == "all" & mort_obs$geo == "france" & !is.na(mort_obs$age) &
+                     mort_obs$age \%in\% 60:104 & mort_obs$year \%in\% 2010:2019, c("year", "age", "qx")]
+mort_obs$qx[mort_obs$age == 104] <- 1
+tab <- merge(pix, mort_obs, by = c("year", "age"))
+
+# uniform evolution of the prevalences at all ages, such that life expectancy with the APA at age 60
+# follows its trend of 2010-2019
+res2 <- projectPrevalence(tab, newdata = mort, method = "target", indicator = "dle", rule = "trend",
+                          scope = "min_age", fit_years = 2010:2019)
+res2[res2$age == 60, c("year", "age", "pix", "ex", "DLEx", "pctDLEx")]
+
+# share of life expectancy lived with the APA, at each age, decreasing by 10 percent between 2019 and 2040.
+# (at the youngest ages, where prevalences are close to 0, the hypothesis can require slightly negative
+# prevalences: they are bounded to 0)
+res3 <- suppressWarnings(projectPrevalence(tab, newdata = mort, method = "target", indicator = "pct_dle",
+                         rule = "horizon", change = -10, horizon = 2040, on_unfeasible = "clip"))
+res3[res3$age \%in\% c(60, 85), c("year", "age", "pix", "DLEx", "pctDLEx")]
 }
 \seealso{
 \code{\link{fitPrevalenceModel}}, \code{\link{predict.prevalence_model}}, \code{\link{prevalenceForecast}}

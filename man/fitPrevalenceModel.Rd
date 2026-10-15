@@ -6,7 +6,7 @@
 \usage{
 fitPrevalenceModel(
   tab,
-  method = c("trend", "mortality"),
+  method = c("trend", "mortality", "target"),
   fit_years = NULL,
   exclude_years = NULL,
   categories = NULL,
@@ -14,16 +14,25 @@ fitPrevalenceModel(
   estimator = c("ols", "endpoints"),
   slope = c("common", "by_age"),
   age_lag = 0,
-  eps = 1e-06
+  eps = 1e-06,
+  indicator = c("dle", "dfle", "pct_dle", "pct_dfle", "ratio"),
+  rule = c("constant", "trend", "horizon"),
+  scope = c("all_ages", "min_age"),
+  ref_year = NULL,
+  change = NULL,
+  horizon = NULL,
+  after = c("linear", "constant"),
+  anchor_age = NULL,
+  uniform_scale = c("odds", "level")
 )
 }
 \arguments{
 \item{tab}{a data frame with variables 'year', 'age' (single years of age) and 'pix' (prevalence), plus 'qx' (mortality rate)
-if method is "mortality". Optional variables 'sex' and 'categ', and the variables listed in 'categories', define separate series:
+if method is "mortality" or "target". Optional variables 'sex' and 'categ', and the variables listed in 'categories', define separate series:
 one model is estimated for each series, and each series must contain the same ages for all years. Prevalences can be obtained
 for example with \code{\link{ApproxPrevalenceTable}}.}
 
-\item{method}{"trend" or "mortality" (see Details)}
+\item{method}{"trend", "mortality" or "target" (see Details)}
 
 \item{fit_years}{vector of the years used for the estimation (default: all years of 'tab')}
 
@@ -34,7 +43,7 @@ for example with \code{\link{ApproxPrevalenceTable}}.}
 \item{scale}{scale on which prevalences are modelled: "logit" (default, keeps projected prevalences between 0 and 1),
 "log" or "level" (prevalences themselves)}
 
-\item{estimator}{method "trend" only: "ols" (default) or "endpoints" (slope between the first and the last years)}
+\item{estimator}{method "trend", or method "target" with rule "trend": "ols" (default) or "endpoints" (slope between the first and the last years)}
 
 \item{slope}{method "mortality" only: "common" (default) for a single slope \eqn{\beta}, or "by_age"}
 
@@ -42,6 +51,24 @@ for example with \code{\link{ApproxPrevalenceTable}}.}
 mortality rates (default 0). A vector selects the best value (see Details).}
 
 \item{eps}{with scale "logit" or "log", prevalences below 'eps' (or, with "logit", above 1 - 'eps') are replaced by this bound, with a warning}
+
+\item{indicator}{method "target" only: "dle", "dfle", "pct_dle", "pct_dfle" or "ratio" (see Details)}
+
+\item{rule}{method "target" only: "constant", "trend" or "horizon" (see Details)}
+
+\item{scope}{method "target" only: "all_ages" (a target at each age) or "min_age" (uniform evolution of prevalences, see Details)}
+
+\item{ref_year}{method "target" only: reference year of the rules "constant" and "horizon" (default: last year of the estimation)}
+
+\item{change}{method "target", rule "horizon": relative change of the indicator, in percent, between the reference year and 'horizon'}
+
+\item{horizon}{method "target", rule "horizon": year at which the change is reached}
+
+\item{after}{method "target", rule "horizon": "linear" (default, the change goes on at the same pace after 'horizon') or "constant"}
+
+\item{anchor_age}{method "target", scope "min_age": age at which the hypothesis is applied (default: minimum age)}
+
+\item{uniform_scale}{method "target", scope "min_age": "odds" (default) or "level" (see Details)}
 }
 \value{
 an object of class "prevalence_model", a list containing in particular the data frames 'coefficients'
@@ -51,7 +78,7 @@ Use \code{\link{predict.prevalence_model}} to project prevalences, and the other
 }
 \description{
 Estimates, on past observations of prevalences of disability by age, a model that can then be used to
-project prevalences (see \code{\link{predict.prevalence_model}}). Two methods are available.
+project prevalences (see \code{\link{predict.prevalence_model}}). Three methods are available.
 }
 \details{
 \strong{Method "trend"} extrapolates prevalences at each age (separately). Denoting \eqn{p_{a,t}} the prevalence at age
@@ -71,6 +98,32 @@ The age shift \eqn{k} is given by 'age_lag' (in years of age, not necessarily an
 interpolated linearly between ages). If 'age_lag' is a vector, the value that minimises the sum of squared residuals is retained
 (separately for each series, see 'categories'). This is a descriptive criterion, not a statistical test. For ages \eqn{a} such that
 \eqn{a+k} is higher than the last age of the table, the mortality rate of the last age is used.
+
+\strong{Method "target"} projects prevalences from a hypothesis on life expectancies, with the Sullivan method (see also
+\code{\link{prevalenceForecast}}). Denote EVI the life expectancy with disability at age \eqn{a} and year \eqn{t}, EVSI the disability-free
+life expectancy and \eqn{e = EVI + EVSI} the total life expectancy. The hypothesis is made of three choices:
+\itemize{
+\item the \strong{indicator} : "dle" (EVI), "dfle" (EVSI), "pct_dle" (share of EVI in total life expectancy, in percent, \eqn{100\,EVI/e}),
+"pct_dfle" (share of EVSI) or "ratio" (EVSI/EVI). A linear evolution of "pct_dle" and of "pct_dfle" are equivalent hypotheses; this is not
+the case for a relative change (rule "horizon"), nor for "dle" and "dfle" (since \eqn{e} does not evolve linearly).
+\item the \strong{rule} giving the value of the indicator \eqn{v_{a,t}} in the projection years: "constant" (\eqn{v_{a,t} = v_{a,t_0}}, with
+\eqn{t_0} the reference year 'ref_year'); "trend" (linear extrapolation of the indicator at each age, estimated over the years of the
+estimation, with 'estimator'); "horizon" (the indicator changes by 'change' percent between the reference year and the year 'horizon',
+linearly in between: \eqn{v_{a,t} = v_{a,t_0}\,[1 + (change/100)\,(t - t_0)/(horizon - t_0)]}; after 'horizon' the change goes on
+linearly (after = "linear") or stops (after = "constant")).
+\item the \strong{scope}: with scope = "all_ages", the rule is applied at each age, which gives a targeted EVI at each age; prevalences are the ones that give
+this EVI, given the projected mortality (inversion of the Sullivan method, as in \code{\link{prevalenceForecast}}). With scope = "min_age",
+the rule is only applied at the minimum age (or at 'anchor_age'), and prevalences of all ages evolve uniformly, from those of the reference
+year, so that the targeted EVI at this age is reached: the odds of prevalences are multiplied by the same factor at all ages
+(uniform_scale = "odds", prevalences always remain between 0 and 1) or prevalences are multiplied by the same factor, with a maximum of 1
+(uniform_scale = "level"). This is a theoretical hypothesis, as prevalences do not usually evolve in the same proportion at all ages.
+}
+
+With method "target", 'tab' must also contain mortality rates for all the ages of the life table, up to its last age (consecutive years of age),
+and the estimation does not transform prevalences ('scale' is not used). Prevalences "fitted" by the model are the ones implied by the hypothesis
+with the observed mortality of each year (for rule "constant", they are the observed prevalences at the reference year); residuals are differences
+of logits. A hypothesis may be impossible to satisfy with the projected mortality: see argument 'on_unfeasible' of
+\code{\link{predict.prevalence_model}}.
 }
 \examples{
 # prevalences by age (simulated) : the odds of disability decrease by 2 percent a year at age 80, 1 percent at age 60
