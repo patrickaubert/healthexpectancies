@@ -37,7 +37,7 @@ If the scale of the model is "log" or "level", prevalences are bounded to the in
 Calculates prevalences by age and year from a model estimated with \code{\link{fitPrevalenceModel}}.
 }
 \details{
-With method "trend", \code{newdata} only needs the years and ages. With method "mortality", \code{newdata} must also contain the
+With methods "trend" and "shift", \code{newdata} only needs the years and ages. With method "mortality", \code{newdata} must also contain the
 mortality rates 'qx' for all the ages of the model and for each year (they are used at ages \eqn{a+k}, see \code{\link{fitPrevalenceModel}}).
 Variables defining series (sex, categories) can be omitted from \code{newdata}: it is then used for all the values
 of these variables in the model (for example, mortality rates by sex apply to all categories).
@@ -46,7 +46,7 @@ Rows of \code{newdata} with ages that are not in the model are dropped.
 Prediction intervals (with \code{interval = TRUE}) are calculated on the scale of the estimation, from the
 residual variance of the regression, and then transformed back to prevalences. They do not take into account
 the uncertainty on the projected mortality rates, nor the uncertainty on the validity of the model outside the period of estimation.
-They are not available for estimator = "endpoints".
+They are not available for estimator = "endpoints", nor for methods "target" and "shift".
 }
 \examples{
 ages <- 60:100; years <- 2010:2019

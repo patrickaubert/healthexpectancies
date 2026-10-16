@@ -6,7 +6,7 @@
 \usage{
 fitPrevalenceModel(
   tab,
-  method = c("trend", "mortality", "target"),
+  method = c("trend", "mortality", "target", "shift"),
   fit_years = NULL,
   exclude_years = NULL,
   categories = NULL,
@@ -23,7 +23,9 @@ fitPrevalenceModel(
   horizon = NULL,
   after = c("linear", "constant"),
   anchor_age = NULL,
-  uniform_scale = c("odds", "level")
+  uniform_scale = c("odds", "level"),
+  from_age = NULL,
+  n_extrap = 5
 )
 }
 \arguments{
@@ -32,7 +34,7 @@ if method is "mortality" or "target". Optional variables 'sex' and 'categ', and 
 one model is estimated for each series, and each series must contain the same ages for all years. Prevalences can be obtained
 for example with \code{\link{ApproxPrevalenceTable}}.}
 
-\item{method}{"trend", "mortality" or "target" (see Details)}
+\item{method}{"trend", "mortality", "target" or "shift" (see Details)}
 
 \item{fit_years}{vector of the years used for the estimation (default: all years of 'tab')}
 
@@ -58,7 +60,7 @@ mortality rates (default 0). A vector selects the best value (see Details).}
 
 \item{scope}{method "target" only: "all_ages" (a target at each age) or "min_age" (uniform evolution of prevalences, see Details)}
 
-\item{ref_year}{method "target" only: reference year of the rules "constant" and "horizon" (default: last year of the estimation)}
+\item{ref_year}{methods "target" (rules "constant" and "horizon") and "shift": reference year (default: last year of the estimation)}
 
 \item{change}{method "target", rule "horizon": relative change of the indicator, in percent, between the reference year and 'horizon'}
 
@@ -69,6 +71,10 @@ mortality rates (default 0). A vector selects the best value (see Details).}
 \item{anchor_age}{method "target", scope "min_age": age at which the hypothesis is applied (default: minimum age)}
 
 \item{uniform_scale}{method "target", scope "min_age": "odds" (default) or "level" (see Details)}
+
+\item{from_age}{method "target", scope "all_ages": age from which the hypothesis is applied (default NULL: all ages, see Details)}
+
+\item{n_extrap}{method "shift": number of ages used to extrapolate the curve beyond the first and the last ages (default 5)}
 }
 \value{
 an object of class "prevalence_model", a list containing in particular the data frames 'coefficients'
@@ -78,7 +84,7 @@ Use \code{\link{predict.prevalence_model}} to project prevalences, and the other
 }
 \description{
 Estimates, on past observations of prevalences of disability by age, a model that can then be used to
-project prevalences (see \code{\link{predict.prevalence_model}}). Three methods are available.
+project prevalences (see \code{\link{predict.prevalence_model}}). Four methods are available.
 }
 \details{
 \strong{Method "trend"} extrapolates prevalences at each age (separately). Denoting \eqn{p_{a,t}} the prevalence at age
@@ -99,6 +105,16 @@ interpolated linearly between ages). If 'age_lag' is a vector, the value that mi
 (separately for each series, see 'categories'). This is a descriptive criterion, not a statistical test. For ages \eqn{a} such that
 \eqn{a+k} is higher than the last age of the table, the mortality rate of the last age is used.
 
+\strong{Method "shift"} assumes that the curve of prevalences by age of a reference year \eqn{t_0} moves towards older ages at a constant speed
+\eqn{s} (in years of age per calendar year):
+\deqn{\mathrm{logit}\,p_{a,t} = \mathrm{logit}\,p_{a - s\,(t - t_0),\,t_0}}
+For each year \eqn{t} of the estimation, the shift \eqn{d_t} that brings the curve of the reference year closest to the curve of year \eqn{t}
+is searched (least squares on the logit of prevalences); \eqn{s} is the slope of the regression of \eqn{d_t} on \eqn{t - t_0}, without
+intercept (since \eqn{d_{t_0} = 0}). The \eqn{d_t} are available with \code{as.data.frame(model, what = "shifts")}. Values between ages are
+interpolated linearly (on the logit scale), and the curve is extrapolated linearly beyond the first and the last ages, using the slope estimated on the
+'n_extrap' first (or last) ages. This is a simple hypothesis: a single speed is assumed for all ages, whereas observed shifts are usually faster at some ages
+than at others, so that the method can be a poor representation of observed evolutions.
+
 \strong{Method "target"} projects prevalences from a hypothesis on life expectancies, with the Sullivan method (see also
 \code{\link{prevalenceForecast}}). Denote EVI the life expectancy with disability at age \eqn{a} and year \eqn{t}, EVSI the disability-free
 life expectancy and \eqn{e = EVI + EVSI} the total life expectancy. The hypothesis is made of three choices:
@@ -112,7 +128,11 @@ estimation, with 'estimator'); "horizon" (the indicator changes by 'change' perc
 linearly in between: \eqn{v_{a,t} = v_{a,t_0}\,[1 + (change/100)\,(t - t_0)/(horizon - t_0)]}; after 'horizon' the change goes on
 linearly (after = "linear") or stops (after = "constant")).
 \item the \strong{scope}: with scope = "all_ages", the rule is applied at each age, which gives a targeted EVI at each age; prevalences are the ones that give
-this EVI, given the projected mortality (inversion of the Sullivan method, as in \code{\link{prevalenceForecast}}). With scope = "min_age",
+this EVI, given the projected mortality (inversion of the Sullivan method, as in \code{\link{prevalenceForecast}}). At the youngest ages, where
+prevalences are very low, the inversion is unstable and can require negative prevalences. If 'from_age' is given, the hypothesis is only applied to the
+ages \eqn{a \ge} 'from_age', and prevalences of younger ages follow the evolution of the odds at age 'from_age':
+\eqn{\mathrm{logit}\,p_{a,t} = \mathrm{logit}\,p_{a,t_0} + [\mathrm{logit}\,p_{a_0,t} - \mathrm{logit}\,p_{a_0,t_0}]} (the hypothesis is then not satisfied at ages
+below 'from_age'). With scope = "min_age",
 the rule is only applied at the minimum age (or at 'anchor_age'), and prevalences of all ages evolve uniformly, from those of the reference
 year, so that the targeted EVI at this age is reached: the odds of prevalences are multiplied by the same factor at all ages
 (uniform_scale = "odds", prevalences always remain between 0 and 1) or prevalences are multiplied by the same factor, with a maximum of 1
@@ -153,6 +173,11 @@ m2 <- fitPrevalenceModel(merge(pix, mort, by = c("year", "age")), method = "mort
                          fit_years = 2010:2019, age_lag = seq(0, 6, by = 0.5))
 summary(m2)
 as.data.frame(m2, what = "lag_search")
+
+# horizontal shift of the curve of prevalences by age
+m3 <- fitPrevalenceModel(pix, method = "shift", fit_years = 2010:2019)
+coef(m3)                                  # years of age per calendar year
+as.data.frame(m3, what = "shifts")
 }
 \seealso{
 \code{\link{predict.prevalence_model}}, \code{\link{projectPrevalence}}, \code{\link{prevalenceForecast}}

@@ -2,7 +2,7 @@
 #'
 #' Calculates prevalences by age and year from a model estimated with \code{\link{fitPrevalenceModel}}.
 #'
-#' With method "trend", \code{newdata} only needs the years and ages. With method "mortality", \code{newdata} must also contain the
+#' With methods "trend" and "shift", \code{newdata} only needs the years and ages. With method "mortality", \code{newdata} must also contain the
 #' mortality rates 'qx' for all the ages of the model and for each year (they are used at ages \eqn{a+k}, see \code{\link{fitPrevalenceModel}}).
 #' Variables defining series (sex, categories) can be omitted from \code{newdata}: it is then used for all the values
 #' of these variables in the model (for example, mortality rates by sex apply to all categories).
@@ -11,7 +11,7 @@
 #' Prediction intervals (with \code{interval = TRUE}) are calculated on the scale of the estimation, from the
 #' residual variance of the regression, and then transformed back to prevalences. They do not take into account
 #' the uncertainty on the projected mortality rates, nor the uncertainty on the validity of the model outside the period of estimation.
-#' They are not available for estimator = "endpoints".
+#' They are not available for estimator = "endpoints", nor for methods "target" and "shift".
 #'
 #' @param object a model estimated with \code{\link{fitPrevalenceModel}}
 #' @param newdata a data frame with variables 'year', 'age' (+ 'qx' for method "mortality") and, optionally, the variables defining series
@@ -64,7 +64,7 @@ predict.prevalence_model <- function(object, newdata, interval = FALSE, level = 
   }
 
   # == extrapolation far beyond the period of estimation (method "trend")
-  if (method == "trend") {
+  if (method %in% c("trend","shift")) {
     span <- diff(range(st$fit_years)); horizon <- max(newdata$year) - st$origin
     if (span > 0 && horizon > 2 * span) {
       warning(paste0("Extrapolation over ",horizon," years beyond the last year of the estimation, from a period of ",span," years."), call. = FALSE)
@@ -73,8 +73,8 @@ predict.prevalence_model <- function(object, newdata, interval = FALSE, level = 
   if (interval && method == "trend" && st$estimator == "endpoints") {
     warning("Prediction intervals are not available with estimator = \"endpoints\".", call. = FALSE)
   }
-  if (interval && method == "target") {
-    warning("Prediction intervals are not available with method = \"target\".", call. = FALSE)
+  if (interval && method %in% c("target","shift")) {
+    warning(paste0("Prediction intervals are not available with method = \"",method,"\"."), call. = FALSE)
     interval <- FALSE
   }
 
@@ -107,6 +107,11 @@ predict.prevalence_model <- function(object, newdata, interval = FALSE, level = 
       pr <- pm_project_target(det, Qmat, years_s)
       pos <- cbind(idx, match(rows$year, years_s))
       rows$pix <- pr$pix[pos]; rows$.clip <- pr$clipped[pos]; rows$.status <- pr$status[match(rows$year, years_s)]
+      return(rows)
+    }
+
+    if (method == "shift") {
+      rows$pix <- stats::plogis(pm_shift_curve(det, rows$age - det$shift * (rows$year - det$ref_year)))
       return(rows)
     }
 

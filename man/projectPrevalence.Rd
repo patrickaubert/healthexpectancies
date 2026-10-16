@@ -7,7 +7,7 @@
 projectPrevalence(
   tab,
   newdata,
-  method = c("trend", "mortality", "target"),
+  method = c("trend", "mortality", "target", "shift"),
   on_unfeasible = c("warn", "clip", "error"),
   ...
 )
@@ -18,7 +18,7 @@ projectPrevalence(
 \item{newdata}{projection years: data frame with variables 'year', 'age' and 'qx' (mortality rate). Mortality rates must cover
 all the ages up to the last age of the life table (where qx = 1), as required by \code{\link{CompleteDFLEtable}}.}
 
-\item{method}{"trend", "mortality" or "target" (see \code{\link{fitPrevalenceModel}})}
+\item{method}{"trend", "mortality", "target" or "shift" (see \code{\link{fitPrevalenceModel}})}
 
 \item{on_unfeasible}{method "target" only: what to do if the hypothesis cannot be satisfied (see \code{\link{predict.prevalence_model}})}
 

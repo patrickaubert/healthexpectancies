@@ -20,7 +20,7 @@
   x,
   row.names = NULL,
   optional = FALSE,
-  what = c("coefficients", "fitted", "observed", "fit_stats", "lag_search"),
+  what = c("coefficients", "fitted", "observed", "fit_stats", "lag_search", "shifts"),
   ...
 )
 
@@ -50,6 +50,7 @@ Methods to retrieve and display the results of a model estimated with \code{\lin
 \item \code{coef()} returns the coefficients in a data frame (long format), one row per series, age and term: "intercept"
 (value of the transformed prevalence at the last year of the estimation) and "slope" (annual change) for method "trend";
 "alpha" (age effects) and "beta" (slope on the mortality rates, with age = NA if it is common to all ages) for method "mortality".
+For method "shift", "shift" (speed of the horizontal shift of the curve of prevalences, in years of age per calendar year, with age = NA).
 For method "target", "reference" (value of the indicator at the reference year) for rules "constant" and "horizon", and "intercept" and "slope"
 (value and annual change of the indicator) for rule "trend"; with scope "min_age", only the minimum age (or 'anchor_age') is concerned.
 Columns: variables defining series, 'age', 'term', 'estimate', 'std.error', 'n'.
@@ -58,7 +59,8 @@ in the order of the rows of \code{as.data.frame(x, what = "fitted")}.
 \item \code{as.data.frame()} returns one of the tables of the model, selected by \code{what}: "coefficients", "fitted"
 (observed and fitted prevalences and residuals by year and age), "observed" (data used for the estimation), "fit_stats"
 (number of observations, residual standard deviation and R-squared for each series) or "lag_search" (sum of squared residuals for each value
-of 'age_lag' tried, for method "mortality" when 'age_lag' is a vector). These tables can be used directly to draw graphics.
+of 'age_lag' tried, for method "mortality" when 'age_lag' is a vector) or "shifts" (for method "shift": shift of the curve of prevalences estimated for each
+year, 'shift_obs', and shift predicted by the model, 'shift_fit'). These tables can be used directly to draw graphics.
 \item \code{summary()} and \code{print()} display a short description of the model.
 }
 }

@@ -173,3 +173,37 @@ test_that("plusieurs séries : chacune a sa référence ; les méthodes S3 et pr
   expect_true(all(c("pix", "ex", "DFLEx", "DLEx") %in% names(res)))
   expect_s3_class(attr(res, "model"), "prevalence_model")
 })
+
+# ---------------------------------------------------------------------------------------------------
+# from_age : hypothèse appliquée à partir d'un âge, les âges plus jeunes suivent les odds de cet âge
+# ---------------------------------------------------------------------------------------------------
+
+test_that("from_age : mêmes résultats que l'inversion complète aux âges supérieurs, et mêmes décalages d'odds en dessous", {
+  args <- list(tab = obs, method = "target", indicator = "ratio", rule = "horizon", change = 3, horizon = 2030)
+  full <- predict(do.call(fitPrevalenceModel, args), projq)
+  part <- predict(do.call(fitPrevalenceModel, c(args, from_age = 70)), projq)
+  expect_equal(part$pix[part$age >= 70], full$pix[full$age >= 70], tolerance = 1e-9)
+  for (y in c(2025, 2030, 2040)) {
+    x <- part[part$year == y, ]; p0 <- obs$pix[obs$year == 2019][match(x$age, 60:100)]
+    shift <- qlogis(x$pix) - qlogis(p0)
+    expect_equal(shift[x$age < 70], rep(shift[x$age == 70], sum(x$age < 70)), tolerance = 1e-9)
+  }
+})
+
+test_that("from_age : évite les prévalences négatives aux jeunes âges, l'hypothèse restant vérifiée à partir de cet âge", {
+  args <- list(tab = obs, method = "target", indicator = "ratio", rule = "horizon", change = 10, horizon = 2030)
+  expect_warning(predict(do.call(fitPrevalenceModel, args), projq), "outside the interval")
+  m <- do.call(fitPrevalenceModel, c(args, from_age = 65))
+  expect_no_warning(pr <- predict(m, projq))
+  expect_true(all(pr$pix > 0 & pr$pix < 1))
+  ind <- indicators(pr); rho_ref <- ref19$DFLEx / ref19$DLEx
+  x <- ind[ind$year == 2030, ]
+  expect_equal((x$DFLEx / x$DLEx)[x$age >= 65], (rho_ref * 1.10)[ref19$age >= 65], tolerance = 1e-8)
+  expect_output(print(m), "Applied from age 65")
+})
+
+test_that("from_age : contrôles", {
+  expect_error(fitPrevalenceModel(obs, method = "target", from_age = 30), "from_age")
+  expect_warning(fitPrevalenceModel(obs, method = "target", scope = "min_age", from_age = 70), "ignored")
+  expect_warning(fitPrevalenceModel(obs, method = "trend", from_age = 70), "ignored unless")
+})

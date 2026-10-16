@@ -1,7 +1,7 @@
 #' Estimates a model of the evolution of prevalences of disability by age
 #'
 #' Estimates, on past observations of prevalences of disability by age, a model that can then be used to
-#' project prevalences (see \code{\link{predict.prevalence_model}}). Three methods are available.
+#' project prevalences (see \code{\link{predict.prevalence_model}}). Four methods are available.
 #'
 #' **Method "trend"** extrapolates prevalences at each age (separately). Denoting \eqn{p_{a,t}} the prevalence at age
 #' \eqn{a} and year \eqn{t} and \eqn{g} the transformation defined by 'scale' (logit, log or identity):
@@ -21,6 +21,16 @@
 #' (separately for each series, see 'categories'). This is a descriptive criterion, not a statistical test. For ages \eqn{a} such that
 #' \eqn{a+k} is higher than the last age of the table, the mortality rate of the last age is used.
 #'
+#' **Method "shift"** assumes that the curve of prevalences by age of a reference year \eqn{t_0} moves towards older ages at a constant speed
+#' \eqn{s} (in years of age per calendar year):
+#' \deqn{\mathrm{logit}\,p_{a,t} = \mathrm{logit}\,p_{a - s\,(t - t_0),\,t_0}}
+#' For each year \eqn{t} of the estimation, the shift \eqn{d_t} that brings the curve of the reference year closest to the curve of year \eqn{t}
+#' is searched (least squares on the logit of prevalences); \eqn{s} is the slope of the regression of \eqn{d_t} on \eqn{t - t_0}, without
+#' intercept (since \eqn{d_{t_0} = 0}). The \eqn{d_t} are available with \code{as.data.frame(model, what = "shifts")}. Values between ages are
+#' interpolated linearly (on the logit scale), and the curve is extrapolated linearly beyond the first and the last ages, using the slope estimated on the
+#' 'n_extrap' first (or last) ages. This is a simple hypothesis: a single speed is assumed for all ages, whereas observed shifts are usually faster at some ages
+#' than at others, so that the method can be a poor representation of observed evolutions.
+#'
 #' **Method "target"** projects prevalences from a hypothesis on life expectancies, with the Sullivan method (see also
 #' \code{\link{prevalenceForecast}}). Denote EVI the life expectancy with disability at age \eqn{a} and year \eqn{t}, EVSI the disability-free
 #' life expectancy and \eqn{e = EVI + EVSI} the total life expectancy. The hypothesis is made of three choices:
@@ -33,7 +43,11 @@
 #' linearly in between: \eqn{v_{a,t} = v_{a,t_0}\,[1 + (change/100)\,(t - t_0)/(horizon - t_0)]}; after 'horizon' the change goes on
 #' linearly (after = "linear") or stops (after = "constant")).
 #' * the **scope**: with scope = "all_ages", the rule is applied at each age, which gives a targeted EVI at each age; prevalences are the ones that give
-#' this EVI, given the projected mortality (inversion of the Sullivan method, as in \code{\link{prevalenceForecast}}). With scope = "min_age",
+#' this EVI, given the projected mortality (inversion of the Sullivan method, as in \code{\link{prevalenceForecast}}). At the youngest ages, where
+#' prevalences are very low, the inversion is unstable and can require negative prevalences. If 'from_age' is given, the hypothesis is only applied to the
+#' ages \eqn{a \ge} 'from_age', and prevalences of younger ages follow the evolution of the odds at age 'from_age':
+#' \eqn{\mathrm{logit}\,p_{a,t} = \mathrm{logit}\,p_{a,t_0} + [\mathrm{logit}\,p_{a_0,t} - \mathrm{logit}\,p_{a_0,t_0}]} (the hypothesis is then not satisfied at ages
+#' below 'from_age'). With scope = "min_age",
 #' the rule is only applied at the minimum age (or at 'anchor_age'), and prevalences of all ages evolve uniformly, from those of the reference
 #' year, so that the targeted EVI at this age is reached: the odds of prevalences are multiplied by the same factor at all ages
 #' (uniform_scale = "odds", prevalences always remain between 0 and 1) or prevalences are multiplied by the same factor, with a maximum of 1
@@ -49,7 +63,7 @@
 #' if method is "mortality" or "target". Optional variables 'sex' and 'categ', and the variables listed in 'categories', define separate series:
 #' one model is estimated for each series, and each series must contain the same ages for all years. Prevalences can be obtained
 #' for example with \code{\link{ApproxPrevalenceTable}}.
-#' @param method "trend", "mortality" or "target" (see Details)
+#' @param method "trend", "mortality", "target" or "shift" (see Details)
 #' @param fit_years vector of the years used for the estimation (default: all years of 'tab')
 #' @param exclude_years vector of years to be left out of the estimation (for example the years of a crisis)
 #' @param categories names of variables of 'tab' defining separate series (in addition to 'sex' and 'categ' when they exist)
@@ -63,12 +77,14 @@
 #' @param indicator method "target" only: "dle", "dfle", "pct_dle", "pct_dfle" or "ratio" (see Details)
 #' @param rule method "target" only: "constant", "trend" or "horizon" (see Details)
 #' @param scope method "target" only: "all_ages" (a target at each age) or "min_age" (uniform evolution of prevalences, see Details)
-#' @param ref_year method "target" only: reference year of the rules "constant" and "horizon" (default: last year of the estimation)
+#' @param ref_year methods "target" (rules "constant" and "horizon") and "shift": reference year (default: last year of the estimation)
 #' @param change method "target", rule "horizon": relative change of the indicator, in percent, between the reference year and 'horizon'
 #' @param horizon method "target", rule "horizon": year at which the change is reached
 #' @param after method "target", rule "horizon": "linear" (default, the change goes on at the same pace after 'horizon') or "constant"
 #' @param anchor_age method "target", scope "min_age": age at which the hypothesis is applied (default: minimum age)
 #' @param uniform_scale method "target", scope "min_age": "odds" (default) or "level" (see Details)
+#' @param from_age method "target", scope "all_ages": age from which the hypothesis is applied (default NULL: all ages, see Details)
+#' @param n_extrap method "shift": number of ages used to extrapolate the curve beyond the first and the last ages (default 5)
 #'
 #' @return an object of class "prevalence_model", a list containing in particular the data frames 'coefficients'
 #' (one row per series, age and term; see \code{\link{coef.prevalence_model}}), 'fitted', 'fit_stats' and 'observed'.
@@ -104,23 +120,38 @@
 #'                          fit_years = 2010:2019, age_lag = seq(0, 6, by = 0.5))
 #' summary(m2)
 #' as.data.frame(m2, what = "lag_search")
+#'
+#' # horizontal shift of the curve of prevalences by age
+#' m3 <- fitPrevalenceModel(pix, method = "shift", fit_years = 2010:2019)
+#' coef(m3)                                  # years of age per calendar year
+#' as.data.frame(m3, what = "shifts")
 #' @export
-fitPrevalenceModel <- function(tab, method = c("trend","mortality","target"), fit_years = NULL, exclude_years = NULL,
+fitPrevalenceModel <- function(tab, method = c("trend","mortality","target","shift"), fit_years = NULL, exclude_years = NULL,
                                categories = NULL, scale = c("logit","log","level"),
                                estimator = c("ols","endpoints"), slope = c("common","by_age"),
                                age_lag = 0, eps = 1e-6,
                                indicator = c("dle","dfle","pct_dle","pct_dfle","ratio"), rule = c("constant","trend","horizon"),
                                scope = c("all_ages","min_age"), ref_year = NULL, change = NULL, horizon = NULL,
-                               after = c("linear","constant"), anchor_age = NULL, uniform_scale = c("odds","level")) {
+                               after = c("linear","constant"), anchor_age = NULL, uniform_scale = c("odds","level"),
+                               from_age = NULL, n_extrap = 5) {
 
   supplied <- names(match.call())[-1]
   method <- match.arg(method); scale <- match.arg(scale)
   estimator <- match.arg(estimator); slope <- match.arg(slope)
   indicator <- match.arg(indicator); rule <- match.arg(rule); scope <- match.arg(scope)
   after <- match.arg(after); uniform_scale <- match.arg(uniform_scale)
-  target_args <- c("indicator","rule","scope","ref_year","change","horizon","after","anchor_age","uniform_scale")
+  target_args <- c("indicator","rule","scope","change","horizon","after","anchor_age","uniform_scale","from_age")
   if (method != "target" & any(target_args %in% supplied)) {
     warning(paste0("Arguments ",paste0("'",intersect(target_args, supplied),"'", collapse = ", ")," are ignored unless method = \"target\"."), call. = FALSE)
+  }
+  if (!(method %in% c("target","shift")) & ("ref_year" %in% supplied)) {
+    warning("Argument 'ref_year' is ignored unless method = \"target\" or \"shift\".", call. = FALSE)
+  }
+  if (method != "shift" & ("n_extrap" %in% supplied)) {
+    warning("Argument 'n_extrap' is ignored unless method = \"shift\".", call. = FALSE)
+  }
+  if (method == "shift" & any(c("scale","estimator","slope","age_lag") %in% supplied)) {
+    warning("Arguments 'scale', 'estimator', 'slope' and 'age_lag' are ignored with method = \"shift\".", call. = FALSE)
   }
   if (method == "trend" & any(c("slope","age_lag") %in% supplied)) {
     warning("Arguments 'slope' and 'age_lag' are ignored with method = \"trend\".", call. = FALSE)
@@ -131,6 +162,7 @@ fitPrevalenceModel <- function(tab, method = c("trend","mortality","target"), fi
   if (method == "target") {
     if (any(c("scale","slope","age_lag") %in% supplied)) { warning("Arguments 'scale', 'slope' and 'age_lag' are ignored with method = \"target\".", call. = FALSE) }
     if (rule != "trend" & ("estimator" %in% supplied)) { warning("Argument 'estimator' is only used with rule = \"trend\".", call. = FALSE) }
+    if (scope == "min_age" & ("from_age" %in% supplied)) { warning("Argument 'from_age' is ignored with scope = \"min_age\".", call. = FALSE) }
     if (rule == "horizon") {
       if (!is.numeric(change) || length(change) != 1 || is.na(change)) { stop("With rule = \"horizon\", 'change' (relative change in percent) must be a number.", call. = FALSE) }
       if (!is.numeric(horizon) || length(horizon) != 1 || is.na(horizon)) { stop("With rule = \"horizon\", 'horizon' (year) must be a number.", call. = FALSE) }
@@ -160,6 +192,7 @@ fitPrevalenceModel <- function(tab, method = c("trend","mortality","target"), fi
   years_fit <- sort(setdiff(fit_years, exclude_years))
   uses_trend <- (method == "trend") | (method == "target" & rule == "trend")
   nmin <- if (!uses_trend) { ifelse(method == "target", 1, 3) } else { ifelse(estimator == "endpoints", 2, 3) }
+  if (method == "shift") { nmin <- 3 }
   if (NROW(years_fit) < nmin) {
     stop(paste0("At least ",nmin," years are needed for the estimation (",NROW(years_fit)," available)."), call. = FALSE)
   }
@@ -173,27 +206,28 @@ fitPrevalenceModel <- function(tab, method = c("trend","mortality","target"), fi
     if (!(ref_year %in% years_avail)) { stop(paste0("'ref_year' (",ref_year,") is not a year of 'tab'."), call. = FALSE) }
     if (rule == "horizon" && horizon <= ref_year) { stop("'horizon' must be later than the reference year.", call. = FALSE) }
     res <- pm_fit_target(tab, years_fit, ref_year, groupvars, indicator, rule, scope, estimator, change, horizon, after,
-                         anchor_age, uniform_scale, eps)
-    fits <- res$fits; seriestab <- res$seriestab
-    groupvals <- lapply(seriestab, function(d) d[1, groupvars, drop = FALSE])
-    addkey <- function(df, k) { if (NROW(groupvars) > 0) { cbind(groupvals[[k]], df, row.names = NULL) } else { df } }
-    coefficients <- do.call(rbind, lapply(names(fits), function(k) addkey(fits[[k]]$coefficients, k)))
-    fit_stats    <- do.call(rbind, lapply(names(fits), function(k) addkey(fits[[k]]$stats, k)))
-    fitted <- do.call(rbind, lapply(names(fits), function(k) {
-      f <- fits[[k]]; df <- expand.grid(age = f$details$ages, year = years_fit)
-      df$pix <- as.vector(f$obs); df$pix_fit <- as.vector(f$pfit); df$resid <- as.vector(f$resid)
-      addkey(df[ , c("year","age","pix","pix_fit","resid")], k) }))
-    rownames(coefficients) <- rownames(fit_stats) <- rownames(fitted) <- NULL
-    return(structure(list(method = "target",
-                          settings = list(scale = NA_character_, indicator = indicator, rule = rule, scope = scope, estimator = estimator,
-                                          ref_year = ref_year, change = change, horizon = horizon, after = after,
-                                          anchor_age = fits[[1]]$details$anchor_age, uniform_scale = uniform_scale,
-                                          fit_years = years_fit, exclude_years = exclude_years, categories = categories,
-                                          groupvars = groupvars, eps = eps, origin = max(years_fit)),
-                          coefficients = coefficients, fitted = fitted, fit_stats = fit_stats, lag_search = NULL,
-                          observed = tab[tab$year %in% res$years_all, , drop = FALSE],
-                          series = lapply(names(fits), function(k) list(key = k, group = groupvals[[k]], details = fits[[k]]$details))),
-                     class = "prevalence_model"))
+                         anchor_age, uniform_scale, eps, from_age)
+    settings <- list(scale = NA_character_, indicator = indicator, rule = rule, scope = scope, estimator = estimator,
+                     ref_year = ref_year, change = change, horizon = horizon, after = after,
+                     anchor_age = res$fits[[1]]$details$anchor_age, uniform_scale = uniform_scale,
+                     from_age = if (scope == "all_ages") from_age else NULL,
+                     fit_years = years_fit, exclude_years = exclude_years, categories = categories,
+                     groupvars = groupvars, eps = eps, origin = max(years_fit))
+    return(pm_build_model("target", settings, res, groupvars, years_fit, tab))
+  }
+
+  # == method "shift" : horizontal shift of the curve of prevalences
+  if (method == "shift") {
+    if (is.null(ref_year)) { ref_year <- max(years_fit) }
+    if (!(ref_year %in% years_avail)) { stop(paste0("'ref_year' (",ref_year,") is not a year of 'tab'."), call. = FALSE) }
+    if (any(tab$pix < 0 | tab$pix > 1)) { stop("Prevalences must be between 0 and 1.", call. = FALSE) }
+    if (any(tab$pix < eps | tab$pix > 1 - eps)) {
+      warning(paste0("Prevalences too close to 0 or 1 have been replaced by bounds ('eps' = ",eps,")."), call. = FALSE)
+    }
+    res <- pm_fit_shift(tab, years_fit, ref_year, groupvars, n_extrap, eps)
+    settings <- list(scale = "logit", ref_year = ref_year, n_extrap = n_extrap, fit_years = years_fit, exclude_years = exclude_years,
+                     categories = categories, groupvars = groupvars, eps = eps, origin = ref_year)
+    return(pm_build_model("shift", settings, res, groupvars, years_fit, tab, with_shifts = TRUE))
   }
 
   tab <- tab[tab$year %in% years_fit, , drop = FALSE]
@@ -345,4 +379,25 @@ pm_as_numeric <- function(x, name) {
   res <- suppressWarnings(as.numeric(as.character(x)))
   if (anyNA(res)) { stop(paste0("Variable '",name,"' must be numeric."), call. = FALSE) }
   res
+}
+
+# assembles the object "prevalence_model" from the results of the estimation of each series (methods "target" and "shift")
+pm_build_model <- function(method, settings, res, groupvars, years_fit, tab, with_shifts = FALSE) {
+  fits <- res$fits; seriestab <- res$seriestab
+  groupvals <- lapply(seriestab, function(d) d[1, groupvars, drop = FALSE])
+  addkey <- function(df, k) { if (NROW(groupvars) > 0) { cbind(groupvals[[k]], df, row.names = NULL) } else { df } }
+  coefficients <- do.call(rbind, lapply(names(fits), function(k) addkey(fits[[k]]$coefficients, k)))
+  fit_stats    <- do.call(rbind, lapply(names(fits), function(k) addkey(fits[[k]]$stats, k)))
+  fitted <- do.call(rbind, lapply(names(fits), function(k) {
+    f <- fits[[k]]; df <- expand.grid(age = f$details$ages, year = years_fit)
+    df$pix <- as.vector(f$obs); df$pix_fit <- as.vector(f$pfit); df$resid <- as.vector(f$resid)
+    addkey(df[ , c("year","age","pix","pix_fit","resid")], k) }))
+  shifts <- if (with_shifts) do.call(rbind, lapply(names(fits), function(k) addkey(fits[[k]]$shifts, k))) else NULL
+  rownames(coefficients) <- rownames(fit_stats) <- rownames(fitted) <- NULL
+  if (!is.null(shifts)) { rownames(shifts) <- NULL }
+  structure(list(method = method, settings = settings, coefficients = coefficients, fitted = fitted, fit_stats = fit_stats,
+                 lag_search = NULL, shifts = shifts,
+                 observed = tab[tab$year %in% res$years_all, , drop = FALSE],
+                 series = lapply(names(fits), function(k) list(key = k, group = groupvals[[k]], details = fits[[k]]$details))),
+            class = "prevalence_model")
 }

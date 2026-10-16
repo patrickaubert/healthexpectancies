@@ -7,7 +7,7 @@
 #' @param tab observed prevalences by age and year (see \code{\link{fitPrevalenceModel}})
 #' @param newdata projection years: data frame with variables 'year', 'age' and 'qx' (mortality rate). Mortality rates must cover
 #' all the ages up to the last age of the life table (where qx = 1), as required by \code{\link{CompleteDFLEtable}}.
-#' @param method "trend", "mortality" or "target" (see \code{\link{fitPrevalenceModel}})
+#' @param method "trend", "mortality", "target" or "shift" (see \code{\link{fitPrevalenceModel}})
 #' @param on_unfeasible method "target" only: what to do if the hypothesis cannot be satisfied (see \code{\link{predict.prevalence_model}})
 #' @param ... other arguments of \code{\link{fitPrevalenceModel}} (fit_years, exclude_years, categories, scale, etc.)
 #' @return a data frame with prevalences ('pix'), life expectancies and other indicators calculated by \code{\link{CompleteDFLEtable}}.
@@ -54,7 +54,7 @@
 #'                          rule = "horizon", change = -10, horizon = 2040, on_unfeasible = "clip"))
 #' res3[res3$age %in% c(60, 85), c("year", "age", "pix", "DLEx", "pctDLEx")]
 #' @export
-projectPrevalence <- function(tab, newdata, method = c("trend","mortality","target"), on_unfeasible = c("warn","clip","error"), ...) {
+projectPrevalence <- function(tab, newdata, method = c("trend","mortality","target","shift"), on_unfeasible = c("warn","clip","error"), ...) {
   method <- match.arg(method); on_unfeasible <- match.arg(on_unfeasible)
   model <- fitPrevalenceModel(tab, method = method, ...)
   if (!("qx" %in% names(newdata))) { stop("'newdata' must contain the mortality rates 'qx' to calculate life expectancies.", call. = FALSE) }

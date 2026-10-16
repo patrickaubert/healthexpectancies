@@ -8,7 +8,10 @@
   that can be selected on a grid (`method = "mortality"`), and hypotheses on life expectancies (`method = "target"`):
   constant, linear trend or change of x percent at a given horizon of life expectancy with disability, disability-free
   life expectancy, their share in total life expectancy or their ratio, at each age (inversion of the Sullivan method)
-  or uniformly at all ages from the value at the minimum age. The years used for the estimation are set with `fit_years` and
+  or uniformly at all ages from the value at the minimum age. At the youngest ages, where the inversion is unstable,
+  `from_age` applies the hypothesis from a given age only.
+* `fitPrevalenceModel(method = "shift")`: horizontal shift of the curve of prevalences by age at a constant speed
+  (in years of age per calendar year). The years used for the estimation are set with `fit_years` and
   `exclude_years`. The results of the estimation are available with `coef()`, `fitted()`, `residuals()`, `summary()` and
   `as.data.frame(what = ...)`.
 * `projectPrevalence()` estimates, projects and calculates life expectancies in one step.

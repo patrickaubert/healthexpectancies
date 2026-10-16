@@ -84,7 +84,14 @@ pm_project_target <- function(det, Qmat, years) {
     s <- pm_sullivan(Qmat[ , j], det$ages)
     if (det$scope == "all_ages") {
       evi <- pm_target_evi(det$indicator, values[ , j], s$ex)
-      pix[ , j] <- clipped[ , j] <- pm_invert_evi(evi, s$lx, s$Lx)
+      p <- pm_invert_evi(evi, s$lx, s$Lx)
+      # hypothesis applied from age 'from_age' : younger ages follow the evolution of the odds at this age
+      if (!is.null(det$from_age) && det$from_age > min(det$ages)) {
+        i0 <- match(det$from_age, det$ages); lo <- seq_len(i0 - 1)
+        lg <- function(x) stats::qlogis(pmin(pmax(x, det$eps), 1 - det$eps))
+        p[lo] <- stats::plogis(lg(det$p_ref[lo]) + (lg(p[i0]) - lg(det$p_ref[i0])))
+      }
+      pix[ , j] <- clipped[ , j] <- p
     } else {
       evi <- pm_target_evi(det$indicator, values[anchor_idx, j], s$ex[anchor_idx])
       u <- pm_uniform_prevalences(evi, det$p_ref, s$lx, s$Lx, anchor_idx, det$uniform_scale)
@@ -96,7 +103,7 @@ pm_project_target <- function(det, Qmat, years) {
 
 # estimation of the method "target" for all series. Returns the elements of the model object.
 pm_fit_target <- function(tab, years_fit, ref_year, groupvars, indicator, rule, scope, estimator, change, horizon, after,
-                          anchor_age, uniform_scale, eps) {
+                          anchor_age, uniform_scale, eps, from_age = NULL) {
 
   years_all <- sort(union(years_fit, ref_year))
   tab <- tab[tab$year %in% years_all, , drop = FALSE]
@@ -122,9 +129,12 @@ pm_fit_target <- function(tab, years_fit, ref_year, groupvars, indicator, rule, 
     if (rule != "trend" && indicator == "ratio" && anyNA(V[ , iref])) {
       stop(paste0("Series '",k,"': with indicator = \"ratio\", the life expectancy with disability must be strictly positive at all ages of the reference year."), call. = FALSE)
     }
+    if (!is.null(from_age) && scope == "all_ages" && !(from_age %in% ages)) {
+      stop(paste0("Series '",k,"': 'from_age' (",from_age,") is not an age of the series."), call. = FALSE)
+    }
     det <- list(ages = ages, years = years_fit, ref_year = ref_year, origin = max(years_fit), indicator = indicator, rule = rule, scope = scope,
                 anchor_age = a0, change = change, horizon = horizon, after = after, estimator = estimator, uniform_scale = uniform_scale,
-                Iref = V[ , iref], p_ref = P[ , iref])
+                Iref = V[ , iref], p_ref = P[ , iref], from_age = if (scope == "all_ages") from_age else NULL, eps = eps)
     ny <- NROW(years_fit); se_a <- se_b <- rep(NA_real_, NROW(ages))
     if (rule == "trend") {
       Vf <- V[ , as.character(years_fit), drop = FALSE]; tt <- years_fit - det$origin
