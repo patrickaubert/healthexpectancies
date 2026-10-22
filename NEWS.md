@@ -32,7 +32,8 @@
   variables defining categories are restored in all cases.
 * Packages `matlib`, `shiny`, `shinydashboard` and `plotly` are no longer required to install the package;
   `tidyr` and `stringr`, used by the code, are now declared.
-* Tests (`testthat`) have been added.
+* Tests (`testthat`) have been added
+* New vignette “Methods for projecting prevalences” describing the methods of fitPrevalenceModel() with an application to the APA.
 
 ## Bug fixes
 
