@@ -5,7 +5,8 @@ bibentry(
   author  = person("Patrick", "Aubert", comment = c(ORCID = "0000-0003-1777-8639")),
   year    = "2026",
   note    = paste("R package version", meta$Version),
-  url     = "https://patrickaubert.github.io/healthexpectancies/"
+  url     = "https://patrickaubert.github.io/healthexpectancies/",
+  doi     = "10.5281/zenodo.24313924"
 )
 
 bibentry(

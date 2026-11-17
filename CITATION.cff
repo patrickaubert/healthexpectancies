@@ -13,6 +13,7 @@ authors:
     given-names: Patrick
     orcid: "https://orcid.org/0000-0003-1777-8639"
 version: 0.1.0
+doi: 10.5281/zenodo.24313924
 date-released: "2026-11-17"
 license: EUPL-1.2
 repository-code: "https://github.com/patrickaubert/healthexpectancies"

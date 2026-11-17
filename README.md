@@ -1,5 +1,7 @@
 # healthexpectancies
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24313924.svg)](https://doi.org/10.5281/zenodo.24313924)
+
 An R package to calculate health expectancies, and in particular disability-free life expectancies (DFLE), with the Sullivan method, from mortality rates and prevalences of disability by age. The package also smooths prevalences observed by age bracket into prevalences by single year of age, and projects prevalences and health expectancies, either under hypotheses on life expectancies or with models estimated on past observations.
 
 The package includes several datasets for France (prevalences of disability and of the APA, population and mortality rates, observed and projected by Insee), and a Shiny app (also available online at: https://patrick-aubert.shinyapps.io/projprevalence/).
@@ -44,7 +46,7 @@ https://reves.site.ined.fr/en/resources/computation_online/sullivan/
 
 If you use the package, please cite it (`citation("healthexpectancies")` in R gives the reference in text and BibTeX formats):
 
-* Patrick Aubert, 2026, *healthexpectancies: Functions to Calculate Health and Disability-Free Life Expectancies (DFLE) Using Sullivan Method*, R package version 0.1.0, https://patrickaubert.github.io/healthexpectancies/
+* Patrick Aubert, 2026, *healthexpectancies: Functions to Calculate Health and Disability-Free Life Expectancies (DFLE) Using Sullivan Method*, R package version 0.1.0, https://doi.org/10.5281/zenodo.24313924
 
 The first application of the package is described in:
 
