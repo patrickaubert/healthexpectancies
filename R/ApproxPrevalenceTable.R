@@ -58,7 +58,7 @@ ApproxPrevalenceTable <- function(tab,
 
   categories <- intersect( names(tab), unique( c( categories, "year","sex","categ") ) )
 
-  name.agetab <- names(tab)[grepl("^(A|a|â)ge",names(tab))]
+  name.agetab <- names(tab)[grepl("^(A|a|\u00e2)ge",names(tab))]
   name.prev <- names(tab)[!(names(tab) %in% categories) & !(names(tab) %in% name.agetab)]
   if (NROW(name.prev)==0) { stop("No prevalence variable found in 'tab'.", call. = FALSE) }
   if (NROW(name.prev)>1) { stop("More than one prevalence variable in 'tab'")
@@ -70,7 +70,7 @@ ApproxPrevalenceTable <- function(tab,
 
   categories.w <- categories[categories %in% names(weights.tab) ]
 
-  name.agew <- names(weights.tab)[grepl("^(A|a|â)ge",names(weights.tab))]
+  name.agew <- names(weights.tab)[grepl("^(A|a|\u00e2)ge",names(weights.tab))]
 
   name.w <- names(weights.tab)[!(names(weights.tab) %in% c(categories.w,name.agew))]
   if (NROW(name.w)>1) { stop("More than one weight variable in 'weights.tab'")}

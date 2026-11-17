@@ -6,3 +6,6 @@
 ^pkgdown$
 ^doc$
 ^Meta$
+^LICENSE$
+^inst/shiny-examples/projprevalence/rsconnect$
+^CITATION\.cff$

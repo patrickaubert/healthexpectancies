@@ -1,69 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//index.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/ApproxPrevalenceTable.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/CompleteDFLEtable.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/description_sullivan.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/FRDreesAPA.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/FRDreesAPA2017.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/FRDreesEHPA.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/FRDreesVQSsurvey2014.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/FRGaliEUSilc.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/FRInseeMortalityForecast2016.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/FRInseeMortalityForecast2021.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/FRInseeMortalityrates.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/FRInseeMortalityrates_t69.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/FRInseePopulation.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/FRInseePopulationForecast2016.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/FRInseePopulationForecast2021.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/prevalenceApprox.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/prevalenceForecast.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/prevalence_to_polynomial.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/runExample.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//reference/sullivan.html</loc>
-  </url>
-  <url>
-    <loc>https://patrickaubert.github.io/healthexpectancies//articles/how-to-use-healthexpectancies.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/404.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/articles/how-to-use-healthexpectancies.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/articles/index.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/articles/projection-methods.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/authors.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/index.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/LICENSE-text.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/news/index.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/ApproxPrevalenceTable.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/coef.prevalence_model.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/CompleteDFLEtable.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/description_sullivan.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/fitPrevalenceModel.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRAPAprevalence.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRDreesAPA.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRDreesAPA2017.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRDreesEHPA.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRDreesVQSsurvey2014.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRDreesVQSsurvey2021.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRGaliEUSilc.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRInseeMortalityForecast2016.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRInseeMortalityForecast2021.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRInseeMortalityForecast2026.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRInseeMortalityrates.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRInseeMortalityrates_t69.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRInseePopulation.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRInseePopulationForecast2016.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRInseePopulationForecast2021.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/FRInseePopulationForecast2026.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/healthexpectancies-package.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/index.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/predict.prevalence_model.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/prevalenceApprox.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/prevalenceForecast.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/prevalence_to_polynomial.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/projectPrevalence.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/runExample.html</loc></url>
+<url><loc>https://patrickaubert.github.io/healthexpectancies/reference/sullivan.html</loc></url>
 </urlset>
+

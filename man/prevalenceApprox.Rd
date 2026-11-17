@@ -57,7 +57,25 @@ If 'categories' is provided (a vector of variable names in 'prevalence' and 'wei
 each separate values of category variables.
 }
 \examples{
-prevalenceApprox(prevalence = (FRDreesAPA2017 \%>\% filter(sex=="female",typepresta=="APA à domicile"))$prevalence, agecuts=c(seq(60,95,5)), agemin=60, agemax=99, weight=(FRInseePopulation \%>\% filter(sex=="F",year==2018,age0101>=60,geo=="france") \%>\% arrange(age0101))$popx)
-prevalenceApprox(prevalence = (FRDreesAPA \%>\% filter(year==2018,sex=="male",typepresta=="APA à domicile"))$prevalence, agecuts=c(seq(60,90,5)), agemin=60, agemax=99, weight=(FRInseePopulation \%>\% filter(sex=="M",year==2019,age0101>=60,geo=="france") \%>\% arrange(age0101))$popx)
-prevalenceApprox(prevalence = FRDreesAPA2017, agecuts=c(seq(60,95,5)), agemin=60, agemax=99, weight=(FRInseePopulation \%>\% filter(year==2018,age0101>=60,geo=="france") \%>\% mutate(sex=recode(sex,"F"="female","M"="male")) \%>\% rename(weight=popx) \%>\% arrange(sex,age0101)), categories = c("typepresta"))
+# Prevalences of the APA in 2019 by 5-year age bracket (proportions), from age 60 to 85 and over
+apa <- FRAPAprevalence[FRAPAprevalence$decomp == 6 & FRAPAprevalence$year == 2019, ]
+# Population by single year of age (both sexes) on 1 January 2020, used as weights
+pop <- FRInseePopulation[FRInseePopulation$geo == "france" & FRInseePopulation$year == 2020 &
+                           FRInseePopulation$age0101 \%in\% 60:99, ]
+pop <- aggregate(popx ~ age0101, data = pop, FUN = sum)
+prevalenceApprox(prevalence = apa$prevalence, agecuts = seq(60, 85, 5),
+                 agemin = 60, agemax = 99, weight = pop$popx)
+# same, with the smoothing of raw prevalences
+prevalenceApprox(prevalence = apa$prevalence, agecuts = seq(60, 85, 5),
+                 agemin = 60, agemax = 99, weight = pop$popx, method = "legacy")
+
+# Data frames: prevalences of the APA in 2017 by sex and type of benefit, weighted by the population by sex
+w <- FRInseePopulation[FRInseePopulation$year == 2018 & FRInseePopulation$geo == "france" &
+                         FRInseePopulation$age0101 >= 60, ]
+w$sex <- ifelse(w$sex == "F", "female", "male")
+names(w)[names(w) == "popx"] <- "weight"
+w <- w[order(w$sex, w$age0101), ]
+res <- prevalenceApprox(prevalence = FRDreesAPA2017, agecuts = seq(60, 95, 5), agemin = 60, agemax = 99,
+                        weight = w, categories = "typepresta")
+head(res)
 }

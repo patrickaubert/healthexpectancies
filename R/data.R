@@ -3,9 +3,23 @@
 #' A dataset taken from the 'Ex 1' example in the Sullivan manual (june 2007 version)
 #' available at https://reves.site.ined.fr/en/resources/computation_online/sullivan/
 #'
-#' @format A data frame with  rows and  variables:
+#' @format A data frame with 86 rows and 15 variables:
 #' \describe{
 #'   \item{year}{year}
+#'   \item{age}{age}
+#'   \item{Px}{mid-year population}
+#'   \item{Dx}{number of deaths}
+#'   \item{mx}{central death rate}
+#'   \item{qx}{conditional probability of death}
+#'   \item{lx}{number surviving to age x}
+#'   \item{Lx}{person years lived at age x}
+#'   \item{Tx}{total number of years lived from age x}
+#'   \item{ex}{total life expectancy}
+#'   \item{pix}{proportion with disability}
+#'   \item{DFLx}{person years lived without disability}
+#'   \item{DFTx}{total years lived without disability from age x}
+#'   \item{DFLEx}{disability-free life expectancy}
+#'   \item{pctDFLEx}{proportion of life spent disability-free (in percent)}
 #' }
 #' @source \url{https://reves.site.ined.fr/fichier/s_rubrique/20182/sullivan_manual_jun2007.en.xls}
 "sullivan"
@@ -286,7 +300,7 @@
 #' Prevalence of the APA by age bracket, France, 2010-2024
 #'
 #' Number of beneficiaries and prevalence (share in the population) of the APA (allocation personnalisee d'autonomie,
-#' the French benefit for dependent elderly people), for all GIR (dependency levels) and all places of residence
+#' the French benefit for older people with long-term care needs), for all GIR (levels of loss of autonomy) and all places of residence
 #' (at home and in institutions), by age bracket. The data come from the annual survey 'Aide sociale' of the DREES, compiled in the
 #' package 'asdep' (version of january 2026, data up to 31 december 2024).
 #'

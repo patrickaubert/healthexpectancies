@@ -6,7 +6,8 @@
 #'
 #' @param tab observed prevalences by age and year (see \code{\link{fitPrevalenceModel}})
 #' @param newdata projection years: data frame with variables 'year', 'age' and 'qx' (mortality rate). Mortality rates must cover
-#' all the ages up to the last age of the life table (where qx = 1), as required by \code{\link{CompleteDFLEtable}}.
+#' all the ages up to the last age of the life table (where qx = 1), as required by \code{\link{CompleteDFLEtable}}. The model
+#' must also be estimated on all these ages (otherwise, a warning is issued and the life table stops at the last age of the model).
 #' @param method "trend", "mortality", "target" or "shift" (see \code{\link{fitPrevalenceModel}})
 #' @param on_unfeasible method "target" only: what to do if the hypothesis cannot be satisfied (see \code{\link{predict.prevalence_model}})
 #' @param ... other arguments of \code{\link{fitPrevalenceModel}} (fit_years, exclude_years, categories, scale, etc.)
@@ -59,6 +60,14 @@ projectPrevalence <- function(tab, newdata, method = c("trend","mortality","targ
   model <- fitPrevalenceModel(tab, method = method, ...)
   if (!("qx" %in% names(newdata))) { stop("'newdata' must contain the mortality rates 'qx' to calculate life expectancies.", call. = FALSE) }
   pred <- predict(model, newdata, on_unfeasible = on_unfeasible)
+  # ages of the life table that are not covered by the model: the life table would stop at the last age of the model
+  above <- sort(unique(newdata$age[newdata$age > max(pred$age)]))
+  if (NROW(above) > 0) {
+    warning(paste0("The model does not cover ages ", min(above), " to ", max(above), " of 'newdata': life expectancies are ",
+                   "calculated with a life table that stops at age ", max(pred$age), ". Estimate the model on all the ages of ",
+                   "the life table (for instance with prevalences after the last observed age set equal to the prevalence at this age)."),
+            call. = FALSE)
+  }
   gv <- model$settings$groupvars
   res <- CompleteDFLEtable(pred[ , c(gv, "year", "age", "qx", "pix")], categories = setdiff(gv, c("sex","categ")))
   attr(res, "model") <- model

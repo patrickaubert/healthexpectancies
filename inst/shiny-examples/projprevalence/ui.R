@@ -26,7 +26,7 @@ ui <- dashboardPage(
                sliderInput("anneeProj", "Année de projection :", 2015, 2050, 1, value = 2030),
                selectInput("optionProj",
                            label = "Option de projection",
-                           choices = list("Prévalences constantes" = "cstPrev",
+                           choices = list("Prévalences constantes" = "cstPreval",
                                           #"Décalage prévalences" = "prevagetrans",
                                           "EVSI constante" = "cstDFLE",
                                           "% EVSI/EV constant" = "cstPctDFLE",

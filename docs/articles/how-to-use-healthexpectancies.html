@@ -4,233 +4,562 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>how-to-use-healthexpectancies • healthexpectancies</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="how-to-use-healthexpectancies">
-<meta property="og:description" content="healthexpectancies">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Getting started with healthexpectancies • healthexpectancies</title>
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Getting started with healthexpectancies">
 </head>
-<body data-spy="scroll" data-target="#toc">
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">healthexpectancies</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9003</span>
-      </span>
-    </div>
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/how-to-use-healthexpectancies.html">how-to-use-healthexpectancies</a>
-    </li>
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
+    <a class="navbar-brand me-2" href="../index.html">healthexpectancies</a>
+
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="active nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/how-to-use-healthexpectancies.html">Getting started with healthexpectancies</a></li>
+    <li><a class="dropdown-item" href="../articles/projection-methods.html">Methods for projecting prevalences</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/patrickaubert/healthexpectancies/">
-    <span class="fa fa-github fa-lg"></span>
-     
-    github
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/patrickaubert/healthexpectancies/"><span class="fa fa-github fa-lg"></span> github</a></li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
+</nav><div class="container template-article">
 
-      
 
-      </header><script src="how-to-use-healthexpectancies_files/header-attrs-2.14/header-attrs.js"></script><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>how-to-use-healthexpectancies</h1>
+
+
+<div class="row">
+  <main id="main" class="col-md-9"><div class="page-header">
+
+      <h1>Getting started with healthexpectancies</h1>
             
       
-      
-      <div class="hidden name"><code>how-to-use-healthexpectancies.Rmd</code></div>
-
+      <small class="dont-index">Source: <a href="https://github.com/patrickaubert/healthexpectancies/blob/HEAD/vignettes/how-to-use-healthexpectancies.Rmd" class="external-link"><code>vignettes/how-to-use-healthexpectancies.Rmd</code></a></small>
+      <div class="d-none name"><code>how-to-use-healthexpectancies.Rmd</code></div>
     </div>
 
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">healthexpectancies</span><span class="op">)</span></code></pre></div>
-<div id="function-completedfletable" class="section level1">
-<h1 class="hasAnchor">
-<a href="#function-completedfletable" class="anchor"></a>Function CompleteDFLEtable</h1>
-<p>This function calculates life expectancies and disability-free life
-expectancies from a dataset containing (at least) information on age,
-mortality rates and disability prevalence.</p>
-<p>As an option, a ‘sex’ and ‘categ’ variables can be added in the input
-dataset. If so, calculations are made for each separate values of ‘sex’
-and ‘categ’. The latter is an undefinit category variables, for instance
-region or social category. If the initial dataset contains variable
-‘year’, calculations are also made for each separate years.</p>
-<p>Calculations are made using the Sullivan method. They completely
-follow example 1 provided in the Sullivan manual (June 2007 version),
-available at <a href="https://reves.site.ined.fr/en/resources/computation_online/sullivan/" class="uri">https://reves.site.ined.fr/en/resources/computation_online/sullivan/</a>.
-One minor deviation is that the ad-hoc value for the conditional
-probability of death (qx) at age 0 is note taken into account.</p>
-<p>The input table is a dataset containing at least the 3 variables
-above. The output table is a dataset containing all input variables and
-additionnal variables that are useful for the calculations of LE and
-DFLE. If those variables are already in the input table, they are not
-calculated and the input variables are used instead.</p>
-<p>Definitions of variables in the input or output dataset:</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patrickaubert.github.io/healthexpectancies/">healthexpectancies</a></span><span class="op">)</span></span></code></pre></div>
+<p>The package calculates <strong>health expectancies</strong>, and in
+particular disability-free life expectancies, with the Sullivan method.
+It also smooths prevalences of disability observed by age bracket, and
+projects prevalences and health expectancies. This vignette walks
+through a typical workflow, step by step:</p>
+<ol style="list-style-type: decimal">
+<li>calculating life expectancies with and without disability with
+<code><a href="../reference/CompleteDFLEtable.html">CompleteDFLEtable()</a></code>;</li>
+<li>converting prevalences observed by age bracket into prevalences by
+single year of age with <code><a href="../reference/ApproxPrevalenceTable.html">ApproxPrevalenceTable()</a></code>;</li>
+<li>projecting prevalences under simple hypotheses on life expectancies
+with <code><a href="../reference/prevalenceForecast.html">prevalenceForecast()</a></code>;</li>
+<li>projecting prevalences with models estimated on past observations,
+with <code><a href="../reference/fitPrevalenceModel.html">fitPrevalenceModel()</a></code>, <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> and
+<code><a href="../reference/projectPrevalence.html">projectPrevalence()</a></code>.</li>
+</ol>
+<p>The methods of step 4 are described in detail in the vignette
+<code><a href="../articles/projection-methods.html">vignette("projection-methods", package = "healthexpectancies")</a></code>.
+The last section lists the datasets included in the package.</p>
+<div class="section level2">
+<h2 id="health-expectancies-with-the-sullivan-method">1. Health expectancies with the Sullivan method<a class="anchor" aria-label="anchor" href="#health-expectancies-with-the-sullivan-method"></a>
+</h2>
+<div class="section level3">
+<h3 id="indicators">Indicators<a class="anchor" aria-label="anchor" href="#indicators"></a>
+</h3>
+<p>Three life expectancies at age
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+are used throughout the package:</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr class="header">
+<th>Indicator</th>
+<th>Meaning</th>
+<th>Variable</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>total life expectancy</td>
+<td>expected number of years lived</td>
+<td><code>ex</code></td>
+</tr>
+<tr class="even">
+<td>disability-free life expectancy (DFLE)</td>
+<td>expected number of years lived <em>without</em> disability
+(<em>espérance de vie sans incapacité</em>, EVSI, in French)</td>
+<td><code>DFLEx</code></td>
+</tr>
+<tr class="odd">
+<td>disability life expectancy (DLE)</td>
+<td>expected number of years lived <em>with</em> disability
+(<em>espérance de vie en incapacité</em>, EVI, in French)</td>
+<td><code>DLEx</code></td>
+</tr>
+</tbody>
+</table>
+<p>They add up: <code>ex = DFLEx + DLEx</code>. The shares of DFLE and
+DLE in total life expectancy are <code>pctDFLEx</code> and
+<code>pctDLEx</code> (in percent).</p>
+<p>The Sullivan method combines a life table with the prevalence of
+disability at each age (<code>pix</code>, a proportion between 0 and 1):
+the person-years lived at each age are split into years lived with and
+without disability according to the prevalence at this age, and then
+summed over the following ages.</p>
+</div>
+<div class="section level3">
+<h3 id="completedfletable">
+<code>CompleteDFLEtable()</code><a class="anchor" aria-label="anchor" href="#completedfletable"></a>
+</h3>
+<p><code><a href="../reference/CompleteDFLEtable.html">CompleteDFLEtable()</a></code> takes a data frame with at least the
+variables <code>age</code>, <code>qx</code> (probability of death
+between age
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x+1</annotation></semantics></math>)
+or <code>mx</code> (central death rate), and <code>pix</code>. It
+returns the same data frame, completed with all the variables of the
+life table and the health expectancies. If <code>pix</code> is missing,
+only total life expectancy is calculated.</p>
+<p>The package includes the first example of the Sullivan manual
+(<code>sullivan</code>), which <code><a href="../reference/CompleteDFLEtable.html">CompleteDFLEtable()</a></code>
+reproduces:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CompleteDFLEtable.html">CompleteDFLEtable</a></span><span class="op">(</span><span class="va">sullivan</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"age"</span>, <span class="st">"mx"</span>, <span class="st">"qx"</span>, <span class="st">"pix"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># life expectancies at birth, at 65 and at 85</span></span>
+<span><span class="va">res</span><span class="op">[</span><span class="va">res</span><span class="op">$</span><span class="va">age</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">65</span>, <span class="fl">85</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"ex"</span>, <span class="st">"DFLEx"</span>, <span class="st">"DLEx"</span>, <span class="st">"pctDFLEx"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;    age        ex     DFLEx      DLEx pctDFLEx</span></span>
+<span><span class="co">#&gt; 1    0 81.415174 66.573158 14.842015 81.76996</span></span>
+<span><span class="co">#&gt; 66  65 19.865979 12.295134  7.570845 61.89040</span></span>
+<span><span class="co">#&gt; 86  85  5.371792  2.616062  2.755729 48.70000</span></span></code></pre></div>
+<p>The meaning of each variable of the output is given in the dataset
+<code>description_sullivan</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">description_sullivan</span></span>
+<span><span class="co">#&gt;      heading                                                    description</span></span>
+<span><span class="co">#&gt; 1       year                                                           Year</span></span>
+<span><span class="co">#&gt; 2        age                                                            Age</span></span>
+<span><span class="co">#&gt; 3         Px                                            Mid-year population</span></span>
+<span><span class="co">#&gt; 4         Dx                                                     No. deaths</span></span>
+<span><span class="co">#&gt; 5         mx                                             central death rate</span></span>
+<span><span class="co">#&gt; 6         qx                               conditional probability of death</span></span>
+<span><span class="co">#&gt; 7         lx                                     numbers surviving to age x</span></span>
+<span><span class="co">#&gt; 8         Lx                                    person years lived at age x</span></span>
+<span><span class="co">#&gt; 9         Tx                            total number of years lived  from x</span></span>
+<span><span class="co">#&gt; 10        ex                                          total life expectancy</span></span>
+<span><span class="co">#&gt; 11       pix                                     proportion with disability</span></span>
+<span><span class="co">#&gt; 12      DFLx                          person years lived without disability</span></span>
+<span><span class="co">#&gt; 13      DFTx                total years lived without disability from age x</span></span>
+<span><span class="co">#&gt; 14     DFLEx                                disability-free life expectancy</span></span>
+<span><span class="co">#&gt; 15  pctDFLEx                       proportion of life spent disability-free</span></span>
+<span><span class="co">#&gt; 16       DLx                             person years lived with disability</span></span>
+<span><span class="co">#&gt; 17      DLEx                                with disability life expectancy</span></span>
+<span><span class="co">#&gt; 18   pctDLEx                       proportion of life spent with disability</span></span>
+<span><span class="co">#&gt; 19   MeanDAx average conjonctural age of person years lived with disability</span></span>
+<span><span class="co">#&gt; 20 MedianDAx  median conjonctural age of person years lived with disability</span></span>
+<span><span class="co">#&gt; 21  ModalDAx   modal conjonctural age of person years lived with disability</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="several-series-at-once">Several series at once<a class="anchor" aria-label="anchor" href="#several-series-at-once"></a>
+</h3>
+<p>If the input data frame contains the variables <code>year</code>
+and/or <code>sex</code>, life expectancies are calculated separately for
+each year and sex. Other grouping variables (for instance a region or a
+social category) can be given with the argument <code>categories</code>.
+This is used in the next section, with two years.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="from-age-brackets-to-single-years-of-age">2. From age brackets to single years of age<a class="anchor" aria-label="anchor" href="#from-age-brackets-to-single-years-of-age"></a>
+</h2>
+<p>Prevalences of disability are usually observed by age bracket only
+(in surveys, sample sizes are too small to measure them at each age),
+whereas the Sullivan method needs prevalences by single year of age.
+<code><a href="../reference/ApproxPrevalenceTable.html">ApproxPrevalenceTable()</a></code> converts prevalences by bracket
+into smoothed prevalences by single year of age. By default, it
+minimises the second differences of the logit of prevalences, under the
+constraint that the average prevalence of each bracket, weighted by the
+population, is equal to the observed one.</p>
+<p>The example uses the prevalence of the APA (<em>allocation
+personnalisée d’autonomie</em>, the French benefit for older people with
+long-term care needs), observed by 5-year age bracket from 60 to 85 and
+over (<code>FRAPAprevalence</code>).</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Prevalences of the APA by age bracket, 2010 to 2024 (proportions)</span></span>
+<span><span class="va">apa</span> <span class="op">&lt;-</span> <span class="va">FRAPAprevalence</span><span class="op">[</span><span class="va">FRAPAprevalence</span><span class="op">$</span><span class="va">decomp</span> <span class="op">==</span> <span class="fl">6</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"age"</span>, <span class="st">"prevalence"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">apa</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   year age  prevalence</span></span>
+<span><span class="co">#&gt; 1 2010  60 0.005174792</span></span>
+<span><span class="co">#&gt; 2 2010  65 0.014897804</span></span>
+<span><span class="co">#&gt; 3 2010  70 0.031050453</span></span>
+<span><span class="co">#&gt; 4 2010  75 0.069224164</span></span>
+<span><span class="co">#&gt; 5 2010  80 0.149172768</span></span>
+<span><span class="co">#&gt; 6 2010  85 0.363697393</span></span>
+<span></span>
+<span><span class="co"># Population by single year of age (both sexes), used as weights.</span></span>
+<span><span class="co"># The population is measured on 1 January: the population on 1 January of year Y</span></span>
+<span><span class="co"># is the population at the end of year Y-1, like the prevalences of the APA.</span></span>
+<span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="va">FRInseePopulation</span><span class="op">[</span><span class="va">FRInseePopulation</span><span class="op">$</span><span class="va">geo</span> <span class="op">==</span> <span class="st">"france"</span> <span class="op">&amp;</span></span>
+<span>                           <span class="va">FRInseePopulation</span><span class="op">$</span><span class="va">age0101</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fl">60</span><span class="op">:</span><span class="fl">99</span>, <span class="op">]</span></span>
+<span><span class="va">pop</span><span class="op">$</span><span class="va">year</span> <span class="op">&lt;-</span> <span class="va">pop</span><span class="op">$</span><span class="va">year</span> <span class="op">-</span> <span class="fl">1</span></span>
+<span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">popx</span> <span class="op">~</span> <span class="va">year</span> <span class="op">+</span> <span class="va">age0101</span>, data <span class="op">=</span> <span class="va">pop</span>, FUN <span class="op">=</span> <span class="va">sum</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">pop</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"age"</span>, <span class="st">"popx"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ApproxPrevalenceTable.html">ApproxPrevalenceTable</a></span><span class="op">(</span><span class="va">apa</span>,</span>
+<span>                             agecuts     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">60</span>, <span class="fl">85</span>, <span class="fl">5</span><span class="op">)</span>,   <span class="co"># lower bounds of the brackets</span></span>
+<span>                             agemin      <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>                             agemax      <span class="op">=</span> <span class="fl">99</span>,</span>
+<span>                             weights.tab <span class="op">=</span> <span class="va">pop</span>,</span>
+<span>                             categories  <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># one row per year and single year of age, with the observed prevalence</span></span>
+<span><span class="co"># of the bracket (prevalence.raw) and the smoothed prevalence (prevalence.approx)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pix</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   year age agebracket prevalence.raw prevalence.approx</span></span>
+<span><span class="co">#&gt; 1 2010  60    [60,65)    0.005174792       0.002991059</span></span>
+<span><span class="co">#&gt; 2 2010  61    [60,65)    0.005174792       0.003846648</span></span>
+<span><span class="co">#&gt; 3 2010  62    [60,65)    0.005174792       0.004941532</span></span>
+<span><span class="co">#&gt; 4 2010  63    [60,65)    0.005174792       0.006328417</span></span>
+<span><span class="co">#&gt; 5 2010  64    [60,65)    0.005174792       0.008052231</span></span>
+<span><span class="co">#&gt; 6 2010  65    [65,70)    0.014897804       0.010127897</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p19</span> <span class="op">&lt;-</span> <span class="va">pix</span><span class="op">[</span><span class="va">pix</span><span class="op">$</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2019</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p19</span><span class="op">$</span><span class="va">age</span>, <span class="va">p19</span><span class="op">$</span><span class="va">prevalence.raw</span>,</span>
+<span>     type <span class="op">=</span> <span class="st">"s"</span>, lwd <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>     xlab <span class="op">=</span> <span class="st">"Age"</span>, ylab <span class="op">=</span> <span class="st">"Prevalence of the APA"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">p19</span><span class="op">$</span><span class="va">age</span>, <span class="va">p19</span><span class="op">$</span><span class="va">prevalence.approx</span>, lwd <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"#0072B2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, bty <span class="op">=</span> <span class="st">"n"</span>, lwd <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"#0072B2"</span><span class="op">)</span>,</span>
+<span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Observed, by age bracket"</span>, <span class="st">"Smoothed, by single year of age"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="how-to-use-healthexpectancies_files/figure-html/fig-smoothing-1.png" class="r-plt" alt="Prevalence of the APA in 2019: observed by age bracket (steps) and smoothed by single year of age (line)." width="672"><p class="caption">
+Prevalence of the APA in 2019: observed by age bracket (steps) and
+smoothed by single year of age (line).
+</p>
+</div>
+<div class="section level3">
+<h3 id="health-expectancies-of-the-apa">Health expectancies of the APA<a class="anchor" aria-label="anchor" href="#health-expectancies-of-the-apa"></a>
+</h3>
+<p>To calculate life expectancies, the prevalences are merged with
+mortality rates. <code>FRInseeMortalityForecast2026</code> contains the
+mortality rates observed until 2022 and projected by Insee afterwards.
+The life table stops at age 104, where the probability of death is set
+to 1, and prevalences after age 99 are set equal to the prevalence at
+99.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># keep year, age and smoothed prevalence</span></span>
+<span><span class="va">pix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">pix</span><span class="op">$</span><span class="va">year</span><span class="op">)</span>,</span>
+<span>                  age  <span class="op">=</span> <span class="va">pix</span><span class="op">$</span><span class="va">age</span>,</span>
+<span>                  pix  <span class="op">=</span> <span class="va">pix</span><span class="op">$</span><span class="va">prevalence.approx</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># extension to ages 100-104 (same prevalence as at age 99)</span></span>
+<span><span class="va">last</span> <span class="op">&lt;-</span> <span class="va">pix</span><span class="op">[</span><span class="va">pix</span><span class="op">$</span><span class="va">age</span> <span class="op">==</span> <span class="fl">99</span>, <span class="op">]</span></span>
+<span><span class="va">pix</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">pix</span>, <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">100</span><span class="op">:</span><span class="fl">104</span>, <span class="kw">function</span><span class="op">(</span><span class="va">a</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">last</span>, age <span class="op">=</span> <span class="va">a</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># mortality rates, both sexes, ages 60 to 104</span></span>
+<span><span class="va">mort</span> <span class="op">&lt;-</span> <span class="va">FRInseeMortalityForecast2026</span></span>
+<span><span class="va">mort</span> <span class="op">&lt;-</span> <span class="va">mort</span><span class="op">[</span><span class="va">mort</span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"all"</span> <span class="op">&amp;</span></span>
+<span>               <span class="va">mort</span><span class="op">$</span><span class="va">geo</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"France excluding Mayotte"</span>, <span class="st">"France"</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>               <span class="va">mort</span><span class="op">$</span><span class="va">def.age</span> <span class="op">==</span> <span class="st">"current age (approx)"</span> <span class="op">&amp;</span></span>
+<span>               <span class="va">mort</span><span class="op">$</span><span class="va">age</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fl">60</span><span class="op">:</span><span class="fl">104</span>,</span>
+<span>             <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"age"</span>, <span class="st">"qx"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">mort</span><span class="op">$</span><span class="va">qx</span><span class="op">[</span><span class="va">mort</span><span class="op">$</span><span class="va">age</span> <span class="op">==</span> <span class="fl">104</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span></span>
+<span><span class="co"># life expectancies in 2010 and 2019</span></span>
+<span><span class="va">tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">pix</span><span class="op">[</span><span class="va">pix</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2010</span>, <span class="fl">2019</span><span class="op">)</span>, <span class="op">]</span>, <span class="va">mort</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"age"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">le</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CompleteDFLEtable.html">CompleteDFLEtable</a></span><span class="op">(</span><span class="va">tab</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">le</span><span class="op">[</span><span class="va">le</span><span class="op">$</span><span class="va">age</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">60</span>, <span class="fl">75</span>, <span class="fl">85</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"age"</span>, <span class="st">"ex"</span>, <span class="st">"DFLEx"</span>, <span class="st">"DLEx"</span>, <span class="st">"pctDLEx"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;    year age        ex     DFLEx     DLEx   pctDLEx</span></span>
+<span><span class="co">#&gt; 6  2010  60 24.803463 22.323771 2.479692  9.997363</span></span>
+<span><span class="co">#&gt; 21 2010  75 13.088135 10.382902 2.705233 20.669351</span></span>
+<span><span class="co">#&gt; 31 2010  85  6.867716  4.146822 2.720894 39.618619</span></span>
+<span><span class="co">#&gt; 51 2019  60 25.624908 23.162815 2.462093  9.608203</span></span>
+<span><span class="co">#&gt; 66 2019  75 13.848563 11.169316 2.679247 19.346750</span></span>
+<span><span class="co">#&gt; 76 2019  85  7.255699  4.543023 2.712676 37.386828</span></span></code></pre></div>
+<p>Here, the “disability” is being a beneficiary of the APA:
+<code>DLEx</code> is the expected number of years spent as a beneficiary
+after age
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>.
+Between 2010 and 2019, total life expectancy at 60 increased, while the
+expected number of years spent as a beneficiary remained stable: the
+share of life expectancy at 60 spent as a beneficiary decreased.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="projections-under-simple-hypotheses-on-life-expectancies">3. Projections under simple hypotheses on life expectancies<a class="anchor" aria-label="anchor" href="#projections-under-simple-hypotheses-on-life-expectancies"></a>
+</h2>
+<p><code><a href="../reference/prevalenceForecast.html">prevalenceForecast()</a></code> projects prevalences from a
+reference year, given projected mortality rates and a hypothesis on the
+evolution of health expectancies:</p>
 <ul>
-<li>year : Year</li>
-<li>age : Age</li>
-<li>Px : Mid-year population at age x</li>
-<li>Dx : No. deaths</li>
-<li>mx : central death rate</li>
-<li>qx : conditional probability of death</li>
-<li>lx : numbers surviving to age x</li>
-<li>Lx : person years lived at age x</li>
-<li>ex : total life expectancy</li>
-<li>pix : proportion with disability</li>
-<li>DFLx : person years lived without disability</li>
-<li>DFTx : total years lived without disability from age x</li>
-<li>DFLEx : disability-free life expectancy</li>
-<li>pctDFLEx : proportion of life spent disability-free</li>
-<li>DLEx : years lived with disability (= ex - DFLEx)</li>
-<li>DLx : person years lived with disability,</li>
-<li>DLEx : with-disability life expectancy</li>
-<li>pctDLEx : proportion of life spent with disability</li>
-<li>MeanDAx : average conjonctural age of person years lived with
-disability</li>
-<li>MedianDAx : median conjonctural age of person years lived with
-disability</li>
-<li>ModalDAx : modal conjonctural age of person years lived with
-disability</li>
+<li>
+<code>"cstPreval"</code>: prevalences by age remain constant;</li>
+<li>
+<code>"cstDFLE"</code>: DFLE remains constant at each age, so that
+all the gains in life expectancy are spent with disability;</li>
+<li>
+<code>"cstDLE"</code>: DLE remains constant at each age, so that all
+the gains in life expectancy are spent without disability;</li>
+<li>
+<code>"cstPctDFLE"</code> or <code>"cstPctDLE"</code>: the share of
+DFLE (or of DLE) in total life expectancy remains constant at each age
+(the two hypotheses are equivalent).</li>
 </ul>
+<p>With the hypotheses on life expectancies, prevalences are obtained by
+<em>inverting</em> the Sullivan method. At the youngest ages, where
+prevalences are very low, this inversion can require negative
+prevalences: the argument <code>on_unfeasible = "clip"</code> bounds
+them to the interval 0 to 1 (with a warning), and recalculates life
+expectancies accordingly.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># reference year 2019, projections for 2030 and 2040</span></span>
+<span><span class="va">tabref</span>  <span class="op">&lt;-</span> <span class="va">tab</span><span class="op">[</span><span class="va">tab</span><span class="op">$</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2019</span>, <span class="op">]</span></span>
+<span><span class="va">tabproj</span> <span class="op">&lt;-</span> <span class="va">mort</span><span class="op">[</span><span class="va">mort</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2030</span>, <span class="fl">2040</span><span class="op">)</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cstPreval"</span>, <span class="st">"cstDFLE"</span>, <span class="st">"cstDLE"</span>, <span class="st">"cstPctDLE"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">hypotheses</span>, <span class="kw">function</span><span class="op">(</span><span class="va">h</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prevalenceForecast.html">prevalenceForecast</a></span><span class="op">(</span><span class="va">tabref</span>, <span class="va">tabproj</span>, hypo <span class="op">=</span> <span class="va">h</span>, on_unfeasible <span class="op">=</span> <span class="st">"clip"</span><span class="op">)</span></span>
+<span>  <span class="va">f</span> <span class="op">&lt;-</span> <span class="va">f</span><span class="op">[</span><span class="va">f</span><span class="op">$</span><span class="va">age</span> <span class="op">==</span> <span class="fl">60</span> <span class="op">&amp;</span> <span class="va">f</span><span class="op">$</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2040</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"ex"</span>, <span class="st">"DFLEx"</span>, <span class="st">"DLEx"</span><span class="op">)</span><span class="op">]</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>hypothesis <span class="op">=</span> <span class="va">h</span>, <span class="va">f</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fc</span></span>
+<span><span class="co">#&gt;      hypothesis year       ex    DFLEx     DLEx</span></span>
+<span><span class="co">#&gt; 461   cstPreval 2040 27.06672 24.18326 2.883453</span></span>
+<span><span class="co">#&gt; 4611    cstDFLE 2040 27.06672 23.16282 3.903902</span></span>
+<span><span class="co">#&gt; 4612     cstDLE 2040 27.06672 24.59989 2.466832</span></span>
+<span><span class="co">#&gt; 4613  cstPctDLE 2040 27.06672 24.46018 2.606536</span></span></code></pre></div>
+<p>The four hypotheses give the same total life expectancy at 60 in
+2040, since mortality is the same, but different numbers of years spent
+as a beneficiary of the APA.</p>
 </div>
-<div id="function-prevalence_to_polynomial" class="section level1">
-<h1 class="hasAnchor">
-<a href="#function-prevalence_to_polynomial" class="anchor"></a>Function prevalence_to_polynomial</h1>
-<p>This function approximates a vector of prevalences (according to age)
-by a polynomial function.</p>
-<p>The degree of the polynomial can be chosen. Default value is 4.</p>
-<p>Weights can also be defined (eg. number of survivors at each each).
-By default, all ages are weighted identically.</p>
-</div>
-<div id="function-polynomial_to_prevalence" class="section level1">
-<h1 class="hasAnchor">
-<a href="#function-polynomial_to_prevalence" class="anchor"></a>Function polynomial_to_prevalence</h1>
-<p>This function calculates prevalences at each age, given a polynomial
-function.</p>
-<p>Parameters are the following :</p>
+<div class="section level2">
+<h2 id="projections-with-models-estimated-on-past-observations">4. Projections with models estimated on past observations<a class="anchor" aria-label="anchor" href="#projections-with-models-estimated-on-past-observations"></a>
+</h2>
+<p>Instead of setting a hypothesis directly,
+<code><a href="../reference/fitPrevalenceModel.html">fitPrevalenceModel()</a></code> estimates a model of the evolution of
+prevalences on past years, and <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> uses it to project
+prevalences. Four families of methods are available:</p>
 <ul>
-<li>coefficients : a vector of coefficients for the polynomial.</li>
-<li>agemin : minimal age in the output vector (default is 60)</li>
-<li>agemax : maximal age in the output vector (default is 120)</li>
-<li>ageclass : a vector defining age brackets. If <em>ageclass</em> is
-non null, the output vector are average prevalences within each
-agebracket</li>
+<li>
+<code>method = "trend"</code>: extrapolation of the trend of (the
+logit of) prevalences, at each age;</li>
+<li>
+<code>method = "mortality"</code>: link between prevalences and
+mortality rates (possibly with an age shift);</li>
+<li>
+<code>method = "target"</code>: hypotheses on life expectancies
+(constant value, linear trend, or change of a given percentage at a
+given horizon), estimated on past years;</li>
+<li>
+<code>method = "shift"</code>: shift of the curve of prevalences
+towards older ages at a constant speed.</li>
 </ul>
+<p><code><a href="../reference/projectPrevalence.html">projectPrevalence()</a></code> estimates the model, projects
+prevalences and calculates life expectancies in one step. The example
+below extrapolates the trend of the logit of prevalences at each age,
+estimated on 2010-2019 (the years of the Covid-19 epidemic are left
+out):</p>
+<p>The projected prevalences are used to calculate life expectancies, so
+the model must cover all the ages of the life table: here, it is
+estimated on ages 60 to 104 (prevalences after age 99 being equal to the
+prevalence at 99). Since the projection goes far beyond the estimation
+period, <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> warns that the trend is extrapolated over
+a long horizon (the warning is not displayed here).</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># estimation table: prevalences by single year of age (60 to 104), 2010 to 2019</span></span>
+<span><span class="va">obs</span> <span class="op">&lt;-</span> <span class="va">pix</span><span class="op">[</span><span class="va">pix</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2019</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># projection years: mortality rates up to the last age of the life table</span></span>
+<span><span class="va">newdata</span> <span class="op">&lt;-</span> <span class="va">mort</span><span class="op">[</span><span class="va">mort</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2030</span>, <span class="fl">2040</span><span class="op">)</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/projectPrevalence.html">projectPrevalence</a></span><span class="op">(</span><span class="va">obs</span>, newdata <span class="op">=</span> <span class="va">newdata</span>, method <span class="op">=</span> <span class="st">"trend"</span>, fit_years <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2019</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">proj</span><span class="op">[</span><span class="va">proj</span><span class="op">$</span><span class="va">age</span> <span class="op">==</span> <span class="fl">60</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"ex"</span>, <span class="st">"DFLEx"</span>, <span class="st">"DLEx"</span>, <span class="st">"pctDLEx"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;    year       ex    DFLEx     DLEx  pctDLEx</span></span>
+<span><span class="co">#&gt; 1  2030 26.31772 23.98168 2.336044 8.876315</span></span>
+<span><span class="co">#&gt; 46 2040 27.06672 24.83155 2.235168 8.257996</span></span></code></pre></div>
+<p>The estimated model is kept as an attribute of the result, and its
+results are available with the usual methods (<code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code>,
+<code><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted()</a></code>, <code><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>,
+<code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code>):</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">proj</span>, <span class="st">"model"</span><span class="op">)</span></span>
+<span><span class="va">model</span></span>
+<span><span class="co">#&gt; Model of prevalences by age, method "trend" (scale: logit)</span></span>
+<span><span class="co">#&gt;   Years used for the estimation: 2010 to 2019 (10 years)</span></span>
+<span><span class="co">#&gt;   Series: 1</span></span>
+<span><span class="co">#&gt;   Ages: 60 to 104</span></span>
+<span><span class="co">#&gt;   Estimator: ols</span></span>
+<span><span class="co">#&gt; Use coef(), as.data.frame(, what = ) and predict() to retrieve results and project prevalences.</span></span></code></pre></div>
+<p>The assumptions of each method, their limits and a comparison on the
+example of the APA are given in
+<code><a href="../articles/projection-methods.html">vignette("projection-methods", package = "healthexpectancies")</a></code>.</p>
 </div>
-<div id="function-forecastprevalence" class="section level1">
-<h1 class="hasAnchor">
-<a href="#function-forecastprevalence" class="anchor"></a>Function ForecastPrevalence</h1>
-<p>This function forecasts the values of disability prevalences and of
-DFLE according to age, given initial datasets containing age, disability
-prevalences at a reference year, forecasted mortality rates, and on
-hypothesis on the evolution of disabilities.</p>
-<p>Forecasting options are :</p>
-<ul>
-<li>‘cstDFLE’ : constant disability-free life expectancy over time (ie.
-every increase in life expectancy is spent in disability)</li>
-<li>‘cstDLE’ : constant in-disability life expectancy (ie. every
-increase in life expectancy is spent disability-free)</li>
-<li>‘cstPctDFLE’ : constant share of disability-free life expectancy in
-total life expectancy</li>
-<li>‘cstPrev’ : constant prevalences of disability (at every age and
-sex) over time</li>
-</ul>
+<div class="section level2">
+<h2 id="interactive-example">5. Interactive example<a class="anchor" aria-label="anchor" href="#interactive-example"></a>
+</h2>
+<p>The package includes a Shiny app, which illustrates projections of
+prevalences under the hypotheses of <code><a href="../reference/prevalenceForecast.html">prevalenceForecast()</a></code>.
+It requires the packages <code>shiny</code>,
+<code>shinydashboard</code>, <code>plotly</code> and
+<code>tidyverse</code>, which are not needed to install the package
+itself:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/runExample.html">runExample</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="datasets-included-in-the-package" class="section level1">
-<h1 class="hasAnchor">
-<a href="#datasets-included-in-the-package" class="anchor"></a>Datasets included in the package</h1>
-<p>Several datasets are included in the <em>healthexpectancies</em>
-package. All of them relates to France.</p>
-<div id="insees-population-forecast-2016" class="section level2">
-<h2 class="hasAnchor">
-<a href="#insees-population-forecast-2016" class="anchor"></a>Insee’s population forecast (2016)</h2>
-<p>Insee is the French national institute for statistics and economic
-studies. It publishes population forecasts every 5 years (last
-publication was in 2016). Forecasted mortality rates by sex for the
-‘central’ scenario are included in the package.</p>
-<p>See <a href="https://www.insee.fr/fr/information/2546485#titre-bloc-3" class="uri">https://www.insee.fr/fr/information/2546485#titre-bloc-3</a>
-for more information about the forecasting methods.</p>
+<div class="section level2">
+<h2 id="datasets-included-in-the-package">6. Datasets included in the package<a class="anchor" aria-label="anchor" href="#datasets-included-in-the-package"></a>
+</h2>
+<p>All the datasets, except <code>sullivan</code> and
+<code>description_sullivan</code>, concern France. Their full
+description is available in their help pages (for instance
+<code><a href="../reference/FRAPAprevalence.html">?FRAPAprevalence</a></code>).</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th>Dataset</th>
+<th>Content</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>
+<code>sullivan</code>, <code>description_sullivan</code>
+</td>
+<td>first example of the Sullivan manual, and description of the
+variables of the output of <code><a href="../reference/CompleteDFLEtable.html">CompleteDFLEtable()</a></code>
+</td>
+</tr>
+<tr class="even">
+<td><strong>Prevalences</strong></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>FRAPAprevalence</code></td>
+<td>prevalence of the APA by age bracket, all sexes, 2010-2024 (DREES,
+<em>Aide sociale</em> survey)</td>
+</tr>
+<tr class="even">
+<td><code>FRDreesAPA</code></td>
+<td>share of beneficiaries of the APA by sex and age bracket, at home
+and in institutions, 2016-2024 (DREES)</td>
+</tr>
+<tr class="odd">
+<td><code>FRDreesAPA2017</code></td>
+<td>share of beneficiaries of the APA by sex and age bracket, 2017
+(DREES)</td>
+</tr>
+<tr class="even">
+<td>
+<code>FRDreesVQSsurvey2014</code>,
+<code>FRDreesVQSsurvey2021</code>
+</td>
+<td>prevalences of disabilities by sex and age bracket, from the <em>Vie
+quotidienne et santé</em> (VQS) surveys of 2014 and 2021 (DREES)</td>
+</tr>
+<tr class="odd">
+<td><code>FRGaliEUSilc</code></td>
+<td>prevalence of general activity limitations (GALI) by sex and age
+bracket (SRCV survey, French part of EU-SILC)</td>
+</tr>
+<tr class="even">
+<td><code>FRDreesEHPA</code></td>
+<td>share of people living in institutions for older people by sex and
+age (DREES, EHPA survey)</td>
+</tr>
+<tr class="odd">
+<td><strong>Population</strong></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>FRInseePopulation</code></td>
+<td>population by sex and age on 1 January (Insee annual estimates)</td>
+</tr>
+<tr class="odd">
+<td>
+<code>FRInseePopulationForecast2016</code>,
+<code>FRInseePopulationForecast2021</code>,
+<code>FRInseePopulationForecast2026</code>
+</td>
+<td>population projections of Insee (central scenario)</td>
+</tr>
+<tr class="even">
+<td><strong>Mortality</strong></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>
+<code>FRInseeMortalityrates</code>,
+<code>FRInseeMortalityrates_t69</code>
+</td>
+<td>observed mortality rates by sex and age (Insee)</td>
+</tr>
+<tr class="even">
+<td>
+<code>FRInseeMortalityForecast2016</code>,
+<code>FRInseeMortalityForecast2021</code>,
+<code>FRInseeMortalityForecast2026</code>
+</td>
+<td>observed and projected mortality rates by sex and age, from the
+population projections of Insee (central scenario)</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="vqs-2014" class="section level2">
-<h2 class="hasAnchor">
-<a href="#vqs-2014" class="anchor"></a>VQS (2014)</h2>
-<p>The <em>Vie quotidienne et santé</em> (VQS) survey is a large sample
-survey conducted in 2014 by DREES (the statistical directory of the
-French Ministry for Health and Social affairs).</p>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
-</div>
-  </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
+
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by <a href="https://patrickaubert.netlify.app/" class="external-link">Patrick Aubert</a>.</p>
 </div>
 
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+</div>
+
+    </footer>
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p>Developed by <a href="https://patrickaubert.netlify.app/">Patrick Aubert</a>.</p>
-</div>
-
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
-</div>
-
-      </footer>
-</div>
-
-  
 
 
   </body>

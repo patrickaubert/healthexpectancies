@@ -16,7 +16,8 @@ projectPrevalence(
 \item{tab}{observed prevalences by age and year (see \code{\link{fitPrevalenceModel}})}
 
 \item{newdata}{projection years: data frame with variables 'year', 'age' and 'qx' (mortality rate). Mortality rates must cover
-all the ages up to the last age of the life table (where qx = 1), as required by \code{\link{CompleteDFLEtable}}.}
+all the ages up to the last age of the life table (where qx = 1), as required by \code{\link{CompleteDFLEtable}}. The model
+must also be estimated on all these ages (otherwise, a warning is issued and the life table stops at the last age of the model).}
 
 \item{method}{"trend", "mortality", "target" or "shift" (see \code{\link{fitPrevalenceModel}})}
 

@@ -5,9 +5,23 @@
 \alias{sullivan}
 \title{An example of calculation using Sullivan's method.}
 \format{
-A data frame with  rows and  variables:
+A data frame with 86 rows and 15 variables:
 \describe{
 \item{year}{year}
+\item{age}{age}
+\item{Px}{mid-year population}
+\item{Dx}{number of deaths}
+\item{mx}{central death rate}
+\item{qx}{conditional probability of death}
+\item{lx}{number surviving to age x}
+\item{Lx}{person years lived at age x}
+\item{Tx}{total number of years lived from age x}
+\item{ex}{total life expectancy}
+\item{pix}{proportion with disability}
+\item{DFLx}{person years lived without disability}
+\item{DFTx}{total years lived without disability from age x}
+\item{DFLEx}{disability-free life expectancy}
+\item{pctDFLEx}{proportion of life spent disability-free (in percent)}
 }
 }
 \source{

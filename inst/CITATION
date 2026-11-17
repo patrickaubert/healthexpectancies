@@ -1,0 +1,21 @@
+bibentry(
+  bibtype = "Manual",
+  header  = "To cite the package healthexpectancies in publications, please use:",
+  title   = "healthexpectancies: Functions to Calculate Health and Disability-Free Life Expectancies (DFLE) Using Sullivan Method",
+  author  = person("Patrick", "Aubert", comment = c(ORCID = "0000-0003-1777-8639")),
+  year    = "2026",
+  note    = paste("R package version", meta$Version),
+  url     = "https://patrickaubert.github.io/healthexpectancies/"
+)
+
+bibentry(
+  bibtype = "Article",
+  header  = "The first application of the package is described in:",
+  title   = "Allocation personnalis\u00e9e d'autonomie : la part de l'esp\u00e9rance de vie pass\u00e9e en tant que b\u00e9n\u00e9ficiaire diminue depuis 2010",
+  author  = person("Patrick", "Aubert"),
+  journal = "\u00c9tudes et r\u00e9sultats",
+  number  = "1212",
+  publisher = "DREES",
+  year    = "2021",
+  url     = "https://drees.solidarites-sante.gouv.fr/publications/etudes-et-resultats/allocation-personnalisee-dautonomie-la-part-de-lesperance-de-vie"
+)

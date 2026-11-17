@@ -1,48 +1,55 @@
 # healthexpectancies
 
-A R package containing functions that calculate disability-free life expectancy (DFLE) from mortality rates and prevalences of disability by age.
+An R package to calculate health expectancies, and in particular disability-free life expectancies (DFLE), with the Sullivan method, from mortality rates and prevalences of disability by age. The package also smooths prevalences observed by age bracket into prevalences by single year of age, and projects prevalences and health expectancies, either under hypotheses on life expectancies or with models estimated on past observations.
 
-The package also includes several data bases as examples (an example from the sullivan manual, forecasted population and mortality rates for France, prevalences of disability among elder people from the French VQS survey) and a Shiny app (also available online at: https://patrick-aubert.shinyapps.io/projprevalence/).
+The package includes several datasets for France (prevalences of disability and of the APA, population and mortality rates, observed and projected by Insee), and a Shiny app (also available online at: https://patrick-aubert.shinyapps.io/projprevalence/).
 
-## Documentation:
+## Documentation
 
-https://patrickaubert.github.io/healthexpectancies/index.html
+Website of the package, with the help pages of all functions and datasets: https://patrickaubert.github.io/healthexpectancies/
+
+Two vignettes are available:
+
+* [Getting started with healthexpectancies](https://patrickaubert.github.io/healthexpectancies/articles/how-to-use-healthexpectancies.html): a tutorial on the main functions, and an overview of the datasets;
+* [Methods for projecting prevalences](https://patrickaubert.github.io/healthexpectancies/articles/projection-methods.html): the methods available to project prevalences, their assumptions, and a comparison on the example of the APA.
+
+## Installation
+
+```r
+# install.packages("remotes")
+remotes::install_github("patrickaubert/healthexpectancies", ref = "main")
+```
+
+## Main functions
+
+* `CompleteDFLEtable()` calculates life expectancies, disability-free life expectancies (DFLE) and life expectancies with disability (DLE) at all ages, with the Sullivan method. Its input is a data frame with at least the variables `age`, `qx` (or `mx`) and `pix` (prevalence of disability); the output is the same data frame completed with the variables of the life table and the health expectancies. The dataset `description_sullivan` describes all the variables of the output.
+* `ApproxPrevalenceTable()` and `prevalenceApprox()` convert prevalences observed by age bracket into smoothed prevalences by single year of age, consistent with the observed prevalences of the brackets. `prevalence_to_polynomial()` approximates them with a polynomial function.
+* `prevalenceForecast()` projects prevalences and health expectancies from a reference year, given projected mortality rates, under simple hypotheses: constant prevalences, constant DFLE, constant DLE, or constant share of DFLE (or DLE) in total life expectancy.
+* `fitPrevalenceModel()` estimates a model of the evolution of prevalences by age on past years (trend of prevalences, link with mortality, hypotheses on life expectancies, or shift of the curve of prevalences), and `predict()` projects prevalences with it. `projectPrevalence()` does both steps and calculates life expectancies.
+
+## Interactive example (Shiny app)
+
+The app requires packages that are not needed to install `healthexpectancies` itself:
+
+```r
+# install.packages(c("shiny", "shinydashboard", "plotly", "tidyverse"))
+library(healthexpectancies)
+runExample()
+```
 
 ## References
 
 Calculations are derived from the Sullivan manual, available on the INED website:
 https://reves.site.ined.fr/en/resources/computation_online/sullivan/
 
-This package is released under EUPL license. This version is a preliminary version of an on-going work: please be aware of it!
+If you use the package, please cite it (`citation("healthexpectancies")` in R gives the reference in text and BibTeX formats):
 
-If you use the package, please include the following article in your list of references:
+* Patrick Aubert, 2026, *healthexpectancies: Functions to Calculate Health and Disability-Free Life Expectancies (DFLE) Using Sullivan Method*, R package version 0.1.0, https://patrickaubert.github.io/healthexpectancies/
 
-Patrick Aubert, 2021, "[Allocation personnalisée d’autonomie : la part de l’espérance de vie passée en tant que bénéficiaire diminue depuis 2010](https://drees.solidarites-sante.gouv.fr/publications/etudes-et-resultats/allocation-personnalisee-dautonomie-la-part-de-lesperance-de-vie)", *Études et résultats* n°1212, DREES.
+The first application of the package is described in:
 
-## To install the package:
+* Patrick Aubert, 2021, "[Allocation personnalisée d’autonomie : la part de l’espérance de vie passée en tant que bénéficiaire diminue depuis 2010](https://drees.solidarites-sante.gouv.fr/publications/etudes-et-resultats/allocation-personnalisee-dautonomie-la-part-de-lesperance-de-vie)", *Études et résultats* n°1212, DREES.
 
-remotes::install_github("patrickaubert/healthexpectancies",ref='main')
+## License
 
-## To run the example (Shiny app):
-
-library(tidyverse)
-
-library(shiny)
-
-library(shinydashboard)
-
-library(plotly)
-
-library(healthexpectancies)
-
-healthexpectancies::runExample()
-
-## Functions and data in the package:
-
-The main function in the package is *CompleteDFLEtable*, which calculates several indicators, among which disability-free and in-disability life expectancies (DFLE and DLE) at all ages. Its input is a dataset containing some information on age, mortality rates and prevalences of disability (at least 'age', 'qx' or 'mx', and 'pix' variables must be within the input dataset). The output is the same dataset enriched with values of life expectancies and disability-free life expectancies (and several other indicators). If some indispensable variables are missing (eg 'age'), the output is the same as the input dataset. Dataset *description_sullivan* provides full description of the variables in the output dataset of the *CompleteDFLEtable* function.
-
-Another useful function is *prevalenceForecast*, which forecasts prevalences of disabilies, DFLEs and DLEs, given prevalences at a reference year and forecasted mortality rates. Several options are available for the forecast, according to the hypothesis on the evolution of DFLE: constant DFLE over time, constant DLE, constant share of DFLE in total life expectancy, or constant prevalences of disability.
-
-Since prevalences of disabilities are usually observed by age brackets only (they are measured through survey data, and sample size issues impede observation at each age), two functions enable to smooth them and estimate prevalences by age. *prevalence_to_polynomial* smoothes prevalences by age brackets through polynomial approximation of degree 4, while *prevalenceApprox* minimises the sum of squares of second-differences of prevalences by age under the constraint that weighted average prevalences by age brackets are equal to the 'prevalence' input vector (*second-differences* rather than first-differences are used in the minimisation function, since prevalences according to age are usually parabolic).
-
-The package also includes several datasets for France: *FRInseeMortalityForecast2016* and *FRInseeMortalityForecast2021* (forecasted mortality rates for men and women at all ages), *FRInseePopulationForecast2016* and *FRInseePopulationForecast2021* (forecasted population of men and women at all ages), *FRDreesVQSsurvey2014* (prevalences of disabilities after age 60, by 5-year age brackets, from the 2014 *Vie quotidienne et santé* [VQS] Survey), *FRDreesAPA2017* (shares of beneficiaries of *allocation personnalisée d'autonomie* [APA] in the total population in Decembre, 2017, from the *Aide sociale* survey), and *sullivan* (example 1 from the Sullivan manual).
+This package is released under the EUPL license.

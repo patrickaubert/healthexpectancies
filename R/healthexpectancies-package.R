@@ -11,3 +11,6 @@
 #' @importFrom stats lm coef fitted residuals predict
 #' @importFrom utils head tail
 NULL
+
+# Variables used in dplyr / tidyr pipelines (non-standard evaluation), declared to avoid notes in R CMD check
+utils::globalVariables(c(".", "a", "age", "agebracket", "categ", "categ.w", "categloc", "sex", "year"))

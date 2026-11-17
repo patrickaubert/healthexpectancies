@@ -34,7 +34,7 @@ prevalence_to_polynomial <- function (prevalence,
       agebracket = agebracket,
       stringsAsFactors = FALSE
     ) %>% left_join(
-      data.frame(prevalence = prevalence, agebracket = unique(agebracket), stringsAsFactors = False),
+      data.frame(prevalence = prevalence, agebracket = unique(agebracket), stringsAsFactors = FALSE),
       by = "agebracket"
     ))$prevalence
 

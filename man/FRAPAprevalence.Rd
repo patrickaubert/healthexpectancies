@@ -24,7 +24,7 @@ FRAPAprevalence
 }
 \description{
 Number of beneficiaries and prevalence (share in the population) of the APA (allocation personnalisee d'autonomie,
-the French benefit for dependent elderly people), for all GIR (dependency levels) and all places of residence
+the French benefit for older people with long-term care needs), for all GIR (levels of loss of autonomy) and all places of residence
 (at home and in institutions), by age bracket. The data come from the annual survey 'Aide sociale' of the DREES, compiled in the
 package 'asdep' (version of january 2026, data up to 31 december 2024).
 }

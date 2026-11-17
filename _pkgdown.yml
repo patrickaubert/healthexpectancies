@@ -1,49 +1,81 @@
 title: healthexpectancies
 url: https://patrickaubert.github.io/healthexpectancies/
 template:
-  params:
-    bootswatch: yeti
+  bootstrap: 5
+  bootswatch: yeti
 authors:
   Patrick Aubert:
     href: https://patrickaubert.netlify.app/
+
+navbar:
+  structure:
+    left:  [reference, articles, news]
+    right: [search, github]
+  components:
+    github:
+      icon: fa-github fa-lg
+      text: "github"
+      href: https://github.com/patrickaubert/healthexpectancies/
+
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - how-to-use-healthexpectancies
+  - projection-methods
+
 reference:
-- title: Main functions
+- title: Health expectancies (Sullivan method)
+  desc: Calculation of life expectancies with and without disability from mortality rates and prevalences of disability by age.
 - contents:
   - CompleteDFLEtable
-  - prevalenceForecast
-  - ApproxPrevalenceTable
-  - fitPrevalenceModel
-  - projectPrevalence
-  - predict.prevalence_model
-  - coef.prevalence_model
-- title: Auxiliary functions
+- title: Prevalences by single year of age
+  desc: Smoothing of prevalences observed by age bracket into prevalences by single year of age.
 - contents:
+  - ApproxPrevalenceTable
   - prevalenceApprox
   - prevalence_to_polynomial
+- title: Projection of prevalences
+  desc: >
+    Projection of prevalences and health expectancies, under hypotheses on life expectancies
+    (`prevalenceForecast()`) or with models estimated on past observations (`fitPrevalenceModel()`).
+- contents:
+  - prevalenceForecast
+  - fitPrevalenceModel
+  - predict.prevalence_model
+  - coef.prevalence_model
+  - projectPrevalence
+- title: Interactive example
+- contents:
   - runExample
 - title: Datasets
-  desc:  Datasets provide examples for calculations. Most are data provided by Insee (the French INS) or DREES (the statistical unit of the French Ministry for Health and Social affairs)
+  desc: >
+    Datasets provide examples for calculations. Apart from the example of the Sullivan manual, they concern France:
+    most are data provided by Insee (the French national statistical institute) or DREES (the statistical unit of the
+    French Ministry for Health and Social affairs).
+- subtitle: Sullivan manual
 - contents:
-  - FRDreesAPA
+  - sullivan
+  - description_sullivan
+- subtitle: Prevalences
+- contents:
   - FRAPAprevalence
+  - FRDreesAPA
   - FRDreesAPA2017
   - FRDreesVQSsurvey2014
   - FRDreesVQSsurvey2021
-  - FRDreesEHPA
   - FRGaliEUSilc
+  - FRDreesEHPA
+- subtitle: Population
+- contents:
   - FRInseePopulation
   - FRInseePopulationForecast2016
   - FRInseePopulationForecast2021
   - FRInseePopulationForecast2026
+- subtitle: Mortality
+- contents:
+  - FRInseeMortalityrates
+  - FRInseeMortalityrates_t69
   - FRInseeMortalityForecast2016
   - FRInseeMortalityForecast2021
   - FRInseeMortalityForecast2026
-  - FRInseeMortalityrates
-  - FRInseeMortalityrates_t69
-  - sullivan
-  - description_sullivan
-navbar:
- right:
-    - icon: fa-github fa-lg
-      text: "github"
-      href: https://github.com/patrickaubert/healthexpectancies/

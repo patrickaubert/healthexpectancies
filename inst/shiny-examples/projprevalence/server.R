@@ -49,15 +49,19 @@ server <- function(input, output) {
       left_join( donneesprev,   by = c("sex","agebracket") ) %>%
       rename(prevalence.ref = prevalence)
 
-    # --- lissage des prévalences
-    prevalencesref <- donneesregr %>% group_by(sex) %>%
-      mutate(prev.approx = case_when(
-        #input$approxPrev ~ prevalence_to_polynomial(age, prevalence.ref, weight=popx),
-        input$approxPrev ~ prevalence_to_polynomial(prevalence = prevalence.ref,
-                                                    agemin=min(donneesregr$age),
-                                                    agemax=max(donneesregr$age),
-                                                    weight=popx),
-        !input$approxPrev ~ prevalence.ref) ) %>%
+    # --- lissage des prévalences (par sexe) : minimisation des différences secondes du logit des prévalences,
+    #     sous la contrainte que les prévalences moyennes par tranche d'âge (pondérées par la population) soient respectées
+    agecuts <- seq(60, 95, 5)
+    lissage <- function(age, prevalence, popx) {
+      prevalenceApprox(prevalence = prevalence[match(agecuts, age)],
+                       agecuts = agecuts,
+                       agemin = min(age), agemax = max(age),
+                       weight = popx)
+    }
+    prevalencesref <- donneesregr %>%
+      arrange(sex, age) %>%
+      group_by(sex) %>%
+      mutate(prev.approx = if (input$approxPrev) lissage(age, prevalence.ref, popx) else prevalence.ref) %>%
       ungroup() %>%
       select(sex, age, prev.approx, prevalence.ref) %>%
       pivot_longer(cols=-c(sex,age),
@@ -88,8 +92,10 @@ server <- function(input, output) {
       filter(age >= 60, age <= input$ageFinCalcul, year %in% c( vyear[vyear != refyear] ) )
 
     # --- tables avec les valeurs en projections
+    #     (si l'hypothèse impose des prévalences hors de l'intervalle [0,1], elles sont bornées)
     projections <- prevalenceForecast( qmortref, qmortproj , input$optionProj,
-                                       includevars  = c("MeanDAx","MedianDAx","ModalDAx")) %>%
+                                       includevars  = c("MeanDAx","MedianDAx","ModalDAx"),
+                                       on_unfeasible = "clip") %>%
       select(sex,age,year,ex,DFLEx,DLEx,pctDFLEx,pix,MeanDAx,MedianDAx,ModalDAx)
 
     # 3) on ajoute les effectifs pour avoir des nombres de personnes âgées en incapacité
@@ -269,7 +275,7 @@ server <- function(input, output) {
                  sep="")
     if (input$approxPrev) {
       txt <- paste(txt,
-                   "Les prévalences par âge sont approximées par une fonction polynomiale de degré 4. ",sep = " ")
+                   "Les prévalences par âge fin sont lissées à partir des prévalences par tranche d'âge (lissage du logit des prévalences, pondéré par la population). ",sep = " ")
     }
     txt <- paste(
       txt,
@@ -278,7 +284,7 @@ server <- function(input, output) {
              "cstDFLE" = "EVSI constante",
              "cstDLE" = "EVI constante",
              "cstPctDFLE" = "part de l'EVSI dans l'EV totale constante",
-             "cstPrev" = "prévalences des incapacités constantes"),
+             "cstPreval" = "prévalences des incapacités constantes"),
       ".",
       sep="")
     txt
@@ -336,7 +342,7 @@ server <- function(input, output) {
              "cstDFLE" = "EVSI constante",
              "cstDLE" = "EVI constante",
              "cstPctDFLE" = "part de l'EVSI dans l'EV totale constante",
-             "cstPrev" = "prévalences des incapacités constantes"),
+             "cstPreval" = "prévalences des incapacités constantes"),
       ".<br><br>",
       "Les différentes <b>options disponibles pour l'hypothèse d'évolutions des incapacités</b> sont les suivantes :",
       "<li><i>Prévalences constantes</i> : les prévalences des incapacités par sexe à chaque âge fin restent constantes par rapport à la valeur à l'année de référence",
