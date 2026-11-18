@@ -1,6 +1,6 @@
 # A dataset with population by sex and age, from Insee's 2021 population forecast (central scenario)
 
-The dataset also includes observed data from 1990 to 2022. Population is
+The dataset also includes observed data from 1962 to 2021. Population is
 measured on the 1st of January of each year.
 
 ## Usage

@@ -22,6 +22,6 @@ A data frame with 34107 observations and 6 variables:
 FRInseePopulationForecast2026
 }
 \description{
-The dataset also includes observed data from 1990 to 2022. Population is measured on the 1st of January of each year.
+The dataset also includes observed data from 1962 to 2022. Population is measured on the 1st of January of each year.
 }
 \keyword{datasets}

@@ -1,5 +1,7 @@
 # healthexpectancies
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24313924.svg)](https://doi.org/10.5281/zenodo.24313924)
+
 An R package to calculate health expectancies, and in particular
 disability-free life expectancies (DFLE), with the Sullivan method, from
 mortality rates and prevalences of disability by age. The package also
@@ -90,7 +92,7 @@ in R gives the reference in text and BibTeX formats):
 - Patrick Aubert, 2026, *healthexpectancies: Functions to Calculate
   Health and Disability-Free Life Expectancies (DFLE) Using Sullivan
   Method*, R package version 0.1.0,
-  <https://patrickaubert.github.io/healthexpectancies/>
+  <https://doi.org/10.5281/zenodo.24313924>
 
 The first application of the package is described in:
 

@@ -20,7 +20,7 @@ A data frame with 591 observations and 6 variables:
 
 - typepresta:
 
-  type of benefits (eg. 'à domicile' or 'en établissement')
+  type of benefits (eg. 'APA à domicile' or 'APA en établissement')
 
 - prevalence:
 

@@ -1,6 +1,6 @@
 Package: healthexpectancies
 Title: Functions to calculate Health and Disability-free Life Expectancies (DFLE) using Sullivan method
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     person(given = "Patrick",
            family = "Aubert",

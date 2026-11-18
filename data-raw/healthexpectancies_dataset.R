@@ -906,7 +906,8 @@ read_excel_from_url <- function(annee) {
               annee <  2020 ~  "https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/les-caracteristiques-des-beneficiaires-de-l-aide-sociale-departementale-aux-pers/attachments/apa_donnees_detaillees_par_gir_age_et_sexe_en_" ),
     annee,
     "_xlsx"
-  )
+  ) |>
+    str_replace("2024_xlsx","2024xlsx")   # correction for 2024 (error in name of file)
   tmp <- tempfile(fileext = ".xlsx")
   GET(url, write_disk(tmp, overwrite = TRUE))
   onglets <- getSheetNames(tmp)
@@ -950,13 +951,33 @@ FRDreesAPA <- bind_rows(
   )
 )
 
-#library(ggplot2)
-#ggplot(FRDreesAPA,aes(y=prevalence,x=age,colour=as.factor(Annee))) +
-#  geom_line() +
-#  facet_wrap(sex ~ typepresta)
-#ggplot(FRDreesAPA,aes(y=prevalence,x=Annee,colour=agebracket)) +
-#  geom_line() +
-#  facet_wrap(sex ~ typepresta)
+# correction for differences in format
+
+FRDreesAPA <- FRDreesAPA |>
+  mutate(
+    typepresta = recode(
+      typepresta,
+      'apa_en_etablissement' = 'APA en établissement',
+      'apa_a_domicile' = 'APA à domicile'
+    )
+  )  |>
+  group_by(year) |> mutate(corr = (max(prevalence)>1), prevalence = if_else(corr , prevalence /100 , prevalence)) |> ungroup() |> select(-corr)
+
+# tests
+
+if (FALSE){
+  #library(ggplot2)
+  ggplot(FRDreesAPA,aes(y=prevalence,x=age,colour=as.factor(year))) +
+    geom_line() +
+    facet_wrap(sex ~ typepresta)
+  ggplot(FRDreesAPA,aes(y=prevalence,x=year,colour=agebracket)) +
+    geom_line() +
+    facet_wrap(sex ~ typepresta)
+  ggplot(FRDreesAPA,aes(y=prevalence,x=year,linetype=sex,colour=typepresta,group=paste(sex,typepresta))) +
+    geom_line() +
+    facet_wrap( ~ agebracket , scales="free")
+}
+
 
 
 # ===================================================================================

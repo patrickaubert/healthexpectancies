@@ -1,3 +1,7 @@
+# healthexpectancies 0.1.1
+
+Correction of errors in datasets (FRDreesAPA) or documentation of datasets (FRInseePopulationForecast2021 and FRInseePopulationForecast2026)
+
 # healthexpectancies 0.1.0
 
 First version with a NEWS file. It lists the changes since version 0.0.0.9003 (November 2021).

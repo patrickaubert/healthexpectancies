@@ -1,5 +1,11 @@
 # Changelog
 
+## healthexpectancies 0.1.1
+
+Correction on errors in datasets (FRDreesAPA) or documentation of
+datasets (FRInseePopulationForecast2021 and
+FRInseePopulationForecast2026)
+
 ## healthexpectancies 0.1.0
 
 First version with a NEWS file. It lists the changes since version

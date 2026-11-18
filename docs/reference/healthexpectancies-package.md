@@ -11,6 +11,17 @@ for France, functions that smooth prevalences observed by age bracket,
 and functions that project prevalences and DFLE, under hypotheses on the
 evolution of DFLE or with models estimated on past observations.
 
+## See also
+
+Useful links:
+
+- <https://patrickaubert.github.io/healthexpectancies/>
+
+- <https://github.com/patrickaubert/healthexpectancies>
+
+- Report bugs at
+  <https://github.com/patrickaubert/healthexpectancies/issues>
+
 ## Author
 
 **Maintainer**: Patrick Aubert <patrick.aubert@m4x.org>

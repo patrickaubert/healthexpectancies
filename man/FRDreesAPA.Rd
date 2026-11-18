@@ -7,7 +7,7 @@
 \format{
 A data frame with 591 observations and 6 variables:
 \describe{
-\item{typepresta}{type of benefits (eg. 'à domicile' or 'en établissement')}
+\item{typepresta}{type of benefits (eg. 'APA à domicile' or 'APA en établissement')}
 \item{prevalence}{share of beneficiaires within the total population in the given age bracket (number between 0 and 1)}
 \item{sex}{sex ('female' or 'male')}
 \item{agebracket}{age bracket (eg '[60;65)' = between 60 and 64 years old)}

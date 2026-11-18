@@ -11,8 +11,9 @@ Source:
 [`inst/CITATION`](https://github.com/patrickaubert/healthexpectancies/blob/HEAD/inst/CITATION)
 
 Aubert P (2026). *healthexpectancies: Functions to Calculate Health and
-Disability-Free Life Expectancies (DFLE) Using Sullivan Method*. R
-package version 0.1.0,
+Disability-Free Life Expectancies (DFLE) Using Sullivan Method*.
+[doi:10.5281/zenodo.24313924](https://doi.org/10.5281/zenodo.24313924),
+R package version 0.1.0,
 <https://patrickaubert.github.io/healthexpectancies/>.
 
     @Manual{,
@@ -21,6 +22,7 @@ package version 0.1.0,
       year = {2026},
       note = {R package version 0.1.0},
       url = {https://patrickaubert.github.io/healthexpectancies/},
+      doi = {10.5281/zenodo.24313924},
     }
 
 Aubert P (2021). “Allocation personnalisée d'autonomie : la part de
